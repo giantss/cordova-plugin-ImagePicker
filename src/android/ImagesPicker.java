@@ -14,7 +14,7 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2016/2/3.
  */
-public class ImagesPicker extends CordovaPlugin {s
+public class ImagesPicker extends CordovaPlugin {
 
     private static final String TAG = "MultiImagesPicker";
 
