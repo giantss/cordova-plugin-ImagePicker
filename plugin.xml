@@ -72,6 +72,11 @@
             </feature>
         </config-file>
 
+        <source-file
+                src="src/android/ImagesPicker.java"
+                target-dir="src/com/giants/imagepicker" />
+
+
     </platform>
 
 
