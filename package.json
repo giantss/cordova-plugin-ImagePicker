@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-ImagePicker",
   "version": "1.0.3",
-  "description": "Cordova Console Plugin",
+  "description": "Cordova ImagePicker Plugin",
   "cordova": {
     "id": "cordova-plugin-ImagePicker",
     "platforms": [

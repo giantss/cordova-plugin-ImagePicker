@@ -22,12 +22,23 @@
            id="cordova-plugin-ImagePicker"
       version="0.0.1">
 
-    <name>Console</name>
-    <description>Cordova Console Plugin</description>
+    <name>ImagePicker</name>
+    <description>Cordova ImagePicker Plugin</description>
     <license>Apache 2.0</license>
-    <keywords>cordova,console</keywords>
+    <keywords>cordova,ImagePicker</keywords>
     <repo>https://github.com/giantss/cordova-plugin-ImagePicker.git</repo>
     <issue>https://github.com/giantss/cordova-plugin-ImagePicker/issues</issue>
+
+    <!--require cordova version -->
+    <engines>
+        <engine name="cordova" version=">=4.0.0" />
+        <engine name="cordova-android" version=">=4.0.0" />
+    </engines>
+
+    <!-- js module-->
+    <js-module src="www/ImagePicker.js" name="ImagePicker">
+        <clobbers target="ImagePicker" />
+    </js-module>
 
     <!--&lt;!&ndash; ios &ndash;&gt;-->
     <!--<platform name="ios">-->
