@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-ImagePicker",
+  "version": "1.0.3",
+  "description": "Cordova Console Plugin",
+  "cordova": {
+    "id": "cordova-plugin-ImagePicker",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/giantss/cordova-plugin-ImagePicker"
+  },
+  "keywords": [
+    "cordova",
+    "cordova-ios",
+    "cordova-android",
+    "ImagePicker"
+  ],
+  "author": "giantss",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "jshint": "0.0.1"
+  }
+}
