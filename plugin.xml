@@ -73,7 +73,7 @@
         </config-file>
 
         <source-file
-                src="src/android/ImagesPicker.java"
+                src="src/android/ImagePicker.java"
                 target-dir="src/com/giants/imagepicker" />
 
 
