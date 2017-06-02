@@ -72,11 +72,11 @@
             </feature>
         </config-file>
 
-        <source-file
-                src="src/android/ImagesPicker.java"
-                target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/ImagesPicker.java" target-dir="src/com/giants/imagepicker" />
 
+        <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker" />
 
+        <framework src="com.squareup.picasso:picasso:2.5.2" />
     </platform>
 
 

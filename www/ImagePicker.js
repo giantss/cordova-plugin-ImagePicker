@@ -11,6 +11,6 @@ module.exports = {
      * @param params
      */
     getPictures: function(onSuccess, onFail, params) {
-        exec(onSuccess, onFail, "ImagesPicker", "getPictures", [params]);
+        exec(onSuccess, onFail, "ImagePicker", "getPictures", [params]);
     }
 };
