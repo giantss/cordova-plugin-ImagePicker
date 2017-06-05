@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bike.main.R;
-import com.lzy.imagepicker.loader.ImageLoader;
+import com.giants.imagepicker.loader.ImageLoader;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 

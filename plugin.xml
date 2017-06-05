@@ -72,12 +72,151 @@
             </feature>
         </config-file>
 
+
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.giants.imagepicker.ui.ImageBaseActivity"/>
+            <activity
+                    android:name="com.giants.imagepicker.ui.ImageGridActivity"
+                    android:configChanges="orientation|screenSize"
+                    android:theme="@style/ImagePickerTheme"/>
+            <activity
+                    android:name="com.giants.imagepicker.ui.ImageCropActivity"
+                    android:configChanges="orientation|screenSize"
+                    android:hardwareAccelerated="false"
+                    android:theme="@style/ImagePickerTheme"/>
+            <activity
+                    android:name="com.giants.imagepicker.ui.ImagePreviewActivity"
+                    android:configChanges="orientation|screenSize"
+                    android:theme="@style/ImagePickerThemeFullScreen"/>
+
+            <provider
+                    android:authorities="${applicationId}.provider"
+                    android:name="com.giants.imagepicker.ImagePickerProvider"
+                    android:exported="false"
+                    android:grantUriPermissions="true">
+                <meta-data
+                        android:name="android.support.FILE_PROVIDER_PATHS"
+                        android:resource="@xml/provider_paths"/>
+            </provider>
+        </config-file>
+
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+
+            <!-- 在SDCard中创建与删除文件权限 -->
+            <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+            <!-- 往SDCard写入数据权限 -->
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <!-- 从SDCard读取数据权限 -->
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+            <!-- 相机权限 -->
+            <uses-permission android:name="android.permission.CAMERA"/>
+
+        </config-file>
+
+        <config-file target="res/values/strings.xml" parent="/*">
+            <string name="all_images">全部图片</string>
+            <string name="folder_image_count">共%1$d张</string>
+            <string name="preview_image_count">%1$s/%2$s</string>
+            <string name="select_limit">最多选择%1$s张图片</string>
+            <string name="complete">完成</string>
+            <string name="select_complete">完成(%1$s/%2$s)</string>
+            <string name="preview_count">预览(%1$s)</string>
+            <string name="photo_crop">图片裁剪</string>
+            <string name="origin">原图</string>
+            <string name="origin_size">原图(%1$s)</string>
+        </config-file>
+
+
+        <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
+        <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
+        <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
+        <source-file src="src/android/module/adapter/ImageRecyclerAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
+        <source-file src="src/android/module/bean/ImageFolder.java" target-dir="src/com/giants/imagepicker/bean" />
+        <source-file src="src/android/module/bean/ImageItem.java" target-dir="src/com/giants/imagepicker/bean" />
+        <source-file src="src/android/module/loader/ImageLoader.java" target-dir="src/com/giants/imagepicker/loader" />
+        <source-file src="src/android/module/ui/ImageBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImageCropActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImageGridActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewDelActivity.java" target-dir="src/com/giants/imagepicker/ui" />
+        <source-file src="src/android/module/util/BitmapUtil.java" target-dir="src/com/giants/imagepicker/util" />
+        <source-file src="src/android/module/util/ProviderUtil.java" target-dir="src/com/giants/imagepicker/util" />
+        <source-file src="src/android/module/util/Utils.java" target-dir="src/com/giants/imagepicker/util" />
+        <source-file src="src/android/module/view/CropImageView.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/view/FolderPopUpWindow.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/view/SuperCheckBox.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/giants/imagepicker/view" />
+
+        <source-file src="src/android/module/DataHolder.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker" />
+
         <source-file src="src/android/ImagePickerMain.java" target-dir="src/com/giants/imagepicker" />
-
         <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker" />
-
         <source-file src="src/android/GApp.java" target-dir="src/com/giants/imagepicker" />
 
+        <source-file src="src/android/res/anim/bottom_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/bottom_out.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/fade_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/fade_out.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/hide_to_bottom.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/left_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/left_out.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/right_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/right_out.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/scale_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/scale_out.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/show_from_bottom.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/top_in.xml" target-dir="res/anim"/>
+        <source-file src="src/android/res/anim/top_out.xml" target-dir="res/anim"/>
+
+
+
+
+        <source-file src="src/android/res/drawable/selector_back_press.xml" target-dir="res/drawable"/>
+        <source-file src="src/android/res/drawable/selector_grid_camera_bg.xml" target-dir="res/drawable"/>
+        <source-file src="src/android/res/drawable/selector_item_checked.xml" target-dir="res/drawable"/>
+        <source-file src="src/android/res/drawable/selector_top_ok.xml" target-dir="res/drawable"/>
+
+
+        <source-file src="src/android/res/drawable-xxhdpi/bg_btn_dis.9.png" target-dir="res/drawable-xxhdpi"/>
+        <source-file src="src/android/res/drawable-xxhdpi/bg_btn_nor.9.png" target-dir="res/drawable-xxhdpi"/>
+        <source-file src="src/android/res/drawable-xxhdpi/bg_btn_pre.9.png" target-dir="res/drawable-xxhdpi"/>
+
+
+        <source-file src="src/android/res/layout/activity_image_crop.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/activity_image_grid.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/activity_image_preview.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/adapter_camera_item.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/adapter_folder_list_item.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/adapter_image_list_item.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/include_top_bar.xml" target-dir="res/layout"/>
+        <source-file src="src/android/res/layout/pop_folder.xml" target-dir="res/layout"/>
+
+        <source-file src="src/android/res/mipmap-xxhdpi/checkbox_checked.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/checkbox_normal.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/default_image.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/grid_camera.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/ic_back.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/ic_del.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/list_selected.png" target-dir="res/mipmap-xxhdpi"/>
+        <source-file src="src/android/res/mipmap-xxhdpi/text_indicator.png" target-dir="res/mipmap-xxhdpi"/>
+
+
+        <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
+
+
+
+        <framework src="com.android.support:appcompat-v7:25.1.1" />
+        <framework src="com.github.chrisbanes.photoview:library:1.2.4" />
+        <framework src="com.android.support:recyclerview-v7:25.1.1" />
         <framework src="com.squareup.picasso:picasso:2.5.2" />
         <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5" />
         <framework src="org.xutils:xutils:3.3.36" />
