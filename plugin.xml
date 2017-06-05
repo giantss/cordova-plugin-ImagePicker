@@ -76,7 +76,12 @@
 
         <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker" />
 
+        <source-file src="src/android/GApp.java" target-dir="src/com/giants/imagepicker" />
+
         <framework src="com.squareup.picasso:picasso:2.5.2" />
+        <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5" />
+        <framework src="org.xutils:xutils:3.3.36" />
+
     </platform>
 
 
