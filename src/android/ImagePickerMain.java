@@ -48,6 +48,9 @@ public class ImagePickerMain extends CordovaPlugin {
         this.params = args.getJSONObject(0);
 
         if (action.equals("getPictures")) {
+            if(this.params != null){
+                imagePicker.setSelectLimit(this.params.getInt("maximumImagesCount"));
+            }
 
             Intent intent = new Intent(cordova.getActivity().getApplicationContext(), ImageGridActivity.class);
             intent.putExtra(ImageGridActivity.EXTRAS_IMAGES,images);
