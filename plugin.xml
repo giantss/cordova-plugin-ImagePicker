@@ -151,6 +151,13 @@
         <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/giants/imagepicker/view" />
         <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/giants/imagepicker/view" />
 
+        <source-file src="src/android/module/compresshelper/BitmapUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+        <source-file src="src/android/module/compresshelper/CompressHelper.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+        <source-file src="src/android/module/compresshelper/FileUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+        <source-file src="src/android/module/compresshelper/ImageUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+        <source-file src="src/android/module/compresshelper/StringUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+
+
         <source-file src="src/android/module/DataHolder.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker" />
