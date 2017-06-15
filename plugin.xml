@@ -40,27 +40,72 @@
         <clobbers target="ImagePicker" />
     </js-module>
 
-    <!--&lt;!&ndash; ios &ndash;&gt;-->
-    <!--<platform name="ios">-->
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ImagePicker">
+                <param name="ios-package" value="ImagePicker"/>
+            </feature>
+        </config-file>
 
-        <!--<config-file target="config.xml" parent="/*">-->
-		<!--<feature name="Console">-->
-			<!--<param name="ios-package" value="CDVLogger"/>-->
-		<!--</feature>-->
-        <!--</config-file>-->
+        <header-file src="src/ios/ImagePickerMain.h"/>
+        <source-file src="src/ios/ImagePickerMain.m"/>
 
-        <!--<js-module src="www/console-via-logger.js" name="console">-->
-            <!--<clobbers target="console" />-->
-        <!--</js-module>-->
+        <header-file src="src/ios/libs/LxGridViewFlowLayout.h" />
+        <source-file src="src/ios/libs/LxGridViewFlowLayout.m"/>
 
-        <!--<js-module src="www/logger.js" name="logger">-->
-            <!--<clobbers target="cordova.logger" />-->
-        <!--</js-module>-->
+        <header-file src="src/ios/libs/TZTestCell.h" />
+        <source-file src="src/ios/libs/TZTestCell.m"/>
 
-	<!--<header-file src="src/ios/CDVLogger.h" />-->
-	<!--<source-file src="src/ios/CDVLogger.m" />-->
+        <header-file src="src/ios/libs/NSBundle+TZImagePicker.h" />
+        <source-file src="src/ios/libs/NSBundle+TZImagePicker.m"/>
 
-    <!--</platform>-->
+        <header-file src="src/ios/libs/TZAssetCell.h" />
+        <source-file src="src/ios/libs/TZAssetCell.m"/>
+
+        <header-file src="src/ios/libs/TZAssetModel.h" />
+        <source-file src="src/ios/libs/TZAssetModel.m"/>
+
+        <header-file src="src/ios/libs/TZGifPhotoPreviewController.h" />
+        <source-file src="src/ios/libs/TZGifPhotoPreviewController.m"/>
+
+        <header-file src="src/ios/libs/TZImageCropManager.h" />
+        <source-file src="src/ios/libs/TZImageCropManager.m"/>
+
+        <header-file src="src/ios/libs/TZImageManager.h" />
+        <source-file src="src/ios/libs/TZImageManager.m"/>
+
+        <header-file src="src/ios/libs/TZImagePickerController.h" />
+        <source-file src="src/ios/libs/TZImagePickerController.m"/>
+
+        <header-file src="src/ios/libs/TZLocationManager.h" />
+        <source-file src="src/ios/libs/TZLocationManager.m"/>
+
+        <header-file src="src/ios/libs/TZPhotoPickerController.h" />
+        <source-file src="src/ios/libs/TZPhotoPickerController.m"/>
+
+        <header-file src="src/ios/libs/TZPhotoPreviewCell.h" />
+        <source-file src="src/ios/libs/TZPhotoPreviewCell.m"/>
+
+        <header-file src="src/ios/libs/TZPhotoPreviewController.h" />
+        <source-file src="src/ios/libs/TZPhotoPreviewController.m"/>
+
+        <header-file src="src/ios/libs/TZProgressView.h" />
+        <source-file src="src/ios/libs/TZProgressView.m"/>
+
+        <header-file src="src/ios/libs/TZVideoPlayerController.h" />
+        <source-file src="src/ios/libs/TZVideoPlayerController.m"/>
+
+        <header-file src="src/ios/libs/UIView+Layout.h" />
+        <source-file src="src/ios/libs/UIView+Layout.m"/>
+
+
+        <resource-file src="src/ios/libs/TZImagePickerController.bundle" />
+
+
+
+
+    </platform>
 
 
 
