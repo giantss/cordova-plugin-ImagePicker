@@ -3,8 +3,38 @@
 
 一个支持多选，相册实现了拍照、预览、（android 图片压缩）等功能
 
-##主要功能
-- 选择获取多张图片地址
+## 2.功能和参数含义
+
+### 温馨提示:目前库中的预览界面有个原图的复选框,暂时只做了UI,还没有做压缩的逻辑
+
+<table>
+  <tdead>
+    <tr>
+      <th align="center">配置参数</th>
+      <th align="center">参数含义</th>
+    </tr>
+  </tdead>
+  <tbody>
+    <tr>
+      <td align="center">selectLimit</td>
+      <td align="center">多选限制数量，默认为9</td>
+    </tr>
+    <tr>
+      <td align="center">width</td>
+      <td align="center">设置图片的width，默认为720</td>
+    </tr>
+     <tr>
+      <td align="center">height</td>
+      <td align="center">设置图片的height，默认为960</td>
+    </tr>
+    <tr>
+      <td align="center">quality</td>
+      <td align="center">图片质量 默认100</td>
+    </tr>
+
+  </tbody>
+</table>
+
 
 ##安装要求
 - Cordova Version >=5.0
@@ -31,42 +61,6 @@ When system version is iOS8 or later, Using PhotoKit.
 1. 这个插件要求cordova-android 的版本 >=4.0,推荐使用 cordova  5.0.0 或更高的版本，因为从cordova 5.0 开始cordova-android 4.0 是默认使用的android版本
 2. 请在cordova的deviceready事件触发以后再调用本插件！！！
 
-
-## 2.功能和参数含义
-
-### 温馨提示:目前库中的预览界面有个原图的复选框,暂时只做了UI,还没有做压缩的逻辑
-
-<table>
-  <tdead>
-    <tr>
-      <th align="center">配置参数</th>
-      <th align="center">参数含义</th>
-    </tr>
-  </tdead>
-  <tbody>
-    <tr>
-      <td align="center">multiMode</td>
-      <td align="center">图片选着模式，单选/多选</td>
-    </tr>
-    <tr>
-      <td align="center">selectLimit</td>
-      <td align="center">多选限制数量，默认为9</td>
-    </tr>
-    <tr>
-      <td align="center">width</td>
-      <td align="center">设置图片的width，默认为720</td>
-    </tr>
-     <tr>
-      <td align="center">height</td>
-      <td align="center">设置图片的height，默认为960</td>
-    </tr>
-    <tr>
-      <td align="center">quality</td>
-      <td align="center">图片质量 默认100</td>
-    </tr>
-
-  </tbody>
-</table>
 
 ## android 演示
 
