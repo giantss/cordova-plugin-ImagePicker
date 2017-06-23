@@ -62,9 +62,24 @@ When system version is iOS8 or later, Using PhotoKit.
 2. 请在cordova的deviceready事件触发以后再调用本插件！！！
 
 
-## android 演示
+## android视频演示
+
+ <video src="http://oqdxjvpc7.bkt.clouddn.com/111.mp4" controls="controls">
+您的浏览器不支持 video 标签。
+</video>
+
+## ios视频演示
+
+ <video src="http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4" controls="controls">
+您的浏览器不支持 video 标签。
+</video>
+
+ <video src="https://github.com/jeasonlzy/Screenshots/blob/master/ImagePicker/demo2.gif" width="270px" height="480">
 
 
+## android效果图
+
+ 
  <img src="https://github.com/jeasonlzy/Screenshots/blob/master/ImagePicker/demo2.gif" width="270px" height="480">
 
 
