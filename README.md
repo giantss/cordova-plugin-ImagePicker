@@ -75,12 +75,12 @@ When system version is iOS8 or later, Using PhotoKit.
 ## android效果图
 
  
- <img src="http://img.blog.csdn.net/20170623210216806" width="270px" height="480">
+ <img src="./res/android.png" width="270px" height="480">
 
 
 ## ios效果图
 
- <img src="http://img.blog.csdn.net/20170623213324913?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbG92ZWx5ZWxmcG9w/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" width="270px" height="480">
+ <img src="./res/ios.jpg" width="270px" height="480">
 
 
 ##使用方式
