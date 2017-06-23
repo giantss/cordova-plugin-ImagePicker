@@ -64,12 +64,12 @@ When system version is iOS8 or later, Using PhotoKit.
 
 ## android视频演示
 
-<a href="http://oqdxjvpc7.bkt.clouddn.com/111.mp4" target="_blank">点击查看视频(mp4格式)</a>
+<a href="http://oqdxjvpc7.bkt.clouddn.com/111.mp4" target="_blank">点击查看视频(mp4格式)</a><br>
 <a href="http://v.youku.com/v_show/id_XMjg0NDg0NDIyMA==.html" target="_blank">点击查看视频(优酷)</a>
 
 ## ios视频演示
 
-<a href="http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4" target="_blank">点击查看视频(mp4格式)</a>
+<a href="http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4" target="_blank">点击查看视频(mp4格式)</a><br>
 <a href="http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html" target="_blank">点击查看视频(优酷)</a>
 
 ## android效果图
