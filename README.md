@@ -1,5 +1,5 @@
 # cordova-plugin-ImagePicker
-非常感谢<a href="https://github.com/nanchen2251">南尘</a>和 <a href="https://github.com/banchichen">banchichen</a> 提供的源码支持
+非常感谢<a href="https://github.com/nanchen2251">南尘</a>和 <a href="https://github.com/banchichen">banchichen</a> 提供的源码支持 多点star✨开源不宜，谢谢。
 
 一个支持多选，相册实现了拍照、预览、（android 图片压缩）等功能
 
