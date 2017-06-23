@@ -52,7 +52,7 @@ When system version is iOS8 or later, Using PhotoKit.
 ## Android效果图
 
  
- <img src="./res/Android.png" width="270px" height="480">
+ <img src="./res/android.png" width="270px" height="480">
 
 
 ## ios效果图
@@ -67,7 +67,7 @@ ImagePicker.getPictures(function(result) {
     alert(result);
 }, function(err) {
     alert(err);
-}, { max : 9, width : 720, height : 960, quality : 100 });
+}, { maximumImagesCount : 9, width : 720, height : 960, quality : 100 });
 
 ```
 
@@ -84,7 +84,7 @@ ImagePicker.getPictures(function(result) {
   </tdead>
   <tbody>
     <tr>
-      <td align="center">selectLimit</td>
+      <td align="center">maximumImagesCount</td>
       <td align="center">多选限制数量，默认为9</td>
     </tr>
     <tr>
