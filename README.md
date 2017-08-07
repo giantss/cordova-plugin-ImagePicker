@@ -37,8 +37,8 @@ When system version is iOS8 or later, Using PhotoKit.
 ##android注意事项
    add插件到项目以后先不要直接build，执行下面的步骤
 
-   1，全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时到包名。
-   2，build
+   - 全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时到包名。
+   - build
 
 
 ## Android视频演示
