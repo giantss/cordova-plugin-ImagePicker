@@ -13,13 +13,13 @@
 
 
 
-##安装要求
+## 安装要求
 - Cordova Version >=5.0
 - Cordova-Android >=4.0
 - Cordova-iOS >=6.0
 
 
-##ios Requirements 要求
+## ios Requirements 要求
 
 OS 6 or later. Requires ARC
 iOS6及以上系统可使用. ARC环境.
@@ -30,14 +30,14 @@ When system version is iOS8 or later, Using PhotoKit.
 如果运行在iOS8及以上系统上，用的是PhotoKit库获取照片资源。
 
 
-##安装
+## 安装
 1. 命令行运行      ```cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git```
 2. 命令行运行 cordova build --device
 
-##android注意事项
+## android注意事项
    add插件到项目以后先不要直接build，执行下面的步骤
 
-   - <div style="color:red; font-size:18px">全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时的包名。</div>
+   - 全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时的包名。
    - build
 
 
