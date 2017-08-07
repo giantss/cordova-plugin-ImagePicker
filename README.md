@@ -1,5 +1,5 @@
 # cordova-plugin-ImagePicker
-非常感谢<a href="https://github.com/nanchen2251">南尘</a>和 <a href="https://github.com/banchichen">banchichen</a> 提供的源码支持 多点star✨开源不宜，谢谢。扣扣群：240255635
+非常感谢<a href="https://github.com/nanchen2251">南尘</a>和 <a href="https://github.com/banchichen">banchichen</a> 提供的源码支持 多点star✨开源不容易，谢谢。扣扣群：240255635
 
 一个支持多选，相册实现了拍照、预览、（Android 图片压缩）等功能
 
@@ -37,7 +37,7 @@ When system version is iOS8 or later, Using PhotoKit.
 ##android注意事项
    add插件到项目以后先不要直接build，执行下面的步骤
 
-   - 全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时的包名。
+   - <div style="color:red; font-size:18px">全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时的包名。</div>
    - build
 
 
