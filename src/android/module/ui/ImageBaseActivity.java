@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.bike.main.R;
+import com.your.package.name.R;
 import com.giants.imagepicker.view.SystemBarTintManager;
 
 /**

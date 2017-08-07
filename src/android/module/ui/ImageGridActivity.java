@@ -20,7 +20,7 @@ import android.widget.GridView;
 import com.giants.imagepicker.DataHolder;
 import com.giants.imagepicker.ImageDataSource;
 import com.giants.imagepicker.ImagePicker;
-import com.bike.main.R;
+import com.your.package.name.R;
 import com.giants.imagepicker.adapter.ImageFolderAdapter;
 import com.giants.imagepicker.adapter.ImageRecyclerAdapter;
 import com.giants.imagepicker.adapter.ImageRecyclerAdapter.OnImageItemClickListener;

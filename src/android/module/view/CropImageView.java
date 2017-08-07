@@ -24,7 +24,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 
-import com.bike.main.R;
+import com.your.package.name.R;
 
 import java.io.File;
 import java.io.IOException;

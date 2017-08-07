@@ -10,7 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.giants.imagepicker.ImagePicker;
-import com.bike.main.R;
+import com.your.package.name.R;
 
 /**
  * ================================================
@@ -90,15 +90,15 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
     @Override
     public void onImageSingleTap() {
         if (topBar.getVisibility() == View.VISIBLE) {
-            topBar.setAnimation(AnimationUtils.loadAnimation(this, com.bike.main.R.anim.top_out));
+            topBar.setAnimation(AnimationUtils.loadAnimation(this, com.your.package.name.R.anim.top_out));
             topBar.setVisibility(View.GONE);
-            tintManager.setStatusBarTintResource(com.bike.main.R.color.transparent);//通知栏所需颜色
+            tintManager.setStatusBarTintResource(com.your.package.name.R.color.transparent);//通知栏所需颜色
             //给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         } else {
-            topBar.setAnimation(AnimationUtils.loadAnimation(this, com.bike.main.R.anim.top_in));
+            topBar.setAnimation(AnimationUtils.loadAnimation(this, com.your.package.name.R.anim.top_in));
             topBar.setVisibility(View.VISIBLE);
-            tintManager.setStatusBarTintResource(com.bike.main.R.color.status_bar);//通知栏所需颜色
+            tintManager.setStatusBarTintResource(com.your.package.name.R.color.status_bar);//通知栏所需颜色
             //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }

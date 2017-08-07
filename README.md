@@ -34,9 +34,11 @@ When system version is iOS8 or later, Using PhotoKit.
 1. 命令行运行      ```cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git```
 2. 命令行运行 cordova build --device
 
-##注意事项
-1. 这个插件要求cordova-Android 的版本 >=4.0,推荐使用 cordova  5.0.0 或更高的版本，因为从cordova 5.0 开始cordova-Android 4.0 是默认使用的Android版本
-2. 请在cordova的deviceready事件触发以后再调用本插件！！！
+##android注意事项
+   add插件到项目以后先不要直接build，执行下面的步骤
+
+   1，全局搜索插件android目录，将 ```com.your.package.name``` 全部替换成自己创建项目时到包名。
+   2，build
 
 
 ## Android视频演示

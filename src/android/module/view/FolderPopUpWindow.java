@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
-import com.bike.main.R;
+import com.your.package.name.R;
 
 
 public class FolderPopUpWindow extends PopupWindow implements View.OnClickListener {

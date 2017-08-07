@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.giants.imagepicker.util.BitmapUtil;
 import com.giants.imagepicker.ImagePicker;
-import com.bike.main.R;
+import com.your.package.name.R;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.view.CropImageView;
 

@@ -2,13 +2,12 @@ package com.giants.imagepicker;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.bike.main.R;
+import com.your.package.name.R;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
@@ -45,6 +44,5 @@ public class GApp extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 }

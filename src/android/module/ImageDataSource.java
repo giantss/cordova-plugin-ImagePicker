@@ -14,7 +14,7 @@ import com.giants.imagepicker.bean.ImageItem;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import com.bike.main.R;
+import com.your.package.name.R;
 
 
 public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {

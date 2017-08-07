@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.giants.imagepicker.ImagePicker;
-import com.bike.main.R;
+import com.your.package.name.R;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.ui.ImageBaseActivity;
 import com.giants.imagepicker.ui.ImageGridActivity;
