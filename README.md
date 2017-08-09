@@ -62,15 +62,12 @@ ImagePicker.getPictures(function(result) {
 
 ## 参数含义
 
-<tdead>ß
-</tdead>
-
-配置参数            | 参数含义
------------------- | ------------------
-maximumImagesCount | 多选限制数量，默认为9
-width              | 设置图片的width，默认为720
-height             | 设置图片的height，默认为960
-quality            | 图片质量 默认100
+| 配置参数            | 参数含义                   |
+|:------------------:|:-------------------------:|
+| maximumImagesCount | 多选限制数量，默认为9        |
+| width              | 设置图片的width，默认为720   |
+| height             | 设置图片的height，默认为960  |
+| quality            | 图片质量 默认100            |
 
 ## License
 
