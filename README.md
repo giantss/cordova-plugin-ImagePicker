@@ -18,7 +18,7 @@
 - Cordova-Android >=4.0
 - Cordova-iOS >=6.0
 
-## ios Requirements 要求
+## iOS Requirements 要求
 
 OS 6 or later. Requires ARC iOS6及以上系统可使用. ARC环境.
 
@@ -36,17 +36,19 @@ add插件到项目以后先不要直接build，执行下面的步骤
 - 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
 - build
 
-## Android视频演示
+## Android 视频演示
 
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>
 [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NDIyMA==.html)
 
-## ios视频演示
+## iOS 视频演示
 
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
 [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
-| Android 效果图   | iOS 效果图     |
+## 效果图
+
+| Android         | iOS          |
 |:---------------:|:------------:|
 | <img src="./res/android.png" width="270px" height="480"> | <img src="./res/ios.jpg" width="270px" height="480"> |
 
