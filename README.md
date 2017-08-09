@@ -46,9 +46,9 @@ add插件到项目以后先不要直接build，执行下面的步骤
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
 [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
-| ## Android效果图 ![](./res/android.png)
-| ------------------------------------
-| ## ios效果图 ![](./res/ios.jpg)
+| ## Android效果图 | ## ios效果图  |
+|:---------------:|:------------:|
+| <img src="./res/android.png" width="270px" height="480"> | <img src="./res/ios.jpg" width="270px" height="480"> |
 
 ## 使用方式
 
@@ -65,7 +65,7 @@ ImagePicker.getPictures(function(result) {
 <tdead>ß
 </tdead>
 
-配置参数               | 参数含义
+配置参数            | 参数含义
 ------------------ | ------------------
 maximumImagesCount | 多选限制数量，默认为9
 width              | 设置图片的width，默认为720
