@@ -46,7 +46,7 @@ add插件到项目以后先不要直接build，执行下面的步骤
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
 [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
-| ## Android效果图 | ## ios效果图  |
+| Android 效果图   | iOS 效果图     |
 |:---------------:|:------------:|
 | <img src="./res/android.png" width="270px" height="480"> | <img src="./res/ios.jpg" width="270px" height="480"> |
 
