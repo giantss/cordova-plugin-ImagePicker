@@ -36,6 +36,28 @@ add插件到项目以后先不要直接build，执行下面的步骤
 - 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
 - build
 
+cordova JAVA 版本 可能不够 支持 砖石运算符（7.0.1 时是这样的）
+```
+错误: -source 1.6 中不支持 diamond 运算符
+        else imageFolders = new ArrayList<>();
+                                          ^
+  (请使用 -source 7 或更高版本以启用 diamond 运算符)
+```
+修改 Android 项目下面的 build.gradle 文件中的
+```
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_6
+    targetCompatibility JavaVersion.VERSION_1_6
+}
+```
+改为
+```
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+}
+```
+
 ## Android 视频演示
 
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>

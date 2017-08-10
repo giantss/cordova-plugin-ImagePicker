@@ -258,6 +258,7 @@
         <framework src="com.android.support:appcompat-v7:25.1.1"/>
         <framework src="com.github.chrisbanes.photoview:library:1.2.4"/>
         <framework src="com.android.support:recyclerview-v7:25.1.1"/>
+        <framework src="com.android.support:support-v4:25.1.1"/>
         <framework src="com.squareup.picasso:picasso:2.5.2"/>
         <framework src="com.github.bumptech.glide:glide:3.7.0"/>
         <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5"/>
