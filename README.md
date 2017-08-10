@@ -58,6 +58,11 @@ compileOptions {
 }
 ```
 
+选择相片闪退出插件与下面版本有关系，指定这个版本后是能用的
+```
+com.android.support:support-v4:25.3.1
+```
+
 ## Android 视频演示
 
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>
