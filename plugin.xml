@@ -18,223 +18,195 @@
   under the License.
 -->
 
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-           id="cordova-plugin-ImagePicker"
-      version="0.0.1">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-ImagePicker" version="0.0.1">
 
-    <name>ImagePicker</name>
-    <description>Cordova ImagePicker Plugin</description>
-    <license>Apache 2.0</license>
-    <keywords>cordova,ImagePicker</keywords>
-    <repo>https://github.com/giantss/cordova-plugin-ImagePicker.git</repo>
-    <issue>https://github.com/giantss/cordova-plugin-ImagePicker/issues</issue>
+  <name>ImagePicker</name>
+  <description>Cordova ImagePicker Plugin</description>
+  <license>Apache 2.0</license>
+  <keywords>cordova,ImagePicker</keywords>
+  <repo>https://github.com/giantss/cordova-plugin-ImagePicker.git</repo>
+  <issue>https://github.com/giantss/cordova-plugin-ImagePicker/issues</issue>
 
-    <!--require cordova version -->
-    <engines>
-        <engine name="cordova" version=">=4.0.0" />
-        <engine name="cordova-android" version=">=4.0.0" />
-    </engines>
+  <!--require cordova version -->
+  <engines>
+    <engine name="cordova" version=">=4.0.0"/>
+      <engine name="cordova-android" version=">=4.0.0"/>
+      </engines>
 
-    <!-- js module-->
-    <js-module src="www/ImagePicker.js" name="ImagePicker">
-        <clobbers target="ImagePicker" />
-    </js-module>
+      <!-- js module-->
+      <js-module src="www/ImagePicker.js" name="ImagePicker">
+        <clobbers target="ImagePicker"/>
+      </js-module>
 
-    <!-- ios -->
-    <platform name="ios">
+      <!-- ios -->
+      <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="ImagePicker">
-                <param name="ios-package" value="ImagePicker"/>
-            </feature>
+          <feature name="ImagePicker">
+            <param name="ios-package" value="ImagePicker"/>
+          </feature>
         </config-file>
 
-        <preference name="CAMERA_USAGE_DESCRIPTION" default=" " />
+        <preference name="CAMERA_USAGE_DESCRIPTION" default=" "/>
         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-            <string>使用相机</string>
+          <string>使用相机</string>
         </config-file>
 
-        <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default=" " />
+        <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default=" "/>
         <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
-            <string>使用相册</string>
+          <string>使用相册</string>
         </config-file>
 
         <header-file src="src/ios/ImagePickerMain.h"/>
         <source-file src="src/ios/ImagePickerMain.m"/>
 
-        <header-file src="src/ios/libs/LxGridViewFlowLayout.h" />
+        <header-file src="src/ios/libs/LxGridViewFlowLayout.h"/>
         <source-file src="src/ios/libs/LxGridViewFlowLayout.m"/>
 
-        <header-file src="src/ios/libs/TZTestCell.h" />
+        <header-file src="src/ios/libs/TZTestCell.h"/>
         <source-file src="src/ios/libs/TZTestCell.m"/>
 
-        <header-file src="src/ios/libs/NSBundle+TZImagePicker.h" />
+        <header-file src="src/ios/libs/NSBundle+TZImagePicker.h"/>
         <source-file src="src/ios/libs/NSBundle+TZImagePicker.m"/>
 
-        <header-file src="src/ios/libs/TZAssetCell.h" />
+        <header-file src="src/ios/libs/TZAssetCell.h"/>
         <source-file src="src/ios/libs/TZAssetCell.m"/>
 
-        <header-file src="src/ios/libs/TZAssetModel.h" />
+        <header-file src="src/ios/libs/TZAssetModel.h"/>
         <source-file src="src/ios/libs/TZAssetModel.m"/>
 
-        <header-file src="src/ios/libs/TZGifPhotoPreviewController.h" />
+        <header-file src="src/ios/libs/TZGifPhotoPreviewController.h"/>
         <source-file src="src/ios/libs/TZGifPhotoPreviewController.m"/>
 
-        <header-file src="src/ios/libs/TZImageCropManager.h" />
+        <header-file src="src/ios/libs/TZImageCropManager.h"/>
         <source-file src="src/ios/libs/TZImageCropManager.m"/>
 
-        <header-file src="src/ios/libs/TZImageManager.h" />
+        <header-file src="src/ios/libs/TZImageManager.h"/>
         <source-file src="src/ios/libs/TZImageManager.m"/>
 
-        <header-file src="src/ios/libs/TZImagePickerController.h" />
+        <header-file src="src/ios/libs/TZImagePickerController.h"/>
         <source-file src="src/ios/libs/TZImagePickerController.m"/>
 
-        <header-file src="src/ios/libs/TZLocationManager.h" />
+        <header-file src="src/ios/libs/TZLocationManager.h"/>
         <source-file src="src/ios/libs/TZLocationManager.m"/>
 
-        <header-file src="src/ios/libs/TZPhotoPickerController.h" />
+        <header-file src="src/ios/libs/TZPhotoPickerController.h"/>
         <source-file src="src/ios/libs/TZPhotoPickerController.m"/>
 
-        <header-file src="src/ios/libs/TZPhotoPreviewCell.h" />
+        <header-file src="src/ios/libs/TZPhotoPreviewCell.h"/>
         <source-file src="src/ios/libs/TZPhotoPreviewCell.m"/>
 
-        <header-file src="src/ios/libs/TZPhotoPreviewController.h" />
+        <header-file src="src/ios/libs/TZPhotoPreviewController.h"/>
         <source-file src="src/ios/libs/TZPhotoPreviewController.m"/>
 
-        <header-file src="src/ios/libs/TZProgressView.h" />
+        <header-file src="src/ios/libs/TZProgressView.h"/>
         <source-file src="src/ios/libs/TZProgressView.m"/>
 
-        <header-file src="src/ios/libs/TZVideoPlayerController.h" />
+        <header-file src="src/ios/libs/TZVideoPlayerController.h"/>
         <source-file src="src/ios/libs/TZVideoPlayerController.m"/>
 
-        <header-file src="src/ios/libs/UIView+Layout.h" />
+        <header-file src="src/ios/libs/UIView+Layout.h"/>
         <source-file src="src/ios/libs/UIView+Layout.m"/>
 
+        <resource-file src="src/ios/libs/TZImagePickerController.bundle"/>
 
-        <resource-file src="src/ios/libs/TZImagePickerController.bundle" />
+      </platform>
 
-
-
-
-    </platform>
-
-
-
-    <!-- android -->
-    <platform name="android">
+      <!-- android -->
+      <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="ImagePicker">
-                <param name="android-package" value="com.giants.imagepicker.ImagePickerMain"/>
-            </feature>
+          <feature name="ImagePicker">
+            <param name="android-package" value="com.giants.imagepicker.ImagePickerMain"/>
+          </feature>
         </config-file>
-
-
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.giants.imagepicker.ui.ImageBaseActivity"/>
-            <activity
-                    android:name="com.giants.imagepicker.ui.ImageGridActivity"
-                    android:configChanges="orientation|screenSize"
-                    android:theme="@style/ImagePickerTheme"/>
-            <activity
-                    android:name="com.giants.imagepicker.ui.ImageCropActivity"
-                    android:configChanges="orientation|screenSize"
-                    android:hardwareAccelerated="false"
-                    android:theme="@style/ImagePickerTheme"/>
-            <activity
-                    android:name="com.giants.imagepicker.ui.ImagePreviewActivity"
-                    android:configChanges="orientation|screenSize"
-                    android:theme="@style/ImagePickerThemeFullScreen"/>
+          <activity android:name="com.giants.imagepicker.ui.ImageBaseActivity"/>
+          <activity android:name="com.giants.imagepicker.ui.ImageGridActivity" android:configChanges="orientation|screenSize" android:theme="@style/ImagePickerTheme"/>
+          <activity android:name="com.giants.imagepicker.ui.ImageCropActivity" android:configChanges="orientation|screenSize" android:hardwareAccelerated="false" android:theme="@style/ImagePickerTheme"/>
+          <activity android:name="com.giants.imagepicker.ui.ImagePreviewActivity" android:configChanges="orientation|screenSize" android:theme="@style/ImagePickerThemeFullScreen"/>
 
-            <provider
-                    android:authorities="${applicationId}.provider"
-                    android:name="com.giants.imagepicker.ImagePickerProvider"
-                    android:exported="false"
-                    android:grantUriPermissions="true">
-                <meta-data
-                        android:name="android.support.FILE_PROVIDER_PATHS"
-                        android:resource="@xml/provider_paths"/>
-            </provider>
+          <provider android:authorities="${applicationId}.provider" android:name="com.giants.imagepicker.ImagePickerProvider" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
+          </provider>
         </config-file>
-
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
 
-            <!-- 在SDCard中创建与删除文件权限 -->
-            <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-            <!-- 往SDCard写入数据权限 -->
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-            <!-- 从SDCard读取数据权限 -->
-            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-            <!-- 相机权限 -->
-            <uses-permission android:name="android.permission.CAMERA"/>
+          <!-- 在SDCard中创建与删除文件权限 -->
+          <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+          <!-- 往SDCard写入数据权限 -->
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+          <!-- 从SDCard读取数据权限 -->
+          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+          <!-- 相机权限 -->
+          <uses-permission android:name="android.permission.CAMERA"/>
 
         </config-file>
 
         <config-file target="res/values/strings.xml" parent="/*">
-            <string name="all_images">全部图片</string>
-            <string name="folder_image_count">共%1$d张</string>
-            <string name="preview_image_count">%1$s/%2$s</string>
-            <string name="select_limit">最多选择%1$s张图片</string>
-            <string name="complete">完成</string>
-            <string name="select_complete">完成(%1$s/%2$s)</string>
-            <string name="preview_count">预览(%1$s)</string>
-            <string name="photo_crop">图片裁剪</string>
-            <string name="origin">原图</string>
-            <string name="origin_size">原图(%1$s)</string>
+          <string name="all_images">全部图片</string>
+          <string name="folder_image_count">共%1$d张</string>
+          <string name="preview_image_count">%1$s/%2$s</string>
+          <string name="select_limit">最多选择%1$s张图片</string>
+          <string name="complete">完成</string>
+          <string name="select_complete">完成(%1$s/%2$s)</string>
+          <string name="preview_count">预览(%1$s)</string>
+          <string name="photo_crop">图片裁剪</string>
+          <string name="origin">原图</string>
+          <string name="origin_size">原图(%1$s)</string>
         </config-file>
 
         <config-file target="res/values/colors.xml" parent="/*">
 
-            <color name="theme_body">#cc22292c</color>
+          <color name="theme_body">#cc22292c</color>
 
-            <color name="black">#000000</color>
+          <color name="black">#000000</color>
 
-            <color name="status_bar">#303135</color>
+          <color name="status_bar">#303135</color>
 
-            <color name="top_bar">#9f556061</color>
+          <color name="top_bar">#9f556061</color>
 
-            <color name="transparent">#00000000</color>
+          <color name="transparent">#00000000</color>
 
         </config-file>
 
+        <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter"/>
+        <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter"/>
+        <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter"/>
+        <source-file src="src/android/module/adapter/ImageRecyclerAdapter.java" target-dir="src/com/giants/imagepicker/adapter"/>
+        <source-file src="src/android/module/bean/ImageFolder.java" target-dir="src/com/giants/imagepicker/bean"/>
+        <source-file src="src/android/module/bean/ImageItem.java" target-dir="src/com/giants/imagepicker/bean"/>
+        <source-file src="src/android/module/loader/ImageLoader.java" target-dir="src/com/giants/imagepicker/loader"/>
+        <source-file src="src/android/module/ui/ImageBaseActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/ui/ImageCropActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/ui/ImageGridActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/ui/ImagePreviewActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/ui/ImagePreviewBaseActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/ui/ImagePreviewDelActivity.java" target-dir="src/com/giants/imagepicker/ui"/>
+        <source-file src="src/android/module/util/BitmapUtil.java" target-dir="src/com/giants/imagepicker/util"/>
+        <source-file src="src/android/module/util/ProviderUtil.java" target-dir="src/com/giants/imagepicker/util"/>
+        <source-file src="src/android/module/util/Utils.java" target-dir="src/com/giants/imagepicker/util"/>
+        <source-file src="src/android/module/view/CropImageView.java" target-dir="src/com/giants/imagepicker/view"/>
+        <source-file src="src/android/module/view/FolderPopUpWindow.java" target-dir="src/com/giants/imagepicker/view"/>
+        <source-file src="src/android/module/view/SuperCheckBox.java" target-dir="src/com/giants/imagepicker/view"/>
+        <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/giants/imagepicker/view"/>
+        <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/giants/imagepicker/view"/>
 
-        <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImageRecyclerAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/bean/ImageFolder.java" target-dir="src/com/giants/imagepicker/bean" />
-        <source-file src="src/android/module/bean/ImageItem.java" target-dir="src/com/giants/imagepicker/bean" />
-        <source-file src="src/android/module/loader/ImageLoader.java" target-dir="src/com/giants/imagepicker/loader" />
-        <source-file src="src/android/module/ui/ImageBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImageCropActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImageGridActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewDelActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/util/BitmapUtil.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/util/ProviderUtil.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/util/Utils.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/view/CropImageView.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/FolderPopUpWindow.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/SuperCheckBox.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/compresshelper/BitmapUtil.java" target-dir="src/com/giants/imagepicker/compresshelper"/>
+        <source-file src="src/android/module/compresshelper/CompressHelper.java" target-dir="src/com/giants/imagepicker/compresshelper"/>
+        <source-file src="src/android/module/compresshelper/FileUtil.java" target-dir="src/com/giants/imagepicker/compresshelper"/>
+        <source-file src="src/android/module/compresshelper/ImageUtil.java" target-dir="src/com/giants/imagepicker/compresshelper"/>
+        <source-file src="src/android/module/compresshelper/StringUtil.java" target-dir="src/com/giants/imagepicker/compresshelper"/>
 
-        <source-file src="src/android/module/compresshelper/BitmapUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
-        <source-file src="src/android/module/compresshelper/CompressHelper.java" target-dir="src/com/giants/imagepicker/compresshelper" />
-        <source-file src="src/android/module/compresshelper/FileUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
-        <source-file src="src/android/module/compresshelper/ImageUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
-        <source-file src="src/android/module/compresshelper/StringUtil.java" target-dir="src/com/giants/imagepicker/compresshelper" />
+        <source-file src="src/android/module/DataHolder.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker"/>
 
-
-        <source-file src="src/android/module/DataHolder.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker" />
-
-        <source-file src="src/android/ImagePickerMain.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/GApp.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/ImagePickerMain.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/GlideImageLoader.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/GApp.java" target-dir="src/com/giants/imagepicker"/>
 
         <source-file src="src/android/res/anim/bottom_in.xml" target-dir="res/anim"/>
         <source-file src="src/android/res/anim/bottom_out.xml" target-dir="res/anim"/>
@@ -251,19 +223,14 @@
         <source-file src="src/android/res/anim/top_in.xml" target-dir="res/anim"/>
         <source-file src="src/android/res/anim/top_out.xml" target-dir="res/anim"/>
 
-
-
-
         <source-file src="src/android/res/drawable/selector_back_press.xml" target-dir="res/drawable"/>
         <source-file src="src/android/res/drawable/selector_grid_camera_bg.xml" target-dir="res/drawable"/>
         <source-file src="src/android/res/drawable/selector_item_checked.xml" target-dir="res/drawable"/>
         <source-file src="src/android/res/drawable/selector_top_ok.xml" target-dir="res/drawable"/>
 
-
         <source-file src="src/android/res/drawable-xxhdpi/bg_btn_dis.9.png" target-dir="res/drawable-xxhdpi"/>
         <source-file src="src/android/res/drawable-xxhdpi/bg_btn_nor.9.png" target-dir="res/drawable-xxhdpi"/>
         <source-file src="src/android/res/drawable-xxhdpi/bg_btn_pre.9.png" target-dir="res/drawable-xxhdpi"/>
-
 
         <source-file src="src/android/res/layout/activity_image_crop.xml" target-dir="res/layout"/>
         <source-file src="src/android/res/layout/activity_image_grid.xml" target-dir="res/layout"/>
@@ -283,24 +250,19 @@
         <source-file src="src/android/res/mipmap-xxhdpi/list_selected.png" target-dir="res/mipmap-xxhdpi"/>
         <source-file src="src/android/res/mipmap-xxhdpi/text_indicator.png" target-dir="res/mipmap-xxhdpi"/>
 
-
         <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
-        <!--<source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>-->
+        <source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>
         <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/xml/provider_paths.xml" target-dir="res/xml"/>
 
+        <framework src="com.android.support:appcompat-v7:25.1.1"/>
+        <framework src="com.github.chrisbanes.photoview:library:1.2.4"/>
+        <framework src="com.android.support:recyclerview-v7:25.1.1"/>
+        <framework src="com.squareup.picasso:picasso:2.5.2"/>
+        <framework src="com.github.bumptech.glide:glide:3.7.0"/>
+        <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5"/>
+        <framework src="org.xutils:xutils:3.3.36"/>
 
+      </platform>
 
-        <framework src="com.android.support:appcompat-v7:25.1.1" />
-        <framework src="com.github.chrisbanes.photoview:library:1.2.4" />
-        <framework src="com.android.support:recyclerview-v7:25.1.1" />
-        <framework src="com.squareup.picasso:picasso:2.5.2" />
-        <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5" />
-        <framework src="org.xutils:xutils:3.3.36" />
-
-    </platform>
-
-
-
-
-
-</plugin>
+    </plugin>
