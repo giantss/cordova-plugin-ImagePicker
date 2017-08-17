@@ -231,6 +231,7 @@
         <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/module/GlideImageLoader.java" target-dir="src/com/giants/imagepicker" />
 
         <source-file src="src/android/ImagePickerMain.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker" />
@@ -296,6 +297,7 @@
         <framework src="com.squareup.picasso:picasso:2.5.2" />
         <framework src="com.nostra13.universalimageloader:universal-image-loader:1.9.5" />
         <framework src="org.xutils:xutils:3.3.36" />
+        <framework src="com.github.bumptech.glide:glide:3.7.0"/>
 
     </platform>
 
