@@ -36,12 +36,8 @@ public class ImagePickerMain extends CordovaPlugin {
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
-<<<<<<< HEAD
         // 换一个解决有的图不能预览的问题
         //imagePicker.setImageLoader(new PicassoImageLoader());   //设置图片加载器
-=======
-        
->>>>>>> 87fb265a45b2a3eafdfef941e543d1cdf25efb18
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
         
         imagePicker.setShowCamera(true);  //显示拍照按钮
