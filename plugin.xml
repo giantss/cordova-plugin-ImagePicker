@@ -203,8 +203,8 @@
         <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker"/>
         <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker"/>
 
-        <source-file src="src/android/ImagePickerMain.java" target-dir="src/com/giants/imagepicker"/>
-        <source-file src="src/android/GlideImageLoader.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/module/ImagePickerMain.java" target-dir="src/com/giants/imagepicker"/>
+        <source-file src="src/android/module/GlideImageLoader.java" target-dir="src/com/giants/imagepicker" />
         <source-file src="src/android/PicassoImageLoader.java" target-dir="src/com/giants/imagepicker"/>
         <source-file src="src/android/GApp.java" target-dir="src/com/giants/imagepicker"/>
 
