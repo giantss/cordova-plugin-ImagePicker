@@ -76,7 +76,6 @@ ImagePicker.getPictures(function(result) {
 
 ## 参数含义
 
-
 <table>
   <tdead>
     <tr>
