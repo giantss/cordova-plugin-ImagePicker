@@ -29,40 +29,6 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 1. 命令行运行 `cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git`
 2. 命令行运行 cordova build --device
 
-## android注意事项
-
-add插件到项目以后先不要直接build，执行下面的步骤
-
-- 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
-- build
-
-cordova JAVA 版本 可能不够 支持 砖石运算符（7.0.1 时是这样的）
-```
-错误: -source 1.6 中不支持 diamond 运算符
-        else imageFolders = new ArrayList<>();
-                                          ^
-  (请使用 -source 7 或更高版本以启用 diamond 运算符)
-```
-修改 Android 项目下面的 build.gradle 文件中的
-```
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_6
-    targetCompatibility JavaVersion.VERSION_1_6
-}
-```
-改为
-```
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-}
-```
-
-选择相片退出插件与下面版本有关系，指定这个版本后是能用的
-```
-com.android.support:support-v4:25.3.1
-```
-
 ## Android 视频演示
 
 [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>
@@ -97,6 +63,58 @@ ImagePicker.getPictures(function(result) {
 | width              | 设置图片的width，默认为720   |
 | height             | 设置图片的height，默认为960  |
 | quality            | 图片质量 默认100            |
+
+## android注意事项
+
+### 修改包名
+add 插件到项目以后先不要直接 build ，执行下面的步骤
+
+- 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
+- build
+
+### build 不支持 diamond 运算符问题
+sourceCompatibility 1.6 不支持 diamond 运算符
+```
+错误: -source 1.6 中不支持 diamond 运算符
+        else imageFolders = new ArrayList<>();
+                                          ^
+  (请使用 -source 7 或更高版本以启用 diamond 运算符)
+```
+修改 Android 项目下面的 build.gradle 文件中的
+```
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_6
+    targetCompatibility JavaVersion.VERSION_1_6
+}
+```
+改为
+```
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+}
+```
+
+### 缺少 colors.xml、provider_paths.xml 文件问题
+出现下面错误
+```
+Error: /Users/guodapeng/Documents/Cordova/skateboard/platforms/android/gradlew: Command failed with exit code 1 Error output:
+/Users/guodapeng/Documents/Cordova/skateboard/platforms/android/res/drawable/selector_back_press.xml:4:29-46: AAPT: No resource found that matches the given name (at 'drawable' with value '@color/theme_body').
+```
+将 cordova-plugin-ImagePicker/src/android/res/values/ 目录的 colors.xml 文件复制到 platforms/android/res/values/ 目录下
+
+出现下面错误
+```
+Error: /Users/guodapeng/Documents/Cordova/skateboard/platforms/android/gradlew: Command failed with exit code 1 Error output:
+/Users/guodapeng/Documents/Cordova/skateboard/platforms/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:66:35-54: AAPT: No resource found that matches the given name (at 'resource' with value '@xml/provider_paths').
+```
+将 cordova-plugin-ImagePicker/src/android/res/xml/ 目录的 provider_paths.xml 文件复制到 platforms/android/res/xml/ 目录下
+
+### 插件选图闪退问题
+在安装了扫描二维码插件时，在 patient-barcodescanner.gradle 文件中将 support-v4 修改为下面版本，可以解决闪退问题。
+```
+com.android.support:support-v4:25.3.1
+```
 
 ## License
 
