@@ -1,4 +1,7 @@
 # cordova-plugin-ImagePicker
+fork  from  giantss/cordova-plugin-ImagePicker
+按照自己的实际需求作了修改
+
 
 非常感谢[南尘](https://github.com/nanchen2251)和 [banchichen](https://github.com/banchichen) 提供的源码支持 多点star✨开源不容易，谢谢。扣扣群：240255635
 
@@ -26,7 +29,7 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 
 ## 安装
 
-1. 命令行运行 `cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git`
+1. 命令行运行 `cordova plugin add https://github.com/ruanchengzhi/cordova-plugin-ImagePicker.git`
 2. 命令行运行 cordova build --device
 
 注意：Android 项目先不要直接 build ，见 [android注意事项](#android注意事项)。
