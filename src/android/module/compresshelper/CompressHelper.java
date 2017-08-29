@@ -82,6 +82,20 @@ public class CompressHelper {
     }
 
     /**
+         * 压缩成文件
+         * @param file  原始文件
+         * @param maxWidth  指定图片宽
+         * @param maxHeight  指定图片高
+         * @param quality  指定图片压缩的质量压缩比
+         * @return      压缩后的文件
+         */
+        public File compressToFile(File file, float maxWidth, float maxHeight, int quality) {
+            return BitmapUtil.compressImage(context, Uri.fromFile(file), maxWidth, maxHeight,
+                    compressFormat, bitmapConfig, quality, destinationDirectoryPath,
+                    fileNamePrefix, fileName);
+        }
+
+    /**
      * 压缩为Bitmap
      * @param file  原始文件
      * @return      压缩后的Bitmap

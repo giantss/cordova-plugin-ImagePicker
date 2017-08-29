@@ -20,7 +20,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-ImagePicker"
-      version="0.0.1">
+      version="0.1.0">
 
     <name>ImagePicker</name>
     <description>Cordova ImagePicker Plugin</description>

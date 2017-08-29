@@ -54,7 +54,7 @@ ImagePicker.getPictures(function(result) {
     alert(result);
 }, function(err) {
     alert(err);
-}, { maximumImagesCount : 9, width : 720, height : 960, quality : 100 });
+}, { maximumImagesCount : 9, width : 1920, height : 1440, quality : 100 });
 ```
 
 ## 参数含义
@@ -62,8 +62,8 @@ ImagePicker.getPictures(function(result) {
 | 配置参数            | 参数含义                   |
 |:------------------:|:-------------------------:|
 | maximumImagesCount | 多选限制数量，默认为9        |
-| width              | 设置图片的width，默认为720   |
-| height             | 设置图片的height，默认为960  |
+| width              | 设置图片的width，默认为1920   |
+| height             | 设置图片的height，默认为1440  |
 | quality            | 图片质量 默认100            |
 
 ## android注意事项
