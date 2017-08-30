@@ -49,7 +49,7 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 
 ## 使用方式
 
-### 注：目前传入的参数都以都不传，程序默认会设置下面demo的传参数，如果要传参数都的一起传，`一个都不能少`，否则会报json错误。
+### 注：目前下面demo中传入的参数都可以不传，程序默认会设置下面demo的传参数，如果需要传参数，都得一起传，`一个都不能少`，否则会报json错误。
 
 ```javascript
 ImagePicker.getPictures(function(result) {
