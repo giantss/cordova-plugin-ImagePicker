@@ -177,19 +177,27 @@
 
 //保存获取图片
 - (NSString *)saveAndGetImageDocuments:(UIImage *)currentImage withName:(NSString*)imageName{
-    
-    NSData *imageData = UIImageJPEGRepresentation(currentImage, 0.8);
-    
+
+    NSData *imageData;
+    if (UIImagePNGRepresentation(currentImage) == nil) {
+        imageData = UIImageJPEGRepresentation(currentImage, 1);
+    } else {
+        imageData = UIImagePNGRepresentation(currentImage);
+    }
+
+    NSRange range = [imageName rangeOfString:@"."];//匹配得到的下标
+//    NSLog(@"rang:%@",NSStringFromRange(range));
+    NSString *name = [imageName substringToIndex:range.location];//截取范围类的字符串
+//    NSLog(@"截取的值为：%@",name);
+
     // 获取沙盒目录
-    NSString *fullPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:imageName];
-    
+    NSString *fullPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/i"] stringByAppendingString:name]  stringByAppendingString:@".jpg"];
+
     // 将图片写入文件
     [imageData writeToFile:fullPath atomically:NO];
-    
-    NSString *sandoxPath=[NSString stringWithFormat:@"%@/Documents/%@",NSHomeDirectory(),imageName];
-    
-    return sandoxPath;
-    
+
+    return fullPath;
+
 }
 
 
