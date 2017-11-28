@@ -197,7 +197,7 @@
 
         </config-file>
         <!-- sourceCompatibility 1.7 用来支持 diamond 运算符  -->
-        <source-file src="build-extras.gradle" target-dir="../android" />
+        <source-file src="src/android/build-extras.gradle" target-dir="../android" />
         <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
