@@ -49,7 +49,7 @@ if (process.env.TARGET) {
           var packageName = configobj.installed_plugins["cordova-plugin-ImagePicker"]["PACKAGE_NAME"];
           console.log("With the package name: "+packageName);
           console.log("change com.your.package.name for "+packageName);
-            replace_string_in_file(val,"com.your.package.name",packageName);
+            replace_string_in_file(val,"/com.your.package.name/g",packageName);
 
         } else {
             console.log("No android platform found! :(");
