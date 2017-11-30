@@ -38,8 +38,8 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 
 ## iOS 视频演示
 
-[点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
-[点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
+- [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
+- [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
 ## 效果图
 
@@ -71,8 +71,7 @@ ImagePicker.getPictures(function(result) {
 ## android注意事项
 
 ### 修改包名
-add 插件到项目以后先不要直接 build ，执行下面的步骤
-
+- add 插件到项目以后先不要直接 build ，执行下面的步骤
 - 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
 - build
 
