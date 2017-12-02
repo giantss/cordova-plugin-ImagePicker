@@ -121,6 +121,7 @@
 
     <!-- android -->
     <platform name="android">
+       <hook type="after_plugin_install" src="hooks/after_plugin_install/hook-add-r-import.js" />
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ImagePicker">
                 <param name="android-package" value="com.giants.imagepicker.ImagePickerMain"/>
@@ -183,7 +184,7 @@
             <string name="origin_size">原图(%1$s)</string>
         </config-file>
 
-        <config-file target="res/values/colors.xml" parent="/*">
+        <!-- <config-file target="res/values/colors.xml" parent="/*">
 
             <color name="theme_body">#cc22292c</color>
 
@@ -195,9 +196,9 @@
 
             <color name="transparent">#00000000</color>
 
-        </config-file>
-
-
+        </config-file> -->
+        <!-- sourceCompatibility 1.7 用来支持 diamond 运算符  -->
+        <source-file src="src/android/build-extras.gradle" target-dir="../android" />
         <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
@@ -252,9 +253,6 @@
         <source-file src="src/android/res/anim/top_in.xml" target-dir="res/anim"/>
         <source-file src="src/android/res/anim/top_out.xml" target-dir="res/anim"/>
 
-
-
-
         <source-file src="src/android/res/drawable/selector_back_press.xml" target-dir="res/drawable"/>
         <source-file src="src/android/res/drawable/selector_grid_camera_bg.xml" target-dir="res/drawable"/>
         <source-file src="src/android/res/drawable/selector_item_checked.xml" target-dir="res/drawable"/>
@@ -286,7 +284,6 @@
 
 
         <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
-        <!--<source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>-->
         <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
 
 
