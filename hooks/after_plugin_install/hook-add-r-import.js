@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-A hook to add R.java to the draw activiy in Android platform.
+A hook to add R.java to the draw activiy in Android platform. 
 */
 
 var fs = require('fs');
