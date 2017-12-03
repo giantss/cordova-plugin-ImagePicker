@@ -19,8 +19,8 @@
 -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-ImagePicker"
-        version="0.1.0">
+           id="cordova-plugin-ImagePicker"
+      version="0.1.0">
 
     <name>ImagePicker</name>
     <description>Cordova ImagePicker Plugin</description>
@@ -184,7 +184,8 @@
             <string name="origin_size">原图(%1$s)</string>
         </config-file>
 
-        <config-file target="res/values/colors.xml" parent="/*">
+        <!-- <config-file target="res/values/colors.xml" parent="/*">
+
             <color name="theme_body">#cc22292c</color>
 
             <color name="black">#000000</color>
@@ -194,10 +195,10 @@
             <color name="top_bar">#9f556061</color>
 
             <color name="transparent">#00000000</color>
-        </config-file>
+
+        </config-file> -->
         <!-- sourceCompatibility 1.7 用来支持 diamond 运算符  -->
         <source-file src="src/android/build-extras.gradle" target-dir="../android" />
-
         <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
         <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
@@ -283,8 +284,6 @@
 
 
         <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
-        <!--<source-file src="src/android/res/values/colors.xml" target-dir="res/values"/>-->
-        <!--<source-file src="src/android/res/xml/provider_paths.xml" target-dir="res/xml"/>-->
         <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
 
 
