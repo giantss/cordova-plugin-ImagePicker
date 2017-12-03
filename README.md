@@ -70,34 +70,6 @@ ImagePicker.getPictures(function(result) {
 
 ## android注意事项
 
-### 修改包名
-- add 插件到项目以后先不要直接 build ，执行下面的步骤
-- 全局搜索插件android目录，将 `com.your.package.name` 全部替换成自己创建项目时的包名。
-- build
-
-### build 不支持 diamond 运算符问题
-sourceCompatibility 1.6 不支持 diamond 运算符
-```
-错误: -source 1.6 中不支持 diamond 运算符
-        else imageFolders = new ArrayList<>();
-                                          ^
-  (请使用 -source 7 或更高版本以启用 diamond 运算符)
-```
-修改 Android 项目下面的 build.gradle 文件中的
-```
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_6
-    targetCompatibility JavaVersion.VERSION_1_6
-}
-```
-改为
-```
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-}
-```
-
 ### 缺少 colors.xml、provider_paths.xml 文件问题
 出现下面错误
 ```
