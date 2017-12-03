@@ -70,13 +70,7 @@ ImagePicker.getPictures(function(result) {
 
 ## android注意事项
 
-### 缺少 colors.xml、provider_paths.xml 文件问题
-出现下面错误
-```
-Error: /Users/guodapeng/Documents/Cordova/skateboard/platforms/android/gradlew: Command failed with exit code 1 Error output:
-/Users/guodapeng/Documents/Cordova/skateboard/platforms/android/res/drawable/selector_back_press.xml:4:29-46: AAPT: No resource found that matches the given name (at 'drawable' with value '@color/theme_body').
-```
-将 cordova-plugin-ImagePicker/src/android/res/values/ 目录的 colors.xml 文件复制到 platforms/android/res/values/ 目录下
+### 缺少 provider_paths.xml 文件问题
 
 出现下面错误
 ```

@@ -171,32 +171,6 @@
 
         </config-file>
 
-        <config-file target="res/values/strings.xml" parent="/*">
-            <string name="all_images">全部图片</string>
-            <string name="folder_image_count">共%1$d张</string>
-            <string name="preview_image_count">%1$s/%2$s</string>
-            <string name="select_limit">最多选择%1$s张图片</string>
-            <string name="complete">完成</string>
-            <string name="select_complete">完成(%1$s/%2$s)</string>
-            <string name="preview_count">预览(%1$s)</string>
-            <string name="photo_crop">图片裁剪</string>
-            <string name="origin">原图</string>
-            <string name="origin_size">原图(%1$s)</string>
-        </config-file>
-
-        <!-- <config-file target="res/values/colors.xml" parent="/*">
-
-            <color name="theme_body">#cc22292c</color>
-
-            <color name="black">#000000</color>
-
-            <color name="status_bar">#303135</color>
-
-            <color name="top_bar">#9f556061</color>
-
-            <color name="transparent">#00000000</color>
-
-        </config-file> -->
         <!-- sourceCompatibility 1.7 用来支持 diamond 运算符  -->
         <source-file src="src/android/build-extras.gradle" target-dir="../android" />
         <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
@@ -285,7 +259,10 @@
 
         <source-file src="src/android/res/values/attrs.xml" target-dir="res/values"/>
         <source-file src="src/android/res/values/styles.xml" target-dir="res/values"/>
-
+        <source-file src="src/android/res/values/multi_image_chooser_colors.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/values/multi_image_chooser_strings.xml" target-dir="res/values"/>
+        <source-file src="src/android/res/values-en/multi_image_chooser_strings.xml" target-dir="res/values-en"/>
+        <source-file src="src/android/res/values-pt/multi_image_chooser_strings.xml" target-dir="res/values-pt"/>
 
 
         <framework src="com.android.support:appcompat-v7:25.1.1" />
