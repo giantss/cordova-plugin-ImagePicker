@@ -45,7 +45,7 @@
             android:drawablePadding="4dp"
             android:includeFontPadding="true"
             android:paddingLeft="8dp"
-            android:text="选择"
+            android:text="@string/select"
             android:textColor="#ffffff"/>
     </RelativeLayout>
 </RelativeLayout>

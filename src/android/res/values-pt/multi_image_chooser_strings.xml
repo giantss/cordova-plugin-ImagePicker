@@ -10,4 +10,6 @@
     <string name="origin">Original</string>
     <string name="origin_size">Original(%1$s)</string>
     <string name="select">Selecione</string>
+    <string name="select_image">Elige una imagen</string>
+    <string name="camera">cámara</string>
 </resources>
