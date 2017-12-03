@@ -183,7 +183,7 @@
             <string name="origin_size">原图(%1$s)</string>
         </config-file>
 
-        <config-file target="res/values/colors.xml" parent="/*">
+        <!-- <config-file target="res/values/colors.xml" parent="/*">
 
             <color name="theme_body">#cc22292c</color>
 
@@ -195,7 +195,7 @@
 
             <color name="transparent">#00000000</color>
 
-        </config-file>
+        </config-file> -->
         <!-- sourceCompatibility 1.7 用来支持 diamond 运算符  -->
         <source-file src="src/android/build-extras.gradle" target-dir="../android" />
         <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
