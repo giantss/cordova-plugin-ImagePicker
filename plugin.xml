@@ -121,7 +121,6 @@
 
     <!-- android -->
     <platform name="android">
-       <hook type="after_plugin_install" src="hooks/after_plugin_install/hook-add-r-import.js" />
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ImagePicker">
                 <param name="android-package" value="com.giants.imagepicker.ImagePickerMain"/>
