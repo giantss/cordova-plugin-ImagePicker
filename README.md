@@ -27,6 +27,10 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 ## 安装
 
  - `cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git`
+ 
+ 或者
+ 
+ - `cordova plugin add cordova-plugin-imagepicker-plus`
 
 
 注意：Android 项目先不要直接 build ，见 [android注意事项](#android注意事项)。
