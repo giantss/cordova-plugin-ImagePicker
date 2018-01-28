@@ -19,7 +19,7 @@
 -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-           id="cordova-plugin-ImagePicker"
+           id="cordova-plugin-imagepicker-plus"
       version="0.1.0">
 
     <name>ImagePicker</name>
@@ -121,7 +121,7 @@
 
     <!-- android -->
     <platform name="android">
-       <hook type="after_plugin_install" src="hooks/after_plugin_install/hook-add-r-import.js" />
+       <hook type="before_plugin_install" src="hooks/before_plugin_install/hook-add-r-import.js" />
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ImagePicker">
                 <param name="android-package" value="com.giants.imagepicker.ImagePickerMain"/>
