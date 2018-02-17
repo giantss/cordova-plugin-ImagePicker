@@ -8,7 +8,7 @@
     NSMutableArray *_selectedPhotos;
     NSMutableArray *_selectedAssets;
     BOOL _isSelectOriginalPhoto;
-    
+
     CGFloat _itemWH;
     CGFloat _margin;
 }
@@ -22,8 +22,8 @@
  */
 - (void)pluginInitialize
 {
-    
-    
+
+
     _enableShowTakePhoto = true;
     _enableSortAscending = true;
     _enablePickingVideo = false;
@@ -38,7 +38,7 @@
     _width = 720;
     _height = 960;
     _quality = 80;
-    
+
 }
 
 
@@ -47,53 +47,53 @@
  */
 - (void)getPictures:(CDVInvokedUrlCommand *)command{
     _callback = command.callbackId;
-    
+
     NSDictionary *paramOptions = [command.arguments objectAtIndex: 0];
-    
+
     self.maxCountTF  = [[paramOptions objectForKey:@"maximumImagesCount"] integerValue];
     self.width  = [[paramOptions objectForKey:@"width"] integerValue];
     self.height  = [[paramOptions objectForKey:@"height"] integerValue];
     self.quality  = [[paramOptions objectForKey:@"quality"] integerValue];
-    
-    
+
+
     if (self.maxCountTF <= 0) {
         return;
     }
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF columnNumber:self.columnNumberTF delegate:(id<TZImagePickerControllerDelegate>)self pushPhotoPickerVc:YES];
-    
-    
+
+
 #pragma mark - 四类个性化设置，这些参数都可以不传，此时会走默认设置
     imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-    
+
     if (self.maxCountTF > 1) {
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
     imagePickerVc.allowTakePicture = self.enableShowTakePhoto; // 在内部显示拍照按钮
-    
+
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
     // imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
     // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
     // imagePickerVc.navigationBar.translucent = NO;
-    
+
     // 3. Set allow picking video & photo & originalPhoto or not
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
     imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
-    
+
     // 4. 照片排列按修改时间升序
     imagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
-    
+
     // imagePickerVc.minImagesCount = 3;
     // imagePickerVc.alwaysEnableDoneBtn = YES;
-    
+
     // imagePickerVc.minPhotoWidthSelectable = 3000;
     // imagePickerVc.minPhotoHeightSelectable = 2000;
-    
+
     /// 5. Single selection mode, valid when maxImagesCount = 1
     /// 5. 单选模式,maxImagesCount为1时才生效
     imagePickerVc.showSelectBtn = NO;
@@ -106,22 +106,23 @@
      cropView.layer.borderColor = [UIColor redColor].CGColor;
      cropView.layer.borderWidth = 2.0;
      }];*/
-    
+
     //imagePickerVc.allowPreview = NO;
 #pragma mark - 到这里为止
-    
+
     // You can get the photos by block, the same as by delegate.
     // 你可以通过block或者代理，来得到用户选择的照片.
     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-        
+
         NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
-        
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        
-        NSString *fileName;
-        
-        
-        for (id asset in assets) {
+
+        NSInteger number = [photos count];
+
+        for(int i=0; i<number; i++) {
+            UIImage *photo = photos[i];
+            id asset = assets[i];
+
+            NSString *fileName;
             if ([asset isKindOfClass:[PHAsset class]]) {
                 PHAsset *phAsset = (PHAsset *)asset;
                 fileName = [phAsset valueForKey:@"filename"];
@@ -129,48 +130,24 @@
                 ALAsset *alAsset = (ALAsset *)asset;
                 fileName = alAsset.defaultRepresentation.filename;;
             }
-            
-            
-            
-            
-            
-            
-            CGSize size = CGSizeMake(self.width, self.height);
-            
-            // 从asset中获得图片
-            [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                
-                // NSLog(@"图片名字:%@",fileName);
-                
-                
-                //                    NSURL *URL = [info valueForKey:@"PHImageFileURLKey"];
-                //                    if(URL != NULL){
-                
-                NSString *sanboxPath =  [self saveAndGetImageDocuments:result withName:fileName];
-                
-                
-                
-                [pathsArr addObject: sanboxPath];
-                //                    }
-                
-                NSLog(@"%@",pathsArr);
-                if([pathsArr count] != 0 && [pathsArr count] == [assets count]){
-                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:pathsArr];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                    //清空选中状态
-                    _selectedAssets = nil;
-                    
-                }
-                
-            }];
-            
-            
-            
+
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+
+            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat: fileName]];
+
+            [UIImagePNGRepresentation(photo) writeToFile:filePath atomically:YES];
+
+            [pathsArr addObject: filePath];
+
+            if([pathsArr count] != 0 && [pathsArr count] == [photos count]) {
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:pathsArr];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                _selectedAssets = nil;
+            }
         }
-        
-        
+
     }];
-    
+
     [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
@@ -212,11 +189,11 @@
     CGFloat targetHeight = frameSize.height;
     CGFloat scaleFactor = 0.0;
     CGSize scaledSize = frameSize;
-    
+
     if (CGSizeEqualToSize(imageSize, frameSize) == NO) {
         CGFloat widthFactor = targetWidth / width;
         CGFloat heightFactor = targetHeight / height;
-        
+
         // opposite comparison to imageByScalingAndCroppingForSize in order to contain the image within the given bounds
         if (widthFactor == 0.0) {
             scaleFactor = heightFactor;
@@ -229,16 +206,16 @@
         }
         scaledSize = CGSizeMake(width * scaleFactor, height * scaleFactor);
     }
-    
+
     UIGraphicsBeginImageContext(scaledSize); // this will resize
-    
+
     [sourceImage drawInRect:CGRectMake(0, 0, scaledSize.width, scaledSize.height)];
-    
+
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     if (newImage == nil) {
         NSLog(@"could not scale image");
     }
-    
+
     // pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
@@ -387,11 +364,11 @@
     UIImage *image = _selectedPhotos[sourceIndexPath.item];
     [_selectedPhotos removeObjectAtIndex:sourceIndexPath.item];
     [_selectedPhotos insertObject:image atIndex:destinationIndexPath.item];
-    
+
     id asset = _selectedAssets[sourceIndexPath.item];
     [_selectedAssets removeObjectAtIndex:sourceIndexPath.item];
     [_selectedAssets insertObject:asset atIndex:destinationIndexPath.item];
-    
+
     [_collectionView reloadData];
 }
 
@@ -402,40 +379,40 @@
         return;
     }
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF columnNumber:self.columnNumberTF delegate:self pushPhotoPickerVc:YES];
-    
-    
+
+
 #pragma mark - 四类个性化设置，这些参数都可以不传，此时会走默认设置
     imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-    
+
     if (self.maxCountTF > 1) {
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
     imagePickerVc.allowTakePicture = self.enableShowTakePhoto; // 在内部显示拍照按钮
-    
+
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
     // imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
     // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
     // imagePickerVc.navigationBar.translucent = NO;
-    
+
     // 3. Set allow picking video & photo & originalPhoto or not
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
     imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
-    
+
     // 4. 照片排列按修改时间升序
     imagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
-    
+
     // imagePickerVc.minImagesCount = 3;
     // imagePickerVc.alwaysEnableDoneBtn = YES;
-    
+
     // imagePickerVc.minPhotoWidthSelectable = 3000;
     // imagePickerVc.minPhotoHeightSelectable = 2000;
-    
+
     /// 5. Single selection mode, valid when maxImagesCount = 1
     /// 5. 单选模式,maxImagesCount为1时才生效
     imagePickerVc.showSelectBtn = NO;
@@ -448,17 +425,17 @@
      cropView.layer.borderColor = [UIColor redColor].CGColor;
      cropView.layer.borderWidth = 2.0;
      }];*/
-    
+
     //imagePickerVc.allowPreview = NO;
 #pragma mark - 到这里为止
-    
+
     // You can get the photos by block, the same as by delegate.
     // 你可以通过block或者代理，来得到用户选择的照片.
     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-        
-        
+
+
     }];
-    
+
     [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
@@ -505,7 +482,7 @@
     } failureBlock:^(NSError *error) {
         _location = nil;
     }];
-    
+
     UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         self.imagePickerVc.sourceType = sourceType;
@@ -526,7 +503,7 @@
         tzImagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
         [tzImagePickerVc showProgressHUD];
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        
+
         // save photo and get asset / 保存图片，获取到asset
         [[TZImageManager manager] savePhotoWithImage:image location:self.location completion:^(NSError *error){
             if (error) {
@@ -561,7 +538,7 @@
     [_selectedAssets addObject:asset];
     [_selectedPhotos addObject:image];
     [_collectionView reloadData];
-    
+
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = asset;
         NSLog(@"location:%@",phAsset.location);
@@ -629,7 +606,7 @@
     _isSelectOriginalPhoto = isSelectOriginalPhoto;
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
-    
+
     // 1.打印图片名字
     [self printAssetsName:assets];
     // 2.图片位置信息
@@ -652,7 +629,7 @@
     // NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
     // Export completed, send video here, send by outputPath or NSData
     // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
-    
+
     // }];
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
@@ -732,7 +709,7 @@
 - (void)deleteBtnClik:(UIButton *)sender {
     [_selectedPhotos removeObjectAtIndex:sender.tag];
     [_selectedAssets removeObjectAtIndex:sender.tag];
-    
+
     [_collectionView performBatchUpdates:^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:sender.tag inSection:0];
         [_collectionView deleteItemsAtIndexPaths:@[indexPath]];
