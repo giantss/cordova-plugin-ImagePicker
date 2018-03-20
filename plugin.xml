@@ -110,9 +110,7 @@
 
         <header-file src="src/ios/libs/UIView+Layout.h"/>
         <source-file src="src/ios/libs/UIView+Layout.m"/>
-
         <resource-file src="src/ios/libs/TZImagePickerController.bundle"/>
-
     </platform>
 
     <!-- android -->
@@ -137,7 +135,7 @@
 
         </config-file>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <config-file target="app/src/main/AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.giants.imagepicker.ui.ImageBaseActivity"/>
             <activity
                     android:name="com.giants.imagepicker.ui.ImageGridActivity"
