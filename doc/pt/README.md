@@ -83,7 +83,7 @@ Ocorreu o seguinte erro
 Error: /Users/guodapeng/Documents/Cordova/skateboard/platforms/android/gradlew: Command failed with exit code 1 Error output:
 /Users/guodapeng/Documents/Cordova/skateboard/platforms/android/build/intermediates/manifests/full/debug/AndroidManifest.xml:66:35-54: AAPT: No resource found that matches the given name (at 'resource' with value '@xml/provider_paths').
 ```
-Copie o arquivo provider_paths.xml do diretório cordova-plugin-ImagePicker/src/android/res/xml/ para platforms/android/res/xml/
+Copie o arquivo provider_paths.xml do diretório cordova-plugin-ImagePicker/src/android/res/xml/ para platforms/android/app/src/main/res/xml/
 ### problema de seleção de mapa de recuperação flash plug-in
 Ao instalar o plug-in de código QR, você pode contornar o problema de flashback alterando o suporte-v4 para a seguinte versão no arquivo patient-barcodescanner.gradle.
 ```
