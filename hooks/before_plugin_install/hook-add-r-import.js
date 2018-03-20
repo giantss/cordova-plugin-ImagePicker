@@ -55,9 +55,9 @@ module.exports = function (context) {
 
         if (fs.existsSync(filePath)) {
 
-            console.log("Android platform available !");
-            console.log("With the package name: " + packageName);
-            console.log("change com.your.package.name for " + packageName);
+            // console.log("Android platform available !");
+            // console.log("With the package name: " + packageName);
+            // console.log("change com.your.package.name for " + packageName);
 
             replace_string_in_file(filePath, /com.your.package.name/g, packageName);
         } else {
