@@ -52,8 +52,9 @@ When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is
 | <img src="./res/android.png" width="270px" height="480"> | <img src="./res/ios.jpg" width="270px" height="480"> |
 
 ## 使用方式
+[一个粗糙的cordova demo](https://github.com/giantss/cordova-plugin-ImagePicker/tree/master/example/cordova/ImagePickerDemo)
 
-### 注：目前下面demo中传入的参数都可以不传，程序默认会设置下面demo的传参数，如果需要传参数，都得一起传，`一个都不能少`，否则会报json错误。
+### 注：目前下面demo中传入的参数都可以不传，程序默认会设置下面demo的传参数，如果需要传参数，都得一起传，`一个都不能少`，否则会报json错误。·】`width` 、`height`、`quality`属性会影响最终获取的图片size（M），值越大size就越大。
 
 ```javascript
 ImagePicker.getPictures(function(result) {
@@ -92,3 +93,5 @@ com.android.support:support-v4:25.3.1
 ## License
 
 [The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.html)
+
+
