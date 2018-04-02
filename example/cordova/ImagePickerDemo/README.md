@@ -13,7 +13,7 @@
 
 - `cordova run android/ios`
 
-## 注：如何执行`cordova run ios`出现
+## 注：如果执行`cordova run ios`出现
 ```
 ** BUILD SUCCEEDED **
 
