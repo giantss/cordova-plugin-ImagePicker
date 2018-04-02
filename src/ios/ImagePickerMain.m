@@ -116,12 +116,13 @@
 
         NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
 
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        NSInteger number = [photos count];
 
-        NSString *fileName;
+        for(int i=0; i<number; i++) {
+            UIImage *photo = photos[i];
+            id asset = assets[i];
 
-
-        for (id asset in assets) {
+            NSString *fileName;
             if ([asset isKindOfClass:[PHAsset class]]) {
                 PHAsset *phAsset = (PHAsset *)asset;
                 fileName = [phAsset valueForKey:@"filename"];
@@ -130,44 +131,20 @@
                 fileName = alAsset.defaultRepresentation.filename;;
             }
 
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
 
+            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat: fileName]];
 
+            [UIImagePNGRepresentation(photo) writeToFile:filePath atomically:YES];
 
+            [pathsArr addObject: filePath];
 
-
-            CGSize size = CGSizeMake(self.width, self.height);
-
-            // 从asset中获得图片
-            [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-
-                // NSLog(@"图片名字:%@",fileName);
-
-
-                //                    NSURL *URL = [info valueForKey:@"PHImageFileURLKey"];
-                //                    if(URL != NULL){
-
-                NSString *sanboxPath =  [self saveAndGetImageDocuments:result withName:fileName];
-
-
-
-                [pathsArr addObject: sanboxPath];
-                //                    }
-
-                NSLog(@"%@",pathsArr);
-                if([pathsArr count] != 0 && [pathsArr count] == [assets count]){
-                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:pathsArr];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                    //清空选中状态
-                    _selectedAssets = nil;
-
-                }
-
-            }];
-
-
-
+            if([pathsArr count] != 0 && [pathsArr count] == [photos count]) {
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:pathsArr];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                _selectedAssets = nil;
+            }
         }
-
 
     }];
 
