@@ -64,7 +64,7 @@ ImagePicker.getPictures(function(result) {
 ```
 
 返回结果如下：
-```json
+```
 {
     "images": [
         "/storage/emulated/0/com.ruguoapp.jike/jikeImg/jike_1526912081333_pic.gif", 
