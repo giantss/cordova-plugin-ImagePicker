@@ -22,6 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:divider="@drawable/folder_list_divider"
+            android:dividerHeight="1dp"
             tools:listitem="@layout/adapter_folder_list_item"/>
     </FrameLayout>
 

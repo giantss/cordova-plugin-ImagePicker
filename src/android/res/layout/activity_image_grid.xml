@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include
@@ -41,7 +42,7 @@
             android:paddingRight="2dp"
             android:paddingTop="2dp"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/footer_bar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -52,7 +53,6 @@
                 android:id="@+id/btn_dir"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
                 android:background="@null"
                 android:drawablePadding="4dp"
                 android:drawableRight="@mipmap/text_indicator"
@@ -65,11 +65,36 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"/>
 
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:background="#00000000"/>
+
+            <com.giants.imagepicker.view.SuperCheckBox
+                android:id="@+id/cb_origin"
+                android:button="@drawable/radio_item_checked"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="8dp"
+                android:text="原图"
+                android:textColor="#FFF"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:background="#00000000"/>
+
             <Button
                 android:id="@+id/btn_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
                 android:background="@null"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -78,13 +103,6 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"/>
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_toLeftOf="@id/btn_preview"
-                android:background="#cc111111"/>
-        </RelativeLayout>
+        </LinearLayout >
     </RelativeLayout>
 </LinearLayout>

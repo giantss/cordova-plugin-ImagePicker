@@ -1,5 +1,7 @@
 package com.giants.imagepicker.ui;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,7 +12,6 @@ import android.widget.TextView;
 
 import com.giants.imagepicker.util.BitmapUtil;
 import com.giants.imagepicker.ImagePicker;
-import com.your.package.name.R;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.view.CropImageView;
 
@@ -36,21 +37,32 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
     private ArrayList<ImageItem> mImageItems;
     private ImagePicker imagePicker;
 
+    private int res_btn_ok;
+    private int res_btn_back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_crop);
+
+        Context appContext = getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+
+        res_btn_ok = resource.getIdentifier("btn_ok", "id", pkgName);
+        res_btn_back = resource.getIdentifier("btn_back", "id", pkgName);
+
+        setContentView(resource.getIdentifier("activity_image_crop", "layout", pkgName));
 
         imagePicker = ImagePicker.getInstance();
 
         //初始化View
-        findViewById(R.id.btn_back).setOnClickListener(this);
-        Button btn_ok = (Button) findViewById(R.id.btn_ok);
-        btn_ok.setText(getString(R.string.complete));
+        findViewById(res_btn_back).setOnClickListener(this);
+        Button btn_ok = (Button) findViewById(res_btn_ok);
+        btn_ok.setText(getString(resource.getIdentifier("complete", "string", pkgName)));
         btn_ok.setOnClickListener(this);
-        TextView tv_des = (TextView) findViewById(R.id.tv_des);
-        tv_des.setText(getString(R.string.photo_crop));
-        mCropImageView = (CropImageView) findViewById(R.id.cv_crop_image);
+        TextView tv_des = (TextView) findViewById(resource.getIdentifier("tv_des", "id", pkgName));
+        tv_des.setText(getString(resource.getIdentifier("photo_crop", "string", pkgName)));
+        mCropImageView = (CropImageView) findViewById(resource.getIdentifier("cv_crop_image", "id", pkgName));
         mCropImageView.setOnBitmapSaveCompleteListener(this);
 
         //获取需要的参数
@@ -96,10 +108,10 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_back) {
+        if (id == res_btn_back) {
             setResult(RESULT_CANCELED);
             finish();
-        } else if (id == R.id.btn_ok) {
+        } else if (id == res_btn_ok) {
             mCropImageView.saveBitmapToFile(imagePicker.getCropCacheFolder(this), mOutputX, mOutputY, mIsSaveRectangle);
         }
     }

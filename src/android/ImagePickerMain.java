@@ -1,18 +1,28 @@
 package com.giants.imagepicker;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.giants.imagepicker.bean.ImageItem;
-import com.giants.imagepicker.compresshelper.CompressHelper;
 import com.giants.imagepicker.ui.ImageGridActivity;
 import com.giants.imagepicker.view.CropImageView;
+import com.giants.imagepicker.imageloader.*;
+import com.nanchen.compresshelper.CompressHelper;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import top.zibin.luban.Luban;
 
 /**
  * Created by Administrator on 2017/8/29.
@@ -20,33 +30,18 @@ import java.util.Iterator;
 public class ImagePickerMain extends CordovaPlugin {
 
     private static final String TAG = "MultiImagesPicker";
-    private static final int IMAGE_DEFAULT_WIDTH = 1920;
-    private static final int IMAGE_DEFAULT_HEIGHT = 1440;
-    private static final int IMAGE_DEFAULT_QUALITY = 100;
-    private static final int IMAGE_DEFAULT_MAX_IMAGES_COUNT = 9;
-    private float imageTargetWidth;
-    private float imageTargetHeight;
 
     private int image_limit_width = 0;
     private int image_limit_height = 0;
     private int image_limit_quality = 0;
 
-
     private CallbackContext callbackContext;
-    private JSONObject params;
     private ImagePicker imagePicker = ImagePicker.getInstance();
     ArrayList<ImageItem> images = null;
-
-    private File oldFile;
-    private File newFile;
-
-
-
 
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
-
 
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
 
@@ -65,23 +60,28 @@ public class ImagePickerMain extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 
         this.callbackContext = callbackContext;
-        this.params = args.getJSONObject(0);
+        JSONObject params = args.getJSONObject(0);
 
         if (action.equals("getPictures")) {
-            if(this.params != null){
-                imagePicker.setSelectLimit(this.params.getInt("maximumImagesCount"));
-                image_limit_width = this.params.getInt("width");
-                image_limit_height = this.params.getInt("height");
-                image_limit_quality = this.params.getInt("quality");
-            }else {
-                imagePicker.setSelectLimit(IMAGE_DEFAULT_MAX_IMAGES_COUNT);
-                image_limit_width = IMAGE_DEFAULT_WIDTH;
-                image_limit_height = IMAGE_DEFAULT_HEIGHT;
-                image_limit_quality = IMAGE_DEFAULT_QUALITY;
-            }
+            imagePicker.setSelectLimit(params.getInt("maximumImagesCount"));
+            image_limit_width = params.getInt("width");
+            image_limit_height = params.getInt("height");
+            image_limit_quality = params.getInt("quality");
 
             Intent intent = new Intent(cordova.getActivity().getApplicationContext(), ImageGridActivity.class);
-            intent.putExtra(ImageGridActivity.EXTRAS_IMAGES,images);
+            intent.putExtra(ImageGridActivity.EXTRAS_IMAGES, images);
+            cordova.startActivityForResult((CordovaPlugin)this,intent, 100);
+
+
+            return true;
+        }
+        else if (action.equals("takePhoto")) {
+            image_limit_width = params.getInt("width");
+            image_limit_height = params.getInt("height");
+            image_limit_quality = params.getInt("quality");
+
+            Intent intent = new Intent(cordova.getActivity().getApplicationContext(), ImageGridActivity.class);
+            intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true);
             cordova.startActivityForResult((CordovaPlugin)this,intent, 100);
 
 
@@ -91,6 +91,12 @@ public class ImagePickerMain extends CordovaPlugin {
         return false;
     }
 
+    public static String readableFileSize(long size) {
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -98,48 +104,91 @@ public class ImagePickerMain extends CordovaPlugin {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             if (data != null && requestCode == 100) {
 
-                images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                ArrayList imagePath = new ArrayList();
+                Context context = cordova.getActivity().getApplicationContext();
 
+                images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                boolean isOrigin = data.getBooleanExtra(ImagePicker.EXTRAS_ISORIGIN, false); // 原图
+
+                File targetDir = new File(context.getCacheDir(), "ImagePicker");
+                if(!targetDir.exists()) {
+                    targetDir.mkdirs();
+                }
+                String targetDirPath = targetDir.getAbsolutePath();
+
+                ArrayList imagePaths = new ArrayList();
 
                 for (Iterator it = images.iterator(); it.hasNext(); ) {
                     ImageItem imageItem = (ImageItem) it.next();
 
-                    oldFile = new File(imageItem.path);
+                    if(TextUtils.isEmpty(imageItem.path)) continue;;
 
-                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    if(isOrigin) {
+                        imagePaths.add(imageItem.path);
+                    }
+                    else { // 压缩
+                        File oldFile = new File(imageItem.path);
 
-                    options.inJustDecodeBounds = true;
+                        // do not compress gif
+                        if(imageItem.path.toLowerCase().endsWith(".gif")) {
+                            imagePaths.add(oldFile.getAbsolutePath());
+                        }
+                        else {
+                            Log.v(TAG, "Image size before compression =====> " + readableFileSize(oldFile.length()));
 
-                    BitmapFactory.decodeFile(imageItem.path, options);
+                            File newFile = null;
 
-                    //获取图片的宽高
-                    int height = options.outHeight;
-                    int width = options.outWidth;
+                            if(image_limit_width > 0 && image_limit_height > 0 && image_limit_quality > 0) {
+                                newFile = new CompressHelper.Builder(context)
+                                        .setMaxWidth(image_limit_width)  // 默认最大宽度
+                                        .setMaxHeight(image_limit_height) // 默认最大高度
+                                        .setQuality(image_limit_quality)    // 默认压缩质量
+                                        .setDestinationDirectoryPath(targetDirPath)
+                                        .build()
+                                        .compressToFile(oldFile);
+                            }
+                            else { // auto compress like wechat
+                                try {
+                                    List<File> files = Luban.with(context)
+                                            .load(oldFile)
+                                            .setTargetDir(targetDirPath)
+                                            .get();
+                                    if(files.size() > 0) {
+                                        newFile = files.get(0);
+                                    }
+                                    else {
+                                        throw new Exception("Unknown exception when compressing " + oldFile.getAbsolutePath());
+                                    }
+                                }
+                                catch(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
 
+                            if(newFile != null) {
+                                imagePaths.add(newFile.getAbsolutePath());
 
-                    if (width >= height) {
-
-                        imageTargetWidth = image_limit_width;
-                        imageTargetHeight = image_limit_height;
-
-                    } else {
-
-                        imageTargetWidth = image_limit_height;
-                        imageTargetHeight = image_limit_width;
+                                Log.v(TAG, "Image size after compression =====> " + readableFileSize(newFile.length()));
+                            }
+                        }
 
                     }
 
-                    newFile = CompressHelper.getDefault(cordova.getActivity().getApplicationContext()).compressToFile(oldFile, imageTargetWidth, imageTargetHeight, image_limit_quality);
-
-                    imagePath.add(newFile.getAbsolutePath());
                 }
 
                 images.clear();
 
-                JSONArray res = new JSONArray(imagePath);
+                try {
+                    JSONArray images = new JSONArray(imagePaths);
 
-                this.callbackContext.success(res);
+                    JSONObject obj = new JSONObject();
+                    obj.put("images", images);
+                    obj.put("isOrigin", isOrigin);
+
+                    this.callbackContext.success(obj);
+                } catch (Exception e) {
+
+                    Log.getStackTraceString(e);
+                }
 
             }
         }

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
-import com.your.package.name.R;
 
 
 public class FolderPopUpWindow extends PopupWindow implements View.OnClickListener {
@@ -29,12 +28,16 @@ public class FolderPopUpWindow extends PopupWindow implements View.OnClickListen
     public FolderPopUpWindow(Context context, BaseAdapter adapter) {
         super(context);
 
-        final View view = View.inflate(context, R.layout.pop_folder, null);
-        masker = view.findViewById(R.id.masker);
+        Context appContext = context.getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+
+        final View view = View.inflate(context, resource.getIdentifier("pop_folder", "layout", pkgName), null);
+        masker = view.findViewById(resource.getIdentifier("masker", "id", pkgName));
         masker.setOnClickListener(this);
-        marginView = view.findViewById(R.id.margin);
+        marginView = view.findViewById(resource.getIdentifier("margin", "id", pkgName));
         marginView.setOnClickListener(this);
-        listView = (ListView) view.findViewById(R.id.listView);
+        listView = (ListView) view.findViewById(resource.getIdentifier("listView", "id", pkgName));
         listView.setAdapter(adapter);
 
         setContentView(view);

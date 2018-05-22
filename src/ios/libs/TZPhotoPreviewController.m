@@ -16,12 +16,14 @@
 
 @interface TZPhotoPreviewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIScrollViewDelegate> {
     UICollectionView *_collectionView;
+    UICollectionViewFlowLayout *_layout;
     NSArray *_photosTemp;
     NSArray *_assetsTemp;
     
     UIView *_naviBar;
     UIButton *_backButton;
     UIButton *_selectButton;
+    UILabel *_indexLabel;
     
     UIView *_toolBar;
     UIButton *_doneButton;
@@ -29,6 +31,8 @@
     UILabel *_numberLabel;
     UIButton *_originalPhotoButton;
     UILabel *_originalPhotoLabel;
+    
+    CGFloat _offsetItemCount;
 }
 @property (nonatomic, assign) BOOL isHideNaviBar;
 @property (nonatomic, strong) UIView *cropBgView;
@@ -43,18 +47,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [TZImageManager manager].shouldFixOrientation = YES;
-     TZPhotoPreviewController *weakSelf = self;
+    __weak TZPhotoPreviewController *weakSelf = self;
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)weakSelf.navigationController;
     if (!self.models.count) {
         self.models = [NSMutableArray arrayWithArray:_tzImagePickerVc.selectedModels];
         _assetsTemp = [NSMutableArray arrayWithArray:_tzImagePickerVc.selectedAssets];
-        self.isSelectOriginalPhoto = _tzImagePickerVc.isSelectOriginalPhoto;
     }
     [self configCollectionView];
-    [self configCropView];
     [self configCustomNaviBar];
     [self configBottomToolBar];
     self.view.clipsToBounds = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeStatusBarOrientationNotification:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];    
 }
 
 - (void)setPhotos:(NSMutableArray *)photos {
@@ -73,7 +76,10 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-    if (iOS7Later) [UIApplication sharedApplication].statusBarHidden = NO;
+    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+    if (tzImagePickerVc.needShowStatusBar && iOS7Later) {
+        [UIApplication sharedApplication].statusBarHidden = NO;
+    }
     [TZImageManager manager].shouldFixOrientation = NO;
 }
 
@@ -83,36 +89,43 @@
 
 - (void)configCustomNaviBar {
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
-
-    _naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.tz_width, 64)];
+    
+    _naviBar = [[UIView alloc] initWithFrame:CGRectZero];
     _naviBar.backgroundColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:0.7];
     
-    _backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 44, 44)];
-    [_backButton setImage:[UIImage imageNamedFromMyBundle:@"navi_back.png"] forState:UIControlStateNormal];
+    _backButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    [_backButton setImage:[UIImage imageNamedFromMyBundle:@"navi_back"] forState:UIControlStateNormal];
     [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
     
-    _selectButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.tz_width - 54, 10, 42, 42)];
-    [_selectButton setImage:[UIImage imageNamedFromMyBundle:tzImagePickerVc.photoDefImageName] forState:UIControlStateNormal];
-    [_selectButton setImage:[UIImage imageNamedFromMyBundle:tzImagePickerVc.photoSelImageName] forState:UIControlStateSelected];
+    _selectButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    [_selectButton setImage:tzImagePickerVc.photoDefImage forState:UIControlStateNormal];
+    [_selectButton setImage:tzImagePickerVc.photoSelImage forState:UIControlStateSelected];
+    _selectButton.imageView.clipsToBounds = YES;
+    _selectButton.imageEdgeInsets = UIEdgeInsetsMake(10, 0, 10, 0);
+    _selectButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [_selectButton addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
     _selectButton.hidden = !tzImagePickerVc.showSelectBtn;
     
+    _indexLabel = [[UILabel alloc] init];
+    _indexLabel.font = [UIFont systemFontOfSize:14];
+    _indexLabel.textColor = [UIColor whiteColor];
+    _indexLabel.textAlignment = NSTextAlignmentCenter;
+    
     [_naviBar addSubview:_selectButton];
+    [_naviBar addSubview:_indexLabel];
     [_naviBar addSubview:_backButton];
     [self.view addSubview:_naviBar];
 }
 
 - (void)configBottomToolBar {
-    _toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.tz_height - 44, self.view.tz_width, 44)];
+    _toolBar = [[UIView alloc] initWithFrame:CGRectZero];
     static CGFloat rgb = 34 / 255.0;
     _toolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:0.7];
     
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (_tzImagePickerVc.allowPickingOriginalPhoto) {
-        CGFloat fullImageWidth = [_tzImagePickerVc.fullImageBtnTitleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size.width;
         _originalPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _originalPhotoButton.frame = CGRectMake(0, 0, fullImageWidth + 56, 44);
         _originalPhotoButton.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
         _originalPhotoButton.backgroundColor = [UIColor clearColor];
         [_originalPhotoButton addTarget:self action:@selector(originalPhotoButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -121,11 +134,10 @@
         [_originalPhotoButton setTitle:_tzImagePickerVc.fullImageBtnTitleStr forState:UIControlStateSelected];
         [_originalPhotoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [_originalPhotoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-        [_originalPhotoButton setImage:[UIImage imageNamedFromMyBundle:_tzImagePickerVc.photoPreviewOriginDefImageName] forState:UIControlStateNormal];
-        [_originalPhotoButton setImage:[UIImage imageNamedFromMyBundle:_tzImagePickerVc.photoOriginSelImageName] forState:UIControlStateSelected];
+        [_originalPhotoButton setImage:_tzImagePickerVc.photoPreviewOriginDefImage forState:UIControlStateNormal];
+        [_originalPhotoButton setImage:_tzImagePickerVc.photoOriginSelImage forState:UIControlStateSelected];
         
         _originalPhotoLabel = [[UILabel alloc] init];
-        _originalPhotoLabel.frame = CGRectMake(fullImageWidth + 42, 0, 80, 44);
         _originalPhotoLabel.textAlignment = NSTextAlignmentLeft;
         _originalPhotoLabel.font = [UIFont systemFontOfSize:13];
         _originalPhotoLabel.textColor = [UIColor whiteColor];
@@ -134,26 +146,25 @@
     }
     
     _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _doneButton.frame = CGRectMake(self.view.tz_width - 44 - 12, 0, 44, 44);
     _doneButton.titleLabel.font = [UIFont systemFontOfSize:16];
     [_doneButton addTarget:self action:@selector(doneButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [_doneButton setTitle:_tzImagePickerVc.doneBtnTitleStr forState:UIControlStateNormal];
     [_doneButton setTitleColor:_tzImagePickerVc.oKButtonTitleColorNormal forState:UIControlStateNormal];
     
-    _numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedFromMyBundle:_tzImagePickerVc.photoNumberIconImageName]];
+    _numberImageView = [[UIImageView alloc] initWithImage:_tzImagePickerVc.photoNumberIconImage];
     _numberImageView.backgroundColor = [UIColor clearColor];
-    _numberImageView.frame = CGRectMake(self.view.tz_width - 56 - 28, 7, 30, 30);
+    _numberImageView.clipsToBounds = YES;
+    _numberImageView.contentMode = UIViewContentModeScaleAspectFit;
     _numberImageView.hidden = _tzImagePickerVc.selectedModels.count <= 0;
     
     _numberLabel = [[UILabel alloc] init];
-    _numberLabel.frame = _numberImageView.frame;
     _numberLabel.font = [UIFont systemFontOfSize:15];
     _numberLabel.textColor = [UIColor whiteColor];
     _numberLabel.textAlignment = NSTextAlignmentCenter;
     _numberLabel.text = [NSString stringWithFormat:@"%zd",_tzImagePickerVc.selectedModels.count];
     _numberLabel.hidden = _tzImagePickerVc.selectedModels.count <= 0;
     _numberLabel.backgroundColor = [UIColor clearColor];
-
+    
     [_originalPhotoButton addSubview:_originalPhotoLabel];
     [_toolBar addSubview:_doneButton];
     [_toolBar addSubview:_originalPhotoButton];
@@ -163,12 +174,9 @@
 }
 
 - (void)configCollectionView {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.itemSize = CGSizeMake(self.view.tz_width + 20, self.view.tz_height);
-    layout.minimumInteritemSpacing = 0;
-    layout.minimumLineSpacing = 0;
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(-10, 0, self.view.tz_width + 20, self.view.tz_height) collectionViewLayout:layout];
+    _layout = [[UICollectionViewFlowLayout alloc] init];
+    _layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_layout];
     _collectionView.backgroundColor = [UIColor blackColor];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;
@@ -179,22 +187,27 @@
     _collectionView.contentSize = CGSizeMake(self.models.count * (self.view.tz_width + 20), 0);
     [self.view addSubview:_collectionView];
     [_collectionView registerClass:[TZPhotoPreviewCell class] forCellWithReuseIdentifier:@"TZPhotoPreviewCell"];
+    [_collectionView registerClass:[TZVideoPreviewCell class] forCellWithReuseIdentifier:@"TZVideoPreviewCell"];
+    [_collectionView registerClass:[TZGifPreviewCell class] forCellWithReuseIdentifier:@"TZGifPreviewCell"];
 }
 
 - (void)configCropView {
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
-    if (!_tzImagePickerVc.showSelectBtn && _tzImagePickerVc.allowCrop) {
+    if (_tzImagePickerVc.maxImagesCount <= 1 && _tzImagePickerVc.allowCrop) {
+        [_cropView removeFromSuperview];
+        [_cropBgView removeFromSuperview];
+        
         _cropBgView = [UIView new];
         _cropBgView.userInteractionEnabled = NO;
-        _cropBgView.backgroundColor = [UIColor clearColor];
         _cropBgView.frame = self.view.bounds;
+        _cropBgView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_cropBgView];
         [TZImageCropManager overlayClippingWithView:_cropBgView cropRect:_tzImagePickerVc.cropRect containerView:self.view needCircleCrop:_tzImagePickerVc.needCircleCrop];
         
         _cropView = [UIView new];
         _cropView.userInteractionEnabled = NO;
-        _cropView.backgroundColor = [UIColor clearColor];
         _cropView.frame = _tzImagePickerVc.cropRect;
+        _cropView.backgroundColor = [UIColor clearColor];
         _cropView.layer.borderColor = [UIColor whiteColor].CGColor;
         _cropView.layer.borderWidth = 1.0;
         if (_tzImagePickerVc.needCircleCrop) {
@@ -205,7 +218,59 @@
         if (_tzImagePickerVc.cropViewSettingBlock) {
             _tzImagePickerVc.cropViewSettingBlock(_cropView);
         }
+        
+        [self.view bringSubviewToFront:_naviBar];
+        [self.view bringSubviewToFront:_toolBar];
     }
+}
+
+#pragma mark - Layout
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+
+    CGFloat statusBarHeight = [TZCommonTools tz_statusBarHeight];
+    CGFloat statusBarHeightInterval = statusBarHeight - 20;
+    CGFloat naviBarHeight = statusBarHeight + _tzImagePickerVc.navigationBar.tz_height;
+    _naviBar.frame = CGRectMake(0, 0, self.view.tz_width, naviBarHeight);
+    _backButton.frame = CGRectMake(10, 10 + statusBarHeightInterval, 44, 44);
+    _selectButton.frame = CGRectMake(self.view.tz_width - 56, 10 + statusBarHeightInterval, 44, 44);
+    _indexLabel.frame = _selectButton.frame;
+    
+    _layout.itemSize = CGSizeMake(self.view.tz_width + 20, self.view.tz_height);
+    _layout.minimumInteritemSpacing = 0;
+    _layout.minimumLineSpacing = 0;
+    _collectionView.frame = CGRectMake(-10, 0, self.view.tz_width + 20, self.view.tz_height);
+    [_collectionView setCollectionViewLayout:_layout];
+    if (_offsetItemCount > 0) {
+        CGFloat offsetX = _offsetItemCount * _layout.itemSize.width;
+        [_collectionView setContentOffset:CGPointMake(offsetX, 0)];
+    }
+    if (_tzImagePickerVc.allowCrop) {
+        [_collectionView reloadData];
+    }
+    
+    CGFloat toolBarHeight = [TZCommonTools tz_isIPhoneX] ? 44 + (83 - 49) : 44;
+    CGFloat toolBarTop = self.view.tz_height - toolBarHeight;
+    _toolBar.frame = CGRectMake(0, toolBarTop, self.view.tz_width, toolBarHeight);
+    if (_tzImagePickerVc.allowPickingOriginalPhoto) {
+        CGFloat fullImageWidth = [_tzImagePickerVc.fullImageBtnTitleStr tz_calculateSizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} maxSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+        _originalPhotoButton.frame = CGRectMake(0, 0, fullImageWidth + 56, 44);
+        _originalPhotoLabel.frame = CGRectMake(fullImageWidth + 42, 0, 80, 44);
+    }
+    [_doneButton sizeToFit];
+    _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 0, _doneButton.tz_width, 44);
+    _numberImageView.frame = CGRectMake(_doneButton.tz_left - 24 - 5, 10, 24, 24);
+    _numberLabel.frame = _numberImageView.frame;
+    
+    [self configCropView];
+}
+
+#pragma mark - Notification
+
+- (void)didChangeStatusBarOrientationNotification:(NSNotification *)noti {
+    _offsetItemCount = _collectionView.contentOffset.x / _layout.itemSize.width;
 }
 
 #pragma mark - Click Event
@@ -219,14 +284,14 @@
             NSString *title = [NSString stringWithFormat:[NSBundle tz_localizedStringForKey:@"Select a maximum of %zd photos"], _tzImagePickerVc.maxImagesCount];
             [_tzImagePickerVc showAlertWithTitle:title];
             return;
-        // 2. if not over the maxImagesCount / 如果没有超过最大个数限制
+            // 2. if not over the maxImagesCount / 如果没有超过最大个数限制
         } else {
-            [_tzImagePickerVc.selectedModels addObject:model];
+            [_tzImagePickerVc addSelectedModel:model];
             if (self.photos) {
                 [_tzImagePickerVc.selectedAssets addObject:_assetsTemp[_currentIndex]];
                 [self.photos addObject:_photosTemp[_currentIndex]];
             }
-            if (model.type == TZAssetModelMediaTypeVideo) {
+            if (model.type == TZAssetModelMediaTypeVideo && !_tzImagePickerVc.allowPickingMultipleVideo) {
                 [_tzImagePickerVc showAlertWithTitle:[NSBundle tz_localizedStringForKey:@"Select the video when in multi state, we will handle the video as a photo"]];
             }
         }
@@ -239,11 +304,11 @@
                 for (NSInteger i = 0; i < selectedModelsTmp.count; i++) {
                     TZAssetModel *model = selectedModelsTmp[i];
                     if ([model isEqual:model_item]) {
-                        [_tzImagePickerVc.selectedModels removeObjectAtIndex:i];
+                        [_tzImagePickerVc removeSelectedModel:model];
+                        // [_tzImagePickerVc.selectedModels removeObjectAtIndex:i];
                         break;
                     }
                 }
-                // [_tzImagePickerVc.selectedModels removeObject:model_item];
                 if (self.photos) {
                     // 1.6.7版本更新:防止有多个一样的asset,一次性被移除了
                     NSArray *selectedAssetsTmp = [NSArray arrayWithArray:_tzImagePickerVc.selectedAssets];
@@ -283,15 +348,15 @@
 - (void)doneButtonClick {
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     // 如果图片正在从iCloud同步中,提醒用户
-    if (_progress > 0 && _progress < 1) {
+    if (_progress > 0 && _progress < 1 && (_selectButton.isSelected || !_tzImagePickerVc.selectedModels.count )) {
         _alertView = [_tzImagePickerVc showAlertWithTitle:[NSBundle tz_localizedStringForKey:@"Synchronizing photos from iCloud"]];
         return;
     }
-
+    
     // 如果没有选中过照片 点击确定时选中当前预览的照片
     if (_tzImagePickerVc.selectedModels.count == 0 && _tzImagePickerVc.minImagesCount <= 0) {
         TZAssetModel *model = _models[_currentIndex];
-        [_tzImagePickerVc.selectedModels addObject:model];
+        [_tzImagePickerVc addSelectedModel:model];
     }
     if (_tzImagePickerVc.allowCrop) { // 裁剪状态
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:_currentIndex inSection:0];
@@ -328,6 +393,12 @@
     }
 }
 
+- (void)didTapPreviewCell {
+    self.isHideNaviBar = !self.isHideNaviBar;
+    _naviBar.hidden = self.isHideNaviBar;
+    _toolBar.hidden = self.isHideNaviBar;
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -340,6 +411,8 @@
         _currentIndex = currentIndex;
         [self refreshNaviBarAndBottomBarState];
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"photoPreviewCollectionViewDidScroll" object:nil];
 }
 
 #pragma mark - UICollectionViewDataSource && Delegate
@@ -349,30 +422,44 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZPhotoPreviewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
-    cell.model = _models[indexPath.row];
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
-    cell.cropRect = _tzImagePickerVc.cropRect;
-    cell.allowCrop = _tzImagePickerVc.allowCrop;
-     TZPhotoPreviewController *weakSelf = self;
-    if (!cell.singleTapGestureBlock) {
-        UIView *weakNaviBar = _naviBar;
-        UIView *weakToolBar = _toolBar;
-        cell.singleTapGestureBlock = ^(){
-            // show or hide naviBar / 显示或隐藏导航栏
-            weakSelf.isHideNaviBar = !weakSelf.isHideNaviBar;
-            weakNaviBar.hidden = weakSelf.isHideNaviBar;
-            weakToolBar.hidden = weakSelf.isHideNaviBar;
-        };
-    }
-    [cell setImageProgressUpdateBlock:^(double progress) {
-        weakSelf.progress = progress;
-        if (progress >= 1) {
-            if (weakSelf.alertView) {
-                [_tzImagePickerVc hideAlertView:weakSelf.alertView];
-                [weakSelf doneButtonClick];
+    TZAssetModel *model = _models[indexPath.row];
+    
+    TZAssetPreviewCell *cell;
+    __weak TZPhotoPreviewController *weakSelf = self;
+    if (_tzImagePickerVc.allowPickingMultipleVideo && model.type == TZAssetModelMediaTypeVideo) {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZVideoPreviewCell" forIndexPath:indexPath];
+    } else if (_tzImagePickerVc.allowPickingMultipleVideo && model.type == TZAssetModelMediaTypePhotoGif && _tzImagePickerVc.allowPickingGif) {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZGifPreviewCell" forIndexPath:indexPath];
+    } else {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZPhotoPreviewCell" forIndexPath:indexPath];
+        TZPhotoPreviewCell *photoPreviewCell = (TZPhotoPreviewCell *)cell;
+        photoPreviewCell.cropRect = _tzImagePickerVc.cropRect;
+        photoPreviewCell.allowCrop = _tzImagePickerVc.allowCrop;
+        __weak TZImagePickerController *weakTzImagePickerVc = _tzImagePickerVc;
+        __weak UICollectionView *weakCollectionView = _collectionView;
+        __weak TZPhotoPreviewCell *weakCell = photoPreviewCell;
+        [photoPreviewCell setImageProgressUpdateBlock:^(double progress) {
+            __strong TZPhotoPreviewController *strongSelf = weakSelf;
+            __strong TZImagePickerController *strongTzImagePickerVc = weakTzImagePickerVc;
+            __strong UICollectionView *strongCollectionView = weakCollectionView;
+            __strong TZPhotoPreviewCell *strongCell = weakCell;
+            strongSelf.progress = progress;
+            if (progress >= 1) {
+                if (strongSelf.isSelectOriginalPhoto) [strongSelf showPhotoBytes];
+                if (strongSelf.alertView && [strongCollectionView.visibleCells containsObject:strongCell]) {
+                    [strongTzImagePickerVc hideAlertView:strongSelf.alertView];
+                    strongSelf.alertView = nil;
+                    [strongSelf doneButtonClick];
+                }
             }
-        }
+        }];
+    }
+    
+    cell.model = model;
+    [cell setSingleTapGestureBlock:^{
+        __strong TZPhotoPreviewController *strongSelf = weakSelf;
+        [strongSelf didTapPreviewCell];
     }];
     return cell;
 }
@@ -386,6 +473,8 @@
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[TZPhotoPreviewCell class]]) {
         [(TZPhotoPreviewCell *)cell recoverSubviews];
+    } else if ([cell isKindOfClass:[TZVideoPreviewCell class]]) {
+        [(TZVideoPreviewCell *)cell pausePlayerAndShowNaviBar];
     }
 }
 
@@ -399,6 +488,15 @@
     TZImagePickerController *_tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     TZAssetModel *model = _models[_currentIndex];
     _selectButton.selected = model.isSelected;
+    [self refreshSelectButtonImageViewContentMode];
+    if (_selectButton.isSelected && _tzImagePickerVc.showSelectedIndex) {
+        NSString *assetId = [[TZImageManager manager] getAssetIdentifier:model.asset];
+        NSString *index = [NSString stringWithFormat:@"%zd", [_tzImagePickerVc.selectedAssetIds indexOfObject:assetId] + 1];
+        _indexLabel.text = index;
+        _indexLabel.hidden = NO;
+    } else {
+        _indexLabel.hidden = YES;
+    }
     _numberLabel.text = [NSString stringWithFormat:@"%zd",_tzImagePickerVc.selectedModels.count];
     _numberImageView.hidden = (_tzImagePickerVc.selectedModels.count <= 0 || _isHideNaviBar || _isCropImage);
     _numberLabel.hidden = (_tzImagePickerVc.selectedModels.count <= 0 || _isHideNaviBar || _isCropImage);
@@ -432,9 +530,19 @@
     }
 }
 
+- (void)refreshSelectButtonImageViewContentMode {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self->_selectButton.imageView.image.size.width <= 27) {
+            self->_selectButton.imageView.contentMode = UIViewContentModeCenter;
+        } else {
+            self->_selectButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        }
+    });
+}
+
 - (void)showPhotoBytes {
     [[TZImageManager manager] getPhotosBytesWithArray:@[_models[_currentIndex]] completion:^(NSString *totalBytes) {
-        _originalPhotoLabel.text = [NSString stringWithFormat:@"(%@)",totalBytes];
+        self->_originalPhotoLabel.text = [NSString stringWithFormat:@"(%@)",totalBytes];
     }];
 }
 

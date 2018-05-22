@@ -2,6 +2,8 @@ package com.giants.imagepicker.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -13,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.giants.imagepicker.ImagePicker;
-import com.your.package.name.R;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.ui.ImageBaseActivity;
 import com.giants.imagepicker.ui.ImageGridActivity;
@@ -43,6 +44,14 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int ITEM_TYPE_NORMAL = 1;  //第一个条目不是相机
     private ImagePicker imagePicker;
     private Activity mActivity;
+
+    private int res_adapter_camera_item;
+    private int res_adapter_image_list_item;
+    private int res_iv_thumb;
+    private int res_mask;
+    private int res_cb_check;
+    private int res_select_limit;
+
     private ArrayList<ImageItem> images;       //当前需要显示的所有的图片数据
     private ArrayList<ImageItem> mSelectedImages; //全局保存的已经选中的图片数据
     private boolean isShowCamera;         //是否显示拍照按钮
@@ -69,6 +78,16 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
      */
     public ImageRecyclerAdapter(Activity activity, ArrayList<ImageItem> images) {
         this.mActivity = activity;
+        Context appContext = activity.getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+        res_adapter_camera_item = resource.getIdentifier("adapter_camera_item", "layout", pkgName);
+        res_adapter_image_list_item = resource.getIdentifier("adapter_image_list_item", "layout", pkgName);
+        res_iv_thumb = resource.getIdentifier("iv_thumb", "id", pkgName);
+        res_mask = resource.getIdentifier("mask", "id", pkgName);
+        res_cb_check = resource.getIdentifier("cb_check", "id", pkgName);
+        res_select_limit = resource.getIdentifier("select_limit", "string", pkgName);
+
         if (images == null || images.size() == 0) this.images = new ArrayList<>();
         else this.images = images;
 
@@ -82,9 +101,9 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_TYPE_CAMERA){
-            return new CameraViewHolder(mInflater.inflate(R.layout.adapter_camera_item,parent,false));
+            return new CameraViewHolder(mInflater.inflate(res_adapter_camera_item,parent,false));
         }
-        return new ImageViewHolder(mInflater.inflate(R.layout.adapter_image_list_item,parent,false));
+        return new ImageViewHolder(mInflater.inflate(res_adapter_image_list_item,parent,false));
     }
 
     @Override
@@ -131,9 +150,9 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         ImageViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
-            ivThumb = (ImageView) itemView.findViewById(R.id.iv_thumb);
-            mask = itemView.findViewById(R.id.mask);
-            cbCheck = (SuperCheckBox) itemView.findViewById(R.id.cb_check);
+            ivThumb = (ImageView) itemView.findViewById(res_iv_thumb);
+            mask = itemView.findViewById(res_mask);
+            cbCheck = (SuperCheckBox) itemView.findViewById(res_cb_check);
             itemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
         }
 
@@ -150,7 +169,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                 public void onClick(View v) {
                     int selectLimit = imagePicker.getSelectLimit();
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(res_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         cbCheck.setChecked(false);
                         mask.setVisibility(View.GONE);
                     } else {

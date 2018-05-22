@@ -1,8 +1,10 @@
 <RelativeLayout
     android:id="@+id/content"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     android:background="#000">
 
     <com.giants.imagepicker.view.ViewPagerFixed
@@ -15,37 +17,51 @@
         android:id="@+id/top_bar"
         layout="@layout/include_top_bar"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#cc22292c"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <com.giants.imagepicker.view.SuperCheckBox
-            android:id="@+id/cb_origin"
-            android:visibility="invisible"
-            style="@style/SuperCheckboxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:paddingLeft="8dp"
-            android:text="原图(3.07M)"
-            android:textColor="#FFF"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
 
-        <com.giants.imagepicker.view.SuperCheckBox
-            android:id="@+id/cb_check"
-            style="@style/SuperCheckboxTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:drawablePadding="4dp"
-            android:includeFontPadding="true"
-            android:paddingLeft="8dp"
-            android:text="@string/select"
-            android:textColor="#ffffff"/>
-    </RelativeLayout>
+            <com.giants.imagepicker.view.SuperCheckBox
+                android:id="@+id/cb_origin"
+                android:button="@drawable/radio_item_checked"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:paddingLeft="8dp"
+                android:text="原图"
+                android:textColor="#FFF"
+                android:textSize="16sp"/>
+
+            <com.giants.imagepicker.view.SuperCheckBox
+                android:id="@+id/cb_check"
+                android:button="@drawable/selector_item_checked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:drawablePadding="4dp"
+                android:includeFontPadding="true"
+                android:paddingLeft="8dp"
+                android:text="@string/select"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/margin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#000" />
+    </LinearLayout>
 </RelativeLayout>

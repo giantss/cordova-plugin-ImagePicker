@@ -2,31 +2,35 @@ package com.giants.imagepicker.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 
 import com.giants.imagepicker.DataHolder;
 import com.giants.imagepicker.ImageDataSource;
 import com.giants.imagepicker.ImagePicker;
-import com.your.package.name.R;
 import com.giants.imagepicker.adapter.ImageFolderAdapter;
 import com.giants.imagepicker.adapter.ImageRecyclerAdapter;
 import com.giants.imagepicker.adapter.ImageRecyclerAdapter.OnImageItemClickListener;
 import com.giants.imagepicker.bean.ImageFolder;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.view.FolderPopUpWindow;
+import com.giants.imagepicker.view.SuperCheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +50,7 @@ import java.util.List;
  *
  * ================================================
  */
-public class ImageGridActivity extends ImageBaseActivity implements ImageDataSource.OnImagesLoadedListener, OnImageItemClickListener, ImagePicker.OnImageSelectedListener, View.OnClickListener {
+public class ImageGridActivity extends ImageBaseActivity implements ImageDataSource.OnImagesLoadedListener, OnImageItemClickListener, ImagePicker.OnImageSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int REQUEST_PERMISSION_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
@@ -55,12 +59,24 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 
     private ImagePicker imagePicker;
 
+    private int res_btn_ok;
+    private int res_btn_back;
+    private int res_btn_dir;
+    private int res_btn_preview;
+    private int res_cb_origin;
+    private int res_origin;
+    private int res_origin_size;
+    private int res_select_complete;
+    private int res_complete;
+    private int res_preview_count;
+
     private boolean isOrigin = false;  //是否选中原图
     private GridView mGridView;  //图片展示控件
     private View mFooterBar;     //底部栏
     private Button mBtnOk;       //确定按钮
     private Button mBtnDir;      //文件夹切换按钮
     private Button mBtnPre;      //预览按钮
+    private SuperCheckBox mCbOrigin;               //原图
     private ImageFolderAdapter mImageFolderAdapter;    //图片文件夹的适配器
     private FolderPopUpWindow mFolderPopupWindow;  //ImageSet的PopupWindow
     private List<ImageFolder> mImageFolders;   //所有的图片文件夹
@@ -85,7 +101,23 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_grid);
+
+        Context appContext = getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+
+        res_btn_ok = resource.getIdentifier("btn_ok", "id", pkgName);
+        res_btn_back = resource.getIdentifier("btn_back", "id", pkgName);
+        res_btn_dir = resource.getIdentifier("btn_dir", "id", pkgName);
+        res_btn_preview = resource.getIdentifier("btn_preview", "id", pkgName);
+        res_cb_origin = resource.getIdentifier("cb_origin", "id", pkgName);
+        res_origin_size = resource.getIdentifier("origin_size", "string", pkgName);
+        res_origin = resource.getIdentifier("origin", "string", pkgName);
+        res_select_complete = resource.getIdentifier("select_complete", "string", pkgName);
+        res_complete = resource.getIdentifier("complete", "string", pkgName);
+        res_preview_count = resource.getIdentifier("preview_count", "string", pkgName);
+
+        setContentView(resource.getIdentifier("activity_image_grid", "layout", pkgName));
 
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
@@ -107,18 +139,18 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         }
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler);
+        mRecyclerView = (RecyclerView) findViewById(resource.getIdentifier("recycler", "id", pkgName));
 
 
-        findViewById(R.id.btn_back).setOnClickListener(this);
-        mBtnOk = (Button) findViewById(R.id.btn_ok);
+        findViewById(res_btn_back).setOnClickListener(this);
+        mBtnOk = (Button) findViewById(res_btn_ok);
         mBtnOk.setOnClickListener(this);
-        mBtnDir = (Button) findViewById(R.id.btn_dir);
+        mBtnDir = (Button) findViewById(res_btn_dir);
         mBtnDir.setOnClickListener(this);
-        mBtnPre = (Button) findViewById(R.id.btn_preview);
+        mBtnPre = (Button) findViewById(res_btn_preview);
         mBtnPre.setOnClickListener(this);
-        mGridView = (GridView) findViewById(R.id.gridview);
-        mFooterBar = findViewById(R.id.footer_bar);
+        mGridView = (GridView) findViewById(resource.getIdentifier("gridview", "id", pkgName));
+        mFooterBar = findViewById(resource.getIdentifier("footer_bar", "id", pkgName));
         if (imagePicker.isMultiMode()) {
             mBtnOk.setVisibility(View.VISIBLE);
             mBtnPre.setVisibility(View.VISIBLE);
@@ -126,6 +158,11 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             mBtnOk.setVisibility(View.GONE);
             mBtnPre.setVisibility(View.GONE);
         }
+
+        mCbOrigin = (SuperCheckBox) findViewById(res_cb_origin);
+        mCbOrigin.setText(getString(res_origin));
+        mCbOrigin.setOnCheckedChangeListener(this);
+        mCbOrigin.setChecked(isOrigin);
 
 //        mImageGridAdapter = new ImageGridAdapter(this, null);
         mImageFolderAdapter = new ImageFolderAdapter(this, null);
@@ -171,12 +208,13 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_ok) {
+        if (id == res_btn_ok) {
             Intent intent = new Intent();
             intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
+            intent.putExtra(ImagePicker.EXTRAS_ISORIGIN, isOrigin);
             setResult(ImagePicker.RESULT_CODE_ITEMS, intent);  //多选不允许裁剪裁剪，返回数据
             finish();
-        } else if (id == R.id.btn_dir) {
+        } else if (id == res_btn_dir) {
             if (mImageFolders == null) {
                 Log.i("ImageGridActivity", "您的手机没有图片");
                 return;
@@ -193,14 +231,14 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                 index = index == 0 ? index : index - 1;
                 mFolderPopupWindow.setSelection(index);
             }
-        } else if (id == R.id.btn_preview) {
+        } else if (id == res_btn_preview) {
             Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
             intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
             intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
             intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             intent.putExtra(ImagePicker.EXTRA_FROM_ITEMS,true);
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
-        } else if (id == R.id.btn_back) {
+        } else if (id == res_btn_back) {
             //点击返回按钮
             finish();
         }
@@ -287,15 +325,24 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     public void onImageSelected(int position, ImageItem item, boolean isAdd) {
         if (imagePicker.getSelectImageCount() > 0) {
-            mBtnOk.setText(getString(R.string.select_complete, imagePicker.getSelectImageCount(), imagePicker.getSelectLimit()));
+            mBtnOk.setText(getString(res_select_complete, imagePicker.getSelectImageCount(), imagePicker.getSelectLimit()));
             mBtnOk.setEnabled(true);
             mBtnPre.setEnabled(true);
         } else {
-            mBtnOk.setText(getString(R.string.complete));
+            mBtnOk.setText(getString(res_complete));
             mBtnOk.setEnabled(false);
             mBtnPre.setEnabled(false);
         }
-        mBtnPre.setText(getResources().getString(R.string.preview_count, imagePicker.getSelectImageCount()));
+
+        if (mCbOrigin.isChecked()) {
+            long size = 0;
+            for (ImageItem imageItem : imagePicker.getSelectedImages())
+                size += imageItem.size;
+            String fileSize = Formatter.formatFileSize(this, size);
+            mCbOrigin.setText(getString(res_origin_size, fileSize));
+        }
+
+        mBtnPre.setText(getResources().getString(res_preview_count, imagePicker.getSelectImageCount()));
 //        mImageGridAdapter.notifyDataSetChanged();
 //        mRecyclerAdapter.notifyItemChanged(position); // 17/4/21 fix the position while click img to preview
 //        mRecyclerAdapter.notifyItemChanged(position + (imagePicker.isShowCamera() ? 1 : 0));// 17/4/24  fix the position while click right bottom preview button
@@ -313,6 +360,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         if (data != null && data.getExtras() != null) {
             if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                 isOrigin = data.getBooleanExtra(ImagePreviewActivity.ISORIGIN, false);
+                mCbOrigin.setChecked(isOrigin);
             } else {
                 //从拍照界面返回
                 //点击 X , 没有选择照片
@@ -369,4 +417,21 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         }
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        int id = buttonView.getId();
+        if (id == res_cb_origin) {
+            if (isChecked) {
+                long size = 0;
+                for (ImageItem item : imagePicker.getSelectedImages())
+                    size += item.size;
+                String fileSize = Formatter.formatFileSize(this, size);
+                isOrigin = true;
+                mCbOrigin.setText(getString(res_origin_size, fileSize));
+            } else {
+                isOrigin = false;
+                mCbOrigin.setText(getString(res_origin));
+            }
+        }
+    }
 }

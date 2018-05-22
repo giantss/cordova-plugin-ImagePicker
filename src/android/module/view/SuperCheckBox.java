@@ -14,7 +14,7 @@ import android.widget.CheckBox;
  * 修订历史：
  * ================================================
  */
-public class SuperCheckBox extends CheckBox {
+public class SuperCheckBox extends android.support.v7.widget.AppCompatCheckBox {
 
     public SuperCheckBox(Context context) {
         super(context);
