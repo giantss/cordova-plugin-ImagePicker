@@ -76,6 +76,9 @@ ImagePicker.getPictures(function(result) {
 }
 ```
 
+ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
+
+
 ## 参数含义
 
 | 配置参数            | 参数含义                   |
@@ -133,6 +136,9 @@ ImagePicker.getPictures(function(result) {
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+
+### v1.1.2
+- (Android)修复部分手机图片预览页返回时，图片墙的小图全没了
 
 ### v1.1.1
 
