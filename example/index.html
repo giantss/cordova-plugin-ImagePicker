@@ -8,7 +8,8 @@
 </head>
 <body>
 
-<button id="btn"> 选择图片</button>
+<button id="btn1">选择图片(最大1920*1440)</button>
+<button id="btn2">选择图片(自动宽高)</button>
 
 <div id="img_list"></div>
 
@@ -25,25 +26,28 @@
         // Bind any cordova events here. Common events are:
         // 'pause', 'resume', etc.
         onDeviceReady: function () {
-            this.receivedEvent('btn');
+            document.getElementById('btn1').onclick = Demo.getImage1;
+            document.getElementById('btn2').onclick = Demo.getImage2;
         },
 
-        // Update DOM on a Received Event
-        receivedEvent: function (id) {
-            document.getElementById(id).onclick = Demo.getImage;
-
-            console.log('Received Event: ' + id);
-        },
-
-        getImage: function () {
+        getImage1: function () {
             ImagePicker.getPictures(function (result) {
                 Demo.showImage(result);
             }, function (err) {
                 alert(err);
             }, {maximumImagesCount: 9, width: 1920, height: 1440, quality: 100});
         },
+        
+        getImage2: function () {
+            ImagePicker.getPictures(function (result) {
+                Demo.showImage(result);
+            }, function (err) {
+                alert(err);
+            }, {maximumImagesCount: 9, width: -1, height: -1, quality: 100});
+        },
 
-        showImage: function (list) {
+        showImage: function (result) {
+            var list = result.images;
             var imgContainer = document.getElementById("img_list");
             imgContainer.innerHTML = "";
 
@@ -56,15 +60,11 @@
                         var img = new Image();
                         img.onload = function () {
                             var node = document.createElement('p');
-                            node.innerHTML = "onload naturalWidth:" + img.naturalWidth + ",naturalHeight:" + img.naturalHeight;
+                            node.innerHTML = "naturalWidth:" + img.naturalWidth + ", naturalHeight:" + img.naturalHeight;
                             div.appendChild(node);
                         };
-                        img.src = list[x];
-                        img.width = 20;
-
-                        var p = document.createElement("p");
-                        p.innerHTML = "naturalWidth:" + img.naturalWidth + ",naturalHeight:" + img.naturalHeight;
-                        div.appendChild(p);
+                        img.src = list[x] + '?' + new Date().getTime();
+                        img.width = 200;
 
                         div.appendChild(img);
 
@@ -77,6 +77,6 @@
 
     Demo.initialize();
 </script>
-<script type="text/javascript" src="../cordova.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
 </body>
 </html>
