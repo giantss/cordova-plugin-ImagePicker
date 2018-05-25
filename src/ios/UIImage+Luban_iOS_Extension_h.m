@@ -29,7 +29,7 @@ static char customImageName;
     int thumbW = fixelW % 2  == 1 ? fixelW + 1 : fixelW;
     int thumbH = fixelH % 2  == 1 ? fixelH + 1 : fixelH;
     
-    double scale = ((double)fixelW/fixelH);
+    double scale = ((double)fixelW/(double)fixelH);
     
     if (scale <= 1 && scale > 0.5625) {
         
@@ -129,7 +129,7 @@ static char customImageName;
     UIImage *thumbImage = [image fixOrientation];
     thumbImage = [thumbImage resizeImage:image thumbWidth:width thumbHeight:height withMask:maskName];
     
-    int qualityCompress = 1.0;
+    float qualityCompress = 1.0f;
     
     NSData *imageData = UIImageJPEGRepresentation(thumbImage, qualityCompress);
     
@@ -161,8 +161,10 @@ static char customImageName;
             inSampleSize *= 2;
         }
     }
-    int heightRatio = (int)ceil(outH / (float) height);
-    int widthRatio  = (int)ceil(outW / (float) width);
+    int outWith  = (int)((outW / (float) width)*10);
+    int outHeiht = (int)((outH / (float) height)*10);
+    float heightRatio = outHeiht/10.0;
+    float widthRatio  = outWith/10.0;
     
     if (heightRatio > 1 || widthRatio > 1) {
         
