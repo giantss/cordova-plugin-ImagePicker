@@ -58,9 +58,9 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context appContext = getApplicationContext();
-        Resources resource = appContext.getResources();
-        String pkgName = appContext.getPackageName();
+        final Context appContext = getApplicationContext();
+        final Resources resource = appContext.getResources();
+        final String pkgName = appContext.getPackageName();
 
         res_btn_ok = resource.getIdentifier("btn_ok", "id", pkgName);
         res_btn_back = resource.getIdentifier("btn_back", "id", pkgName);
@@ -75,7 +75,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
         res_fade_in = resource.getIdentifier("fade_in", "anim", pkgName);
         res_transparent = resource.getIdentifier("transparent", "color", pkgName);
         res_status_bar = resource.getIdentifier("status_bar", "color", pkgName);
-        int res_preview_image_count = resource.getIdentifier("preview_image_count", "string", pkgName);
+        final int res_preview_image_count = resource.getIdentifier("preview_image_count", "string", pkgName);
 
         isOrigin = getIntent().getBooleanExtra(ImagePreviewActivity.ISORIGIN, false);
         imagePicker.addOnImageSelectedListener(this);

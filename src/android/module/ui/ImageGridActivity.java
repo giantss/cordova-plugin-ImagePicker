@@ -200,6 +200,12 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     }
 
     @Override
+    public void onBackPressed() {
+        //this.setResult(ImagePicker.RESULT_CODE_ITEMS, null);
+        this.finish();
+    }
+
+    @Override
     protected void onDestroy() {
         imagePicker.removeOnImageSelectedListener(this);
         super.onDestroy();
@@ -240,6 +246,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
         } else if (id == res_btn_back) {
             //点击返回按钮
+            //this.setResult(ImagePicker.RESULT_CODE_ITEMS, null);
             finish();
         }
     }
@@ -366,6 +373,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                 //点击 X , 没有选择照片
                 if (data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS) == null) {
                     //什么都不做 直接调起相机
+                    //setResult(ImagePicker.RESULT_CODE_ITEMS, null);
                 } else {
                     //说明是从裁剪页面过来的数据，直接返回就可以
                     setResult(ImagePicker.RESULT_CODE_ITEMS, data);
@@ -412,6 +420,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                     finish();
                 }
             } else if (directPhoto){
+                //this.setResult(ImagePicker.RESULT_CODE_ITEMS, null);
                 finish();
             }
         }

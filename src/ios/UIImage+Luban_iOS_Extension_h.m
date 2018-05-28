@@ -170,7 +170,7 @@ static char customImageName;
         
         inSampleSize = heightRatio > widthRatio ? heightRatio : widthRatio;
     }
-    CGSize thumbSize = CGSizeMake((NSUInteger)((CGFloat)outW/widthRatio), (NSUInteger)((CGFloat)outH/heightRatio));
+    CGSize thumbSize = CGSizeMake((NSUInteger)((CGFloat)(outW/inSampleSize)), (NSUInteger)((CGFloat)(outH/inSampleSize)));
     
     UIGraphicsBeginImageContext(thumbSize);
     

@@ -18,12 +18,6 @@
 - Cordova-Android >= 6.0.0
 - Cordova-iOS >= 4.0.0
 
-## iOS Requirements 要求
-
-OS 6 or later. Requires ARC iOS6及以上系统可使用. ARC环境.
-
-When system version is iOS6 or iOS7, Using AssetsLibrary. When system version is iOS8 or later, Using PhotoKit. 如果运行在iOS6或7系统上，用的是AssetsLibrary库获取照片资源。 如果运行在iOS8及以上系统上，用的是PhotoKit库获取照片资源。
-
 ## 安装
 
  - `cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git`
@@ -112,6 +106,10 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
     ```
     其中`{required version}` 值为类似 `25.+`，`26.+`，`27.+` 这种。
 
+- 如果你用的是 低版本 Cordova 和 Gradle，会报错不支持`implementation`
+    Cordova 7.1.0 及以下版本（对应Cordova-Android@6.3.0及以下版本），请将 `cordova-plugin-ImagePicker\src\android\imagepicker.gradle` 里面的 `implementation` 修改为 `compile`，
+因为低版本的 Cordova-Android 使用的是低版本的 Gradle, 不支持 `implementation`。
+
 - 如果还是 build 不成功
     ```
     $ cordova platform rm android
@@ -136,6 +134,11 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+
+### v1.1.3
+- (Android)修复低版本 Cordova-Android 和 Gradle 的情况下, build 出现 diamond  运算符异常的问题
+- (Android)增加 `takePhoto` 方法，直接进入拍照
+- (Android)增加失败回调，取消选图时会触发该回调
 
 ### v1.1.2
 - (Android)修复部分手机图片预览页返回时，图片墙的小图全没了

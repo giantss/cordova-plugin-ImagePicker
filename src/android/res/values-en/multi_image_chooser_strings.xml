@@ -12,4 +12,5 @@
     <string name="select">Select</string>
     <string name="select_image">Select Image</string>
     <string name="camera">Camera</string>
+    <string name="canceled">Canceled</string>
 </resources>

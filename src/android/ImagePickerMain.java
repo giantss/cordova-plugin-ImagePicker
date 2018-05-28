@@ -1,6 +1,7 @@
 package com.giants.imagepicker;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
@@ -101,8 +102,16 @@ public class ImagePickerMain extends CordovaPlugin {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            if (data != null && requestCode == 100) {
+        if (requestCode == 100) {
+            if(data == null) {
+                Context appContext = this.cordova.getActivity().getApplicationContext();
+                Resources resource = appContext.getResources();
+                String pkgName = appContext.getPackageName();
+                int res_canceled = resource.getIdentifier("canceled", "string", pkgName);
+                String canceled = resource.getString(res_canceled);
+                this.callbackContext.error(canceled);
+            }
+            else if (data != null && resultCode == ImagePicker.RESULT_CODE_ITEMS) {
 
                 Context context = cordova.getActivity().getApplicationContext();
 
