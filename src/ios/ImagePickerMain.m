@@ -781,7 +781,12 @@
 /// User click cancel button
 /// 用户点击了取消
 - (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-    // NSLog(@"cancel");
+    NSLog(@"cancel");
+    
+    if(_callback != NULL) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"已取消"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callback];
+    }
 }
 
 // The picker should dismiss itself; when it dismissed these handle will be called.
