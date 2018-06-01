@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-imagepicker",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Cordova ImagePicker Plugin",
   "cordova": {
     "id": "cordova-plugin-imagepicker",
@@ -32,7 +32,7 @@
     }
   },
   "devDependencies": {
-    "jshint": "0.0.1"
+    "jshint": "^0.1.8"
   },
   "dependencies": {
     "async": "^2.6.0"

@@ -124,24 +124,35 @@ public class ImagePickerMain extends CordovaPlugin {
                 }
                 String targetDirPath = targetDir.getAbsolutePath();
 
-                ArrayList imagePaths = new ArrayList();
+                ArrayList imageObjects = new ArrayList();
 
                 for (Iterator it = images.iterator(); it.hasNext(); ) {
                     ImageItem imageItem = (ImageItem) it.next();
 
                     if(TextUtils.isEmpty(imageItem.path)) continue;;
 
-                    if(isOrigin) {
-                        imagePaths.add(imageItem.path);
-                    }
-                    else { // 压缩
-                        File oldFile = new File(imageItem.path);
+                    String newPath = "";
+                    int newWidth = -1;
+                    int newHeight = -1;
+                    long newSize = -1;
 
+                    if(isOrigin) {
+                        newPath = imageItem.path;
+                        newWidth = imageItem.width;
+                        newHeight = imageItem.height;
+                        newSize = imageItem.size;
+                    }
+                    else {
                         // do not compress gif
                         if(imageItem.path.toLowerCase().endsWith(".gif")) {
-                            imagePaths.add(oldFile.getAbsolutePath());
+                            newPath = imageItem.path;
+                            newWidth = imageItem.width;
+                            newHeight = imageItem.height;
+                            newSize = imageItem.size;
                         }
-                        else {
+                        else { // 压缩
+                            File oldFile = new File(imageItem.path);
+
                             Log.v(TAG, "Image size before compression =====> " + readableFileSize(oldFile.length()));
 
                             File newFile = null;
@@ -174,20 +185,40 @@ public class ImagePickerMain extends CordovaPlugin {
                             }
 
                             if(newFile != null) {
-                                imagePaths.add(newFile.getAbsolutePath());
+                                newPath = newFile.getAbsolutePath();
+                                newSize = newFile.length();
 
-                                Log.v(TAG, "Image size after compression =====> " + readableFileSize(newFile.length()));
+                                BitmapFactory.Options bounds = new BitmapFactory.Options();
+                                bounds.inJustDecodeBounds = true;
+                                BitmapFactory.decodeFile(newPath, bounds);
+                                newHeight = bounds.outHeight;
+                                newWidth = bounds.outWidth;
+
+                                Log.v(TAG, "Image size after compression =====> " + readableFileSize(newSize));
                             }
                         }
-
                     }
 
+                    if(!TextUtils.isEmpty(newPath)) {
+                        try {
+                            JSONObject obj = new JSONObject();
+                            obj.put("path", newPath);
+                            obj.put("width", newWidth);
+                            obj.put("height", newHeight);
+                            obj.put("size", newSize);
+
+                            imageObjects.add(obj);
+                        } catch (Exception e) {
+
+                            Log.getStackTraceString(e);
+                        }
+                    }
                 }
 
                 images.clear();
 
                 try {
-                    JSONArray images = new JSONArray(imagePaths);
+                    JSONArray images = new JSONArray(imageObjects);
 
                     JSONObject obj = new JSONObject();
                     obj.put("images", images);

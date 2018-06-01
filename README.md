@@ -60,12 +60,17 @@ ImagePicker.getPictures(function(result) {
 返回结果如下：
 ```
 {
-    "images": [
-        "/storage/emulated/0/com.ruguoapp.jike/jikeImg/jike_1526912081333_pic.gif", 
-        "/data/user/0/com.pushsoft.imagepicker/cache/ImagePicker/1526957362446190.jpg", 
-        "/data/user/0/com.pushsoft.imagepicker/cache/ImagePicker/1526957362520245.jpg", 
-        "/data/user/0/com.pushsoft.imagepicker/cache/ImagePicker/152695736256873.jpg"
-    ],
+    "images": [{
+        "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
+        "width": 720,
+        "height": 1280,
+        "size": 104871 // 文件体积(单位：字节)
+    }, {
+        "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817464525.jpg",
+        "width": 720,
+        "height": 1280,
+        "size": 109873
+    }],
     "isOrigin": false // 是否原图
 }
 ```
@@ -134,6 +139,10 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+
+### v1.1.4
+- 返回值增加 图片宽高和文件体积
+- (iOS)修复ios压缩某些图片模糊的问题
 
 ### v1.1.3
 - (Android)修复低版本 Cordova-Android 和 Gradle 的情况下, build 出现 diamond  运算符异常的问题
