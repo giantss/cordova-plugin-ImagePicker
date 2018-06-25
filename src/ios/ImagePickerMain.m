@@ -287,21 +287,43 @@
                 
                 NSData *compressed;
                 
-                if(maxWidth > 0 && maxHeight > 0) {
-                    compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight];
+                CGSize targetSize = CGSizeMake(0, 0);
+                CGFloat maxHeight = self.height;
+                CGFloat maxWidth = self.width;
+                CGSize imageSize = photo.size;
+                CGFloat width = imageSize.width;
+                CGFloat height = imageSize.height;
+                CGFloat ratio=width/height;
+                //横向的图片
+                if(ratio>1){
+                    if(height>maxHeight){
+                        targetSize=CGSizeMake(width*maxHeight/height, maxHeight);
+                    }
+                    
+                }else{
+                    //竖向图片
+                    
+                    //宽度大于最大宽度
+                    if(width>maxWidth){
+                        targetSize=CGSizeMake(maxWidth, height*maxWidth/width);
+                    }
+                    
                 }
-                else { // maxWidth 和 maxHeight 如果小于0，就自动压缩分辨率
-                    compressed = [UIImage lubanCompressImage:photo];
+                //如果需要裁剪
+                if(targetSize.width>0){
+                    UIGraphicsBeginImageContext(targetSize);
+                    [photo drawInRect:CGRectMake(0,0,targetSize.width,targetSize.height)];
+                    photo=UIGraphicsGetImageFromCurrentImageContext();
                 }
-                
-                UIImage *newImage   = [UIImage imageWithData:compressed];
+                //压缩成jpg，压缩速度快，体积小，不用png压缩
+                compressed = UIImageJPEGRepresentation(photo, self.quality/100.f);
                 
                 NSString *fileName = [[[originName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
                 NSString *path = [self saveNSDataToFile:compressed withName:fileName];
                 NSDictionary* fileObj = @{
                                           @"path": path,
-                                          @"width": @(newImage.size.width * newImage.scale),
-                                          @"height": @(newImage.size.height * newImage.scale),
+                                          @"width": @(photo.size.width * photo.scale),
+                                          @"height": @(photo.size.height * photo.scale),
                                           @"size": @([compressed length])
                                           };
                 [compressedPaths addObject:fileObj];
