@@ -139,6 +139,8 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.1.6
+- (Android)移除[picasso](https://github.com/square/picasso)引用和相关实现逻辑代码
 
 ### v1.1.5
 - (iOS)取消选图支持回调函数
