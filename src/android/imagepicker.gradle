@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    implementation 'com.android.support:appcompat-v7:+'
+    implementation 'com.android.support:recyclerview-v7:+'
+    implementation 'com.android.support:exifinterface:+'
+    implementation 'com.github.chrisbanes.photoview:library:1.+'
+    implementation 'com.github.bumptech.glide:glide:4.+'
+    implementation 'com.github.nanchen2251:CompressHelper:1.0.+'
+    implementation 'top.zibin:Luban:1.1.+'
+}
+android {
+   packagingOptions {
+       exclude 'META-INF/NOTICE'
+       exclude 'META-INF/LICENSE'
+   }
+}
+ext.postBuildExtras = {
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+        allprojects {
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_1_7
+                targetCompatibility = JavaVersion.VERSION_1_7
+            }
+        }
+    }
+}

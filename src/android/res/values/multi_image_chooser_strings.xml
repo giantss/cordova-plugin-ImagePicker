@@ -9,4 +9,8 @@
     <string name="photo_crop">图片裁剪</string>
     <string name="origin">原图</string>
     <string name="origin_size">原图(%1$s)</string>
+    <string name="select">选择</string>
+    <string name="select_image">选择图片</string>
+    <string name="camera">拍摄照片</string>
+    <string name="canceled">已取消</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.giants.imagepicker.ui;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.your.package.name.R;
+import com.giants.imagepicker.ImagePicker;
 import com.giants.imagepicker.view.SystemBarTintManager;
 
 /**
@@ -34,7 +36,11 @@ public class ImageBaseActivity extends AppCompatActivity {
         }
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.color.status_bar);  //设置上方状态栏的颜色
+
+        Context appContext = getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+        tintManager.setStatusBarTintResource(resource.getIdentifier("status_bar", "color", pkgName));  //设置上方状态栏的颜色
     }
 
     @TargetApi(19)
@@ -56,5 +62,17 @@ public class ImageBaseActivity extends AppCompatActivity {
 
     public void showToast(String toastText) {
         Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ImagePicker.getInstance().restoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ImagePicker.getInstance().saveInstanceState(outState);
     }
 }

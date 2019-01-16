@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-ImagePicker",
-  "version": "1.0.3",
+  "name": "cordova-plugin-imagepicker",
+  "version": "1.1.6",
   "description": "Cordova ImagePicker Plugin",
   "cordova": {
-    "id": "cordova-plugin-ImagePicker",
+    "id": "cordova-plugin-imagepicker",
     "platforms": [
       "ios",
       "android"
@@ -21,7 +21,20 @@
   ],
   "author": "giantss",
   "license": "Apache-2.0",
+  "engines": {
+    "cordovaDependencies": {
+      "1.0.0": {
+        "cordova-android": ">6.0.0"
+      },
+      "2.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
   "devDependencies": {
-    "jshint": "0.0.1"
+    "jshint": "^0.1.8"
+  },
+  "dependencies": {
+    "async": "^2.6.0"
   }
 }

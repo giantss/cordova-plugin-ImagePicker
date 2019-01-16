@@ -1,5 +1,7 @@
 package com.giants.imagepicker;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,10 +16,10 @@ import com.giants.imagepicker.bean.ImageItem;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import com.your.package.name.R;
 
 
 public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
+    private int res_all_images;
 
     public static final int LOADER_ALL = 0;         //加载所有图片
     public static final int LOADER_CATEGORY = 1;    //分类加载图片
@@ -34,6 +36,8 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
     private OnImagesLoadedListener loadedListener;                     //图片加载完成的回调接口
     private ArrayList<ImageFolder> imageFolders = new ArrayList<>();   //所有的图片文件夹
 
+    private LoaderManager loaderManager=null;
+
     /**
      * @param activity       用于初始化LoaderManager，需要兼容到2.3
      * @param path           指定扫描的文件夹目录，可以为 null，表示扫描所有图片
@@ -43,7 +47,12 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         this.activity = activity;
         this.loadedListener = loadedListener;
 
-        LoaderManager loaderManager = activity.getSupportLoaderManager();
+        Context appContext = activity.getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+        res_all_images = resource.getIdentifier("all_images", "string", pkgName);
+
+        loaderManager = activity.getSupportLoaderManager();
         if (path == null) {
             loaderManager.initLoader(LOADER_ALL, null, this);//加载所有的图片
         } else {
@@ -76,6 +85,12 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                 //查询数据
                 String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                 String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+
+                File file = new File(imagePath);
+                if (!file.exists() || file.length() <= 0) {
+                    continue;
+                }
+
                 long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
                 int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
                 int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
@@ -109,10 +124,10 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                 }
             }
             //防止没有图片报异常
-            if (data.getCount() > 0) {
+            if (data.getCount() > 0 && allImages.size()>0) {
                 //构造所有图片的集合
                 ImageFolder allImagesFolder = new ImageFolder();
-                allImagesFolder.name = activity.getResources().getString(R.string.all_images);
+                allImagesFolder.name = activity.getResources().getString(res_all_images);
                 allImagesFolder.path = "/";
                 allImagesFolder.cover = allImages.get(0);
                 allImagesFolder.images = allImages;
@@ -123,6 +138,11 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         //回调接口，通知图片数据准备完成
         ImagePicker.getInstance().setImageFolders(imageFolders);
         loadedListener.onImagesLoaded(imageFolders);
+
+        // fix: 点击图片返回后图片没有了
+        if(loaderManager.getLoader(LOADER_ALL)!=null) {
+            loaderManager.destroyLoader(LOADER_ALL);
+        }
     }
 
     @Override

@@ -10,7 +10,7 @@
         android:id="@+id/iv_cover"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/default_image"/>
 
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/all_images"
             android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tv_image_count"
@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@mipmap/list_selected"/>
+        android:layout_marginRight="18dp"
+        android:src="@mipmap/radio_checked"/>
 
 </LinearLayout>

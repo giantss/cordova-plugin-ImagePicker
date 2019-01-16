@@ -24,11 +24,10 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 
-import com.your.package.name.R;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -101,18 +100,80 @@ public class CropImageView extends AppCompatImageView {
         mFocusHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mFocusHeight, getResources().getDisplayMetrics());
         mBorderWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mBorderWidth, getResources().getDisplayMetrics());
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CropImageView);
-        mMaskColor = a.getColor(R.styleable.CropImageView_cropMaskColor, mMaskColor);
-        mBorderColor = a.getColor(R.styleable.CropImageView_cropBorderColor, mBorderColor);
-        mBorderWidth = a.getDimensionPixelSize(R.styleable.CropImageView_cropBorderWidth, mBorderWidth);
-        mFocusWidth = a.getDimensionPixelSize(R.styleable.CropImageView_cropFocusWidth, mFocusWidth);
-        mFocusHeight = a.getDimensionPixelSize(R.styleable.CropImageView_cropFocusHeight, mFocusHeight);
-        mDefaultStyleIndex = a.getInteger(R.styleable.CropImageView_cropStyle, mDefaultStyleIndex);
+        TypedArray a = context.obtainStyledAttributes(attrs, getResourceDeclareStyleableIntArray(context, "CropImageView"));
+        mMaskColor = a.getColor(getResourceDeclareStyleableInt(context, "CropImageView_cropMaskColor"), mMaskColor);
+        mBorderColor = a.getColor(getResourceDeclareStyleableInt(context, "CropImageView_cropBorderColor"), mBorderColor);
+        mBorderWidth = a.getDimensionPixelSize(getResourceDeclareStyleableInt(context, "CropImageView_cropBorderWidth"), mBorderWidth);
+        mFocusWidth = a.getDimensionPixelSize(getResourceDeclareStyleableInt(context, "CropImageView_cropFocusWidth"), mFocusWidth);
+        mFocusHeight = a.getDimensionPixelSize(getResourceDeclareStyleableInt(context, "CropImageView_cropFocusHeight"), mFocusHeight);
+        mDefaultStyleIndex = a.getInteger(getResourceDeclareStyleableInt(context, "CropImageView_cropStyle"), mDefaultStyleIndex);
         mStyle = styles[mDefaultStyleIndex];
         a.recycle();
 
         //只允许图片为当前的缩放模式
         setScaleType(ScaleType.MATRIX);
+    }
+
+    /*********************************************************************************
+     *   Returns the resource-IDs for all attributes specified in the
+     *   given <declare-styleable>-resource tag as an int array.
+     *
+     *   @param  context     The current application context.
+     *   @param  name        The name of the <declare-styleable>-resource-tag to pick.
+     *   @return             All resource-IDs of the child-attributes for the given
+     *                       <declare-styleable>-resource or <code>null</code> if
+     *                       this tag could not be found or an error occured.
+     *********************************************************************************/
+    public static final int[] getResourceDeclareStyleableIntArray( Context context, String name )
+    {
+        try
+        {
+            //use reflection to access the resource class
+            Field[] fields2 = Class.forName( context.getPackageName() + ".R$styleable" ).getFields();
+
+            //browse all fields
+            for ( Field f : fields2 )
+            {
+                //pick matching field
+                if ( f.getName().equals( name ) )
+                {
+                    //return as int array
+                    int[] ret = (int[])f.get( null );
+                    return ret;
+                }
+            }
+        }
+        catch ( Throwable t )
+        {
+        }
+
+        return null;
+    }
+
+    public static final int getResourceDeclareStyleableInt( Context context, String name )
+    {
+        try
+        {
+            //use reflection to access the resource class
+            Field[] fields2 = Class.forName( context.getPackageName() + ".R$styleable" ).getFields();
+
+            //browse all fields
+            for ( Field f : fields2 )
+            {
+                //pick matching field
+                if ( f.getName().equals( name ) )
+                {
+                    //return as int
+                    int ret = (int)f.get( null );
+                    return ret;
+                }
+            }
+        }
+        catch ( Throwable t )
+        {
+        }
+
+        return 0;
     }
 
     @Override

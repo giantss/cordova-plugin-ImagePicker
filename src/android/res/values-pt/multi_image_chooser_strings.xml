@@ -1,0 +1,16 @@
+<resources>
+    <string name="all_images">Todas as imagens</string>
+    <string name="folder_image_count">Um total de %1$d Pág.</string>
+    <string name="preview_image_count">%1$s/%2$s</string>
+    <string name="select_limit">Escolha até %1$s imagens</string>
+    <string name="complete">Completo</string>
+    <string name="select_complete">Marcado(%1$s/%2$s)</string>
+    <string name="preview_count">Total(%1$s)</string>
+    <string name="photo_crop">Imagem recortada</string>
+    <string name="origin">Original</string>
+    <string name="origin_size">Original(%1$s)</string>
+    <string name="select">Selecione</string>
+    <string name="select_image">Elige una imagen</string>
+    <string name="camera">cámara</string>
+    <string name="canceled">Cancelado</string>
+</resources>

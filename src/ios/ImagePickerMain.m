@@ -1,6 +1,7 @@
 
 
 #import "ImagePickerMain.h"
+#import "UIImage+Luban_iOS_Extension_h.h"
 
 #define CDV_PHOTO_PREFIX @"cdv_photo_"
 
@@ -8,7 +9,7 @@
     NSMutableArray *_selectedPhotos;
     NSMutableArray *_selectedAssets;
     BOOL _isSelectOriginalPhoto;
-    
+
     CGFloat _itemWH;
     CGFloat _margin;
 }
@@ -18,27 +19,30 @@
 @implementation ImagePicker
 
 /**
- *  插件初始化主要用于appkey的注册
+ *  插件初始化
  */
 - (void)pluginInitialize
 {
-    
-    
     _enableShowTakePhoto = true;
-    _enableSortAscending = true;
+    _enableShowTakeVideo = true;
+    _enableSortAscending = false;
     _enablePickingVideo = false;
     _enablePickingImage = true;
     _enablePickingGif = false;
     _enablePickingOriginalPhoto = false;
+
     _enableShowSheet = false;
     _enableCrop = false;
     _enableCircleCrop = false;
+    _enablePickingMuitlpleVideo = true;
+    _enableSelectedIndex = true;
+    
     _maxCountTF = 9;
     _columnNumberTF = 4;
     _width = 720;
     _height = 960;
     _quality = 80;
-    
+
 }
 
 
@@ -47,60 +51,65 @@
  */
 - (void)getPictures:(CDVInvokedUrlCommand *)command{
     _callback = command.callbackId;
-    
+
     NSDictionary *paramOptions = [command.arguments objectAtIndex: 0];
-    
+
     self.maxCountTF  = [[paramOptions objectForKey:@"maximumImagesCount"] integerValue];
     self.width  = [[paramOptions objectForKey:@"width"] integerValue];
     self.height  = [[paramOptions objectForKey:@"height"] integerValue];
     self.quality  = [[paramOptions objectForKey:@"quality"] integerValue];
-    
-    
+
     if (self.maxCountTF <= 0) {
         return;
     }
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF columnNumber:self.columnNumberTF delegate:(id<TZImagePickerControllerDelegate>)self pushPhotoPickerVc:YES];
-    
-    
+
+
 #pragma mark - 四类个性化设置，这些参数都可以不传，此时会走默认设置
     imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-    
+
     if (self.maxCountTF > 1) {
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
     imagePickerVc.allowTakePicture = self.enableShowTakePhoto; // 在内部显示拍照按钮
-    
+
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
     // imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
     // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
     // imagePickerVc.navigationBar.translucent = NO;
-    
+
     // 3. Set allow picking video & photo & originalPhoto or not
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
     imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
-    
+    imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo; // 是否可以多选视频
+
     // 4. 照片排列按修改时间升序
     imagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
-    
+
     // imagePickerVc.minImagesCount = 3;
     // imagePickerVc.alwaysEnableDoneBtn = YES;
-    
+
     // imagePickerVc.minPhotoWidthSelectable = 3000;
     // imagePickerVc.minPhotoHeightSelectable = 2000;
-    
+
     /// 5. Single selection mode, valid when maxImagesCount = 1
     /// 5. 单选模式,maxImagesCount为1时才生效
     imagePickerVc.showSelectBtn = NO;
     imagePickerVc.allowCrop = self.enableCrop;
     imagePickerVc.needCircleCrop = self.enableCircleCrop;
-    imagePickerVc.circleCropRadius = 100;
-    imagePickerVc.isStatusBarDefault = NO;
+    // 设置竖屏下的裁剪尺寸
+    //NSInteger left = 30;
+    //NSInteger widthHeight = self.view.tz_width - 2 * left;
+    //NSInteger top = (self.view.tz_height - widthHeight) / 2;
+    //imagePickerVc.cropRect = CGRectMake(left, top, widthHeight, widthHeight);
+    // 设置横屏下的裁剪尺寸
+    // imagePickerVc.cropRectLandscape = CGRectMake((self.view.tz_height - widthHeight) / 2, left, widthHeight, widthHeight);
     /*
      [imagePickerVc setCropViewSettingBlock:^(UIView *cropView) {
      cropView.layer.borderColor = [UIColor redColor].CGColor;
@@ -108,87 +117,249 @@
      }];*/
     
     //imagePickerVc.allowPreview = NO;
-#pragma mark - 到这里为止
+    // 自定义导航栏上的返回按钮
+    /*
+     [imagePickerVc setNavLeftBarButtonSettingBlock:^(UIButton *leftButton){
+     [leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+     [leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 20)];
+     }];
+     imagePickerVc.delegate = self;
+     */
     
+    // Deprecated, Use statusBarStyle
+    // imagePickerVc.isStatusBarDefault = NO;
+    imagePickerVc.statusBarStyle = UIStatusBarStyleLightContent;
+    
+    // 设置是否显示图片序号
+    imagePickerVc.showSelectedIndex = self.enableSelectedIndex;
+    
+    // 设置首选语言 / Set preferred language
+    // imagePickerVc.preferredLanguage = @"zh-Hans";
+    
+    // 设置languageBundle以使用其它语言 / Set languageBundle to use other language
+    // imagePickerVc.languageBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"tz-ru" ofType:@"lproj"]];
+#pragma mark - 到这里为止
+
     // You can get the photos by block, the same as by delegate.
     // 你可以通过block或者代理，来得到用户选择的照片.
     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-        
-        NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
-        
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-        
-        NSString *fileName;
-        
-        
-        for (id asset in assets) {
-            if ([asset isKindOfClass:[PHAsset class]]) {
-                PHAsset *phAsset = (PHAsset *)asset;
-                fileName = [phAsset valueForKey:@"filename"];
-            } else if ([asset isKindOfClass:[ALAsset class]]) {
-                ALAsset *alAsset = (ALAsset *)asset;
-                fileName = alAsset.defaultRepresentation.filename;;
-            }
-            
-            
-            
-            
-            
-            
-            CGSize size = CGSizeMake(self.width, self.height);
-            
-            // 从asset中获得图片
-            [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+
+            if(isSelectOriginalPhoto) {
+                __block NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
                 
-                // NSLog(@"图片名字:%@",fileName);
-                
-                
-                //                    NSURL *URL = [info valueForKey:@"PHImageFileURLKey"];
-                //                    if(URL != NULL){
-                
-                NSString *sanboxPath =  [self saveAndGetImageDocuments:result withName:fileName];
-                
-                
-                
-                [pathsArr addObject: sanboxPath];
-                //                    }
-                
-                NSLog(@"%@",pathsArr);
-                if([pathsArr count] != 0 && [pathsArr count] == [assets count]){
-                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:pathsArr];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                    //清空选中状态
-                    _selectedAssets = nil;
+                [self saveOriginalImage:assets currentIdx:0 originalPathArray:pathsArr completion:^(NSMutableArray *paths) {
                     
+                    NSLog(@"All finished.");
+                    
+                    NSDictionary* result = @{@"images": paths, @"isOrigin": @(YES)};
+                    
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+                    
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    
+                    _isSelectOriginalPhoto = FALSE;
+                }];
+            }
+            else {
+                
+                /*NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
+                
+                for(int i=0; i<[photos count]; i++) {
+                    UIImage *photo = photos[i];
+                    id asset = assets[i];
+                    
+                    NSString *fileName = [self getFileNameForAsset:asset];
+                    
+                    NSString *filePath = [self saveImgToFile:photo withName:fileName];
+                    
+                    [pathsArr addObject: filePath];
                 }
                 
-            }];
+                if([pathsArr count] != 0 && [pathsArr count] == [photos count]) {
+                    NSDictionary* result = @{@"images": pathsArr, @"isOrigin": @(NO)};
+                    
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+                    
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                
+                _isSelectOriginalPhoto = FALSE;*/
+                
+                
+                __block NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
+                
+                [self saveCompressImage:assets currentIdx:0 compressedPathArray:pathsArr completion:^(NSMutableArray *paths) {
+                    
+                    NSLog(@"All finished.");
+                    
+                    NSDictionary* result = @{@"images": paths, @"isOrigin": @(NO)};
+                    
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+                    
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                    
+                    _isSelectOriginalPhoto = FALSE;
+                }];
+            }
             
-            
-            
-        }
-        
-        
+            _selectedAssets = nil;
+
     }];
-    
+
     [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
+//获取原始文件名
+- (NSString *)getFileNameForAsset:(id)asset {
+    NSString *fileName;
+    
+    if ([asset isKindOfClass:[PHAsset class]]) {
+        PHAsset *phAsset = (PHAsset *)asset;
+        fileName = [phAsset valueForKey:@"filename"];
+    } else if ([asset isKindOfClass:[ALAsset class]]) {
+        ALAsset *alAsset = (ALAsset *)asset;
+        fileName = alAsset.defaultRepresentation.filename;
+    }
+    
+    return fileName;
+}
 
-//保存获取图片
-- (NSString *)saveAndGetImageDocuments:(UIImage *)currentImage withName:(NSString*)imageName{
+- (void)saveOriginalImage:(NSArray *)assets currentIdx:(NSInteger)idx  originalPathArray:(NSMutableArray *)originalPaths completion:(void (^)(NSMutableArray *photos))completion {
+    if([assets count] - 1 >= idx) {
+        id asset = assets[idx];
+        
+        __block NSInteger index = idx;
+        __block NSString *fileName = [self getFileNameForAsset:asset];
+        
+        [[TZImageManager manager] getOriginalPhotoDataWithAsset:asset completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
+            
+            NSString *path = [self saveNSDataToFile:data withName:fileName];
+            NSDictionary* fileObj = @{
+                                      @"path": path,
+                                      @"width": @([asset pixelWidth]),
+                                      @"height": @([asset pixelHeight]),
+                                      @"size": @([data length])
+                                      };
+            [originalPaths addObject:fileObj];
+            
+            index += 1;
+            [self saveOriginalImage:assets currentIdx:index originalPathArray:originalPaths completion:completion];
+        }];
+    }
+    else {
+        if (completion) {
+            completion(originalPaths);
+        }
+    }
+}
     
-    NSData *imageData = UIImageJPEGRepresentation(currentImage, 0.8);
     
-    // 获取沙盒目录
-    NSString *fullPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:imageName];
+- (void)saveCompressImage:(NSArray *)assets currentIdx:(NSInteger)idx compressedPathArray:(NSMutableArray *)compressedPaths completion:(void (^)(NSMutableArray *photos))completion {
+    if([assets count] - 1 >= idx) {
+        id asset = assets[idx];
+        
+        __block NSInteger index = idx;
+        
+        NSString *originName = [self getFileNameForAsset:asset];
+        NSString *originExt = [[originName pathExtension] lowercaseString]; // origin file extension
+        
+        __block int maxWidth = (int)self.width;
+        __block int maxHeight = (int)self.height;
+        
+        // do not compress gif
+        if([originExt isEqualToString:@"gif"]) {
+            [[TZImageManager manager] getOriginalPhotoDataWithAsset:asset completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
+                
+                NSString *path = [self saveNSDataToFile:data withName:originName];
+                NSDictionary* fileObj = @{
+                                          @"path": path,
+                                          @"width": @([asset pixelWidth]),
+                                          @"height": @([asset pixelHeight]),
+                                          @"size": @([data length])
+                                          };
+                [compressedPaths addObject:fileObj];
+                
+                index += 1;
+                [self saveCompressImage:assets currentIdx:index compressedPathArray:compressedPaths completion:completion];
+            }];
+        }
+        else {
+            [[TZImageManager manager] getOriginalPhotoWithAsset:asset completion:^(UIImage *photo, NSDictionary *info) {
+                
+                NSData *compressed;
+                
+                if(maxWidth > 0 && maxHeight > 0) {
+                    compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight];
+                }
+                else { // maxWidth 和 maxHeight 如果小于0，就自动压缩分辨率
+                    compressed = [UIImage lubanCompressImage:photo];
+                }
+                
+                UIImage *newImage   = [UIImage imageWithData:compressed];
+                
+                NSString *fileName = [[[originName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
+                NSString *path = [self saveNSDataToFile:compressed withName:fileName];
+                NSDictionary* fileObj = @{
+                                          @"path": path,
+                                          @"width": @(newImage.size.width * newImage.scale),
+                                          @"height": @(newImage.size.height * newImage.scale),
+                                          @"size": @([compressed length])
+                                          };
+                [compressedPaths addObject:fileObj];
+                
+                index += 1;
+                [self saveCompressImage:assets currentIdx:index compressedPathArray:compressedPaths completion:completion];
+            }];
+        }
+    }
+    else {
+        if (completion) {
+            completion(compressedPaths);
+        }
+    }
+}
+
+// 创建临时保存目录
+- (NSString *)ensureSaveDirectory {
+    //NSString *storeDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSString *storeDir = [NSTemporaryDirectory() stringByAppendingPathComponent:@"ImagePicker"];
+    
+    BOOL isDir = TRUE;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:storeDir isDirectory:&isDir];
+    
+    if(!exists) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:storeDir withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    return storeDir;
+}
+    
+//保存JPG图片
+- (NSString *)saveImgToFile:(UIImage *)currentImage withName:(NSString*)imageName{
+
+    NSData *imageData = UIImageJPEGRepresentation(currentImage, 1);
+
+    NSString *fileName = [[[imageName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
+
+    // 获取沙盒临时路径
+    NSString *fullPath = [[self ensureSaveDirectory] stringByAppendingPathComponent:fileName];
+
+    // 将图片写入文件
+    [imageData writeToFile:fullPath atomically:NO];
+
+    return fullPath;
+
+}
+    
+//保存原始图片
+- (NSString *)saveNSDataToFile:(NSData *)imageData withName:(NSString*)imageName{
+    // 获取沙盒临时路径
+    NSString *fullPath = [[self ensureSaveDirectory] stringByAppendingPathComponent:imageName];
     
     // 将图片写入文件
     [imageData writeToFile:fullPath atomically:NO];
     
-    NSString *sandoxPath=[NSString stringWithFormat:@"%@/Documents/%@",NSHomeDirectory(),imageName];
-    
-    return sandoxPath;
+    return fullPath;
     
 }
 
@@ -204,11 +375,11 @@
     CGFloat targetHeight = frameSize.height;
     CGFloat scaleFactor = 0.0;
     CGSize scaledSize = frameSize;
-    
+
     if (CGSizeEqualToSize(imageSize, frameSize) == NO) {
         CGFloat widthFactor = targetWidth / width;
         CGFloat heightFactor = targetHeight / height;
-        
+
         // opposite comparison to imageByScalingAndCroppingForSize in order to contain the image within the given bounds
         if (widthFactor == 0.0) {
             scaleFactor = heightFactor;
@@ -221,16 +392,16 @@
         }
         scaledSize = CGSizeMake(width * scaleFactor, height * scaleFactor);
     }
-    
+
     UIGraphicsBeginImageContext(scaledSize); // this will resize
-    
+
     [sourceImage drawInRect:CGRectMake(0, 0, scaledSize.width, scaledSize.height)];
-    
+
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     if (newImage == nil) {
         NSLog(@"could not scale image");
     }
-    
+
     // pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
@@ -337,12 +508,12 @@
             ALAsset *alAsset = asset;
             isVideo = [[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo];
         }
-        if ([[asset valueForKey:@"filename"] containsString:@"GIF"] && self.enablePickingGif) {
+        if ([[asset valueForKey:@"filename"] containsString:@"GIF"] && self.enablePickingGif && !self.enablePickingMuitlpleVideo) {
             TZGifPhotoPreviewController *vc = [[TZGifPhotoPreviewController alloc] init];
             TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypePhotoGif timeLength:@""];
             vc.model = model;
             [self.viewController presentViewController:vc animated:YES completion:nil];
-        } else if (isVideo) { // perview video / 预览视频
+        } else if (isVideo && !self.enablePickingMuitlpleVideo) { // perview video / 预览视频
             TZVideoPlayerController *vc = [[TZVideoPlayerController alloc] init];
             TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypeVideo timeLength:@""];
             vc.model = model;
@@ -350,7 +521,10 @@
         } else { // preview photos / 预览照片
             TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithSelectedAssets:_selectedAssets selectedPhotos:_selectedPhotos index:indexPath.row];
             imagePickerVc.maxImagesCount = self.maxCountTF;
+            imagePickerVc.allowPickingGif = self.enablePickingGif;
             imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
+            imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo;
+            imagePickerVc.showSelectedIndex = self.enableSelectedIndex;
             imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
             [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
                 _selectedPhotos = [NSMutableArray arrayWithArray:photos];
@@ -379,11 +553,11 @@
     UIImage *image = _selectedPhotos[sourceIndexPath.item];
     [_selectedPhotos removeObjectAtIndex:sourceIndexPath.item];
     [_selectedPhotos insertObject:image atIndex:destinationIndexPath.item];
-    
+
     id asset = _selectedAssets[sourceIndexPath.item];
     [_selectedAssets removeObjectAtIndex:sourceIndexPath.item];
     [_selectedAssets insertObject:asset atIndex:destinationIndexPath.item];
-    
+
     [_collectionView reloadData];
 }
 
@@ -394,40 +568,53 @@
         return;
     }
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF columnNumber:self.columnNumberTF delegate:self pushPhotoPickerVc:YES];
-    
-    
-#pragma mark - 四类个性化设置，这些参数都可以不传，此时会走默认设置
+
+
+#pragma mark - 五类个性化设置，这些参数都可以不传，此时会走默认设置
     imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-    
+
     if (self.maxCountTF > 1) {
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
     imagePickerVc.allowTakePicture = self.enableShowTakePhoto; // 在内部显示拍照按钮
+    imagePickerVc.allowTakeVideo = self.enableShowTakeVideo;   // 在内部显示拍视频按钮
+    imagePickerVc.videoMaximumDuration = 10; // 视频最大拍摄时间
+    [imagePickerVc setUiImagePickerControllerSettingBlock:^(UIImagePickerController *imagePickerController) {
+        imagePickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
+    }];
     
+    // imagePickerVc.photoWidth = 1000;
+
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
-    // imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
+    // if (iOS7Later) {
+    //  imagePickerVc.navigationBar.barTintColor = [UIColor greenColor];
+    // }
     // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
     // imagePickerVc.navigationBar.translucent = NO;
-    
+    imagePickerVc.iconThemeColor = [UIColor colorWithRed:31 / 255.0 green:185 / 255.0 blue:34 / 255.0 alpha:1.0];
+    imagePickerVc.showPhotoCannotSelectLayer = YES;
+    imagePickerVc.cannotSelectLayerColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
+
     // 3. Set allow picking video & photo & originalPhoto or not
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
     imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
-    
+    imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo; // 是否可以多选视频
+
     // 4. 照片排列按修改时间升序
     imagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
-    
+
     // imagePickerVc.minImagesCount = 3;
     // imagePickerVc.alwaysEnableDoneBtn = YES;
-    
+
     // imagePickerVc.minPhotoWidthSelectable = 3000;
     // imagePickerVc.minPhotoHeightSelectable = 2000;
-    
+
     /// 5. Single selection mode, valid when maxImagesCount = 1
     /// 5. 单选模式,maxImagesCount为1时才生效
     imagePickerVc.showSelectBtn = NO;
@@ -440,17 +627,17 @@
      cropView.layer.borderColor = [UIColor redColor].CGColor;
      cropView.layer.borderWidth = 2.0;
      }];*/
-    
+
     //imagePickerVc.allowPreview = NO;
 #pragma mark - 到这里为止
-    
+
     // You can get the photos by block, the same as by delegate.
     // 你可以通过block或者代理，来得到用户选择的照片.
     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-        
-        
+
+
     }];
-    
+
     [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
@@ -477,9 +664,13 @@
         }
         // 拍照之前还需要检查相册权限
     } else if ([TZImageManager authorizationStatus] == 2) { // 已被拒绝，没有相册权限，将无法保存拍的照片
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
-        alert.tag = 1;
-        [alert show];
+        if (iOS8Later) {
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
+            [alert show];
+        } else {
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alert show];
+        }
     } else if ([TZImageManager authorizationStatus] == 0) { // 未请求过相册权限
         [[TZImageManager manager] requestAuthorizationWithCompletion:^{
             [self takePhoto];
@@ -492,12 +683,12 @@
 // 调用相机
 - (void)pushImagePickerController {
     // 提前定位
-    [[TZLocationManager manager] startLocationWithSuccessBlock:^(CLLocation *location, CLLocation *oldLocation) {
-        _location = location;
+    [[TZLocationManager manager] startLocationWithSuccessBlock:^(NSArray<CLLocation *> *locations) {
+        _location = [locations firstObject];
     } failureBlock:^(NSError *error) {
         _location = nil;
     }];
-    
+
     UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         self.imagePickerVc.sourceType = sourceType;
@@ -518,14 +709,14 @@
         tzImagePickerVc.sortAscendingByModificationDate = self.enableSortAscending;
         [tzImagePickerVc showProgressHUD];
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        
+
         // save photo and get asset / 保存图片，获取到asset
         [[TZImageManager manager] savePhotoWithImage:image location:self.location completion:^(NSError *error){
             if (error) {
                 [tzImagePickerVc hideProgressHUD];
                 NSLog(@"图片保存失败 %@",error);
             } else {
-                [[TZImageManager manager] getCameraRollAlbum:NO allowPickingImage:YES completion:^(TZAlbumModel *model) {
+                [[TZImageManager manager] getCameraRollAlbum:NO allowPickingImage:YES  needFetchAssets:NO completion:^(TZAlbumModel *model) {
                     [[TZImageManager manager] getAssetsFromFetchResult:model.result allowPickingVideo:NO allowPickingImage:YES completion:^(NSArray<TZAssetModel *> *models) {
                         [tzImagePickerVc hideProgressHUD];
                         TZAssetModel *assetModel = [models firstObject];
@@ -553,7 +744,7 @@
     [_selectedAssets addObject:asset];
     [_selectedPhotos addObject:image];
     [_collectionView reloadData];
-    
+
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = asset;
         NSLog(@"location:%@",phAsset.location);
@@ -582,19 +773,6 @@
     if (buttonIndex == 1) { // 去设置界面，开启相机访问权限
         if (iOS8Later) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-        } else {
-            NSURL *privacyUrl;
-            if (alertView.tag == 1) {
-                privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=PHOTOS"];
-            } else {
-                privacyUrl = [NSURL URLWithString:@"prefs:root=Privacy&path=CAMERA"];
-            }
-            if ([[UIApplication sharedApplication] canOpenURL:privacyUrl]) {
-                [[UIApplication sharedApplication] openURL:privacyUrl];
-            } else {
-                UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"抱歉" message:@"无法跳转到隐私设置页面，请手动前往设置页面，谢谢" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                [alert show];
-            }
         }
     }
 }
@@ -604,7 +782,12 @@
 /// User click cancel button
 /// 用户点击了取消
 - (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
-    // NSLog(@"cancel");
+    NSLog(@"cancel");
+    
+    if(_callback != NULL) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"已取消"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callback];
+    }
 }
 
 // The picker should dismiss itself; when it dismissed these handle will be called.
@@ -621,7 +804,7 @@
     _isSelectOriginalPhoto = isSelectOriginalPhoto;
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
-    
+
     // 1.打印图片名字
     [self printAssetsName:assets];
     // 2.图片位置信息
@@ -644,7 +827,7 @@
     // NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
     // Export completed, send video here, send by outputPath or NSData
     // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
-    
+
     // }];
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
@@ -724,7 +907,7 @@
 - (void)deleteBtnClik:(UIButton *)sender {
     [_selectedPhotos removeObjectAtIndex:sender.tag];
     [_selectedAssets removeObjectAtIndex:sender.tag];
-    
+
     [_collectionView performBatchUpdates:^{
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:sender.tag inSection:0];
         [_collectionView deleteItemsAtIndexPaths:@[indexPath]];
@@ -732,66 +915,6 @@
         [_collectionView reloadData];
     }];
 }
-
-//- (IBAction)enableShowTakePhotoClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        [_enableShowSheet setOn:NO animated:YES];
-//        [_enablePickingImage setOn:YES animated:YES];
-//    }
-//}
-//
-//- (IBAction)enableShowSheetClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        [_enableShowTakePhoto setOn:NO animated:YES];
-//        [_enablePickingImage setOn:YES animated:YES];
-//    }
-//}
-//
-//- (IBAction)allowPickingOriginPhotoSwitchClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        [_enablePickingImage setOn:YES animated:YES];
-//        [self.enableCircleCrop setOn:NO animated:YES];
-//        [self.enableCrop setOn:NO animated:YES];
-//    }
-//}
-//
-//- (IBAction)enablePickingImageClick:(UISwitch *)sender {
-//    if (!sender.isOn) {
-//        [_enablePickingOriginalPhoto setOn:NO animated:YES];
-//        [_enableShowTakePhoto setOn:NO animated:YES];
-//        [_enablePickingVideo setOn:YES animated:YES];
-//        [_enablePickingGif setOn:NO animated:YES];
-//    }
-//}
-//
-//- (IBAction)enablePickingGifClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        [_enablePickingImage setOn:YES animated:YES];
-//    }
-//}
-//
-//- (IBAction)enablePickingVideoClick:(UISwitch *)sender {
-//    if (!sender.isOn) {
-//        [_enablePickingImage setOn:YES animated:YES];
-//    }
-//}
-//
-//- (IBAction)enableCropClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        self.maxCountTF.text = @"1";
-//        [self.enablePickingOriginalPhoto setOn:NO animated:YES];
-//    } else {
-//        [self.enableCircleCrop setOn:NO animated:YES];
-//    }
-//}
-//
-//- (IBAction)enableCircleCropClick:(UISwitch *)sender {
-//    if (sender.isOn) {
-//        [self.enableCrop setOn:YES animated:YES];
-//        self.maxCountTF.text = @"1";
-//        [self.enablePickingOriginalPhoto setOn:NO animated:YES];
-//    }
-//}
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.viewController.view endEditing:YES];
@@ -814,9 +937,6 @@
     }
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
 #pragma clang diagnostic pop
 
 @end

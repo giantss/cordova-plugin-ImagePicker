@@ -2,6 +2,8 @@ package com.giants.imagepicker.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.giants.imagepicker.ImagePicker;
-import com.your.package.name.R;
 import com.giants.imagepicker.util.Utils;
 import com.giants.imagepicker.bean.ImageItem;
 import com.giants.imagepicker.ui.ImageBaseActivity;
@@ -37,6 +38,14 @@ public class ImageGridAdapter extends BaseAdapter {
 
     private ImagePicker imagePicker;
     private Activity mActivity;
+
+    private int res_adapter_camera_item;
+    private int res_adapter_image_list_item;
+    private int res_iv_thumb;
+    private int res_mask;
+    private int res_cb_check;
+    private int res_select_limit;
+
     private ArrayList<ImageItem> images = new ArrayList<>();       //当前需要显示的所有的图片数据
     private ArrayList<ImageItem> mSelectedImages; //全局保存的已经选中的图片数据
     private boolean isShowCamera;         //是否显示拍照按钮
@@ -45,6 +54,16 @@ public class ImageGridAdapter extends BaseAdapter {
 
     public ImageGridAdapter(Activity activity, ArrayList<ImageItem> images) {
         this.mActivity = activity;
+        Context appContext = activity.getApplicationContext();
+        Resources resource = appContext.getResources();
+        String pkgName = appContext.getPackageName();
+        res_adapter_camera_item = resource.getIdentifier("adapter_camera_item", "layout", pkgName);
+        res_adapter_image_list_item = resource.getIdentifier("adapter_image_list_item", "layout", pkgName);
+        res_iv_thumb = resource.getIdentifier("iv_thumb", "id", pkgName);
+        res_mask = resource.getIdentifier("mask", "id", pkgName);
+        res_cb_check = resource.getIdentifier("cb_check", "id", pkgName);
+        res_select_limit = resource.getIdentifier("select_limit", "string", pkgName);
+
         if (images != null) {
             this.images = images;
         }
@@ -96,8 +115,9 @@ public class ImageGridAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         int itemViewType = getItemViewType(position);
+
         if (itemViewType == ITEM_TYPE_CAMERA) {
-            convertView = LayoutInflater.from(mActivity).inflate(R.layout.adapter_camera_item, parent, false);
+            convertView = LayoutInflater.from(mActivity).inflate(res_adapter_camera_item, parent, false);
             convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
             convertView.setTag(null);
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +133,7 @@ public class ImageGridAdapter extends BaseAdapter {
         } else {
             final ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mActivity).inflate(R.layout.adapter_image_list_item, parent, false);
+                convertView = LayoutInflater.from(mActivity).inflate(res_adapter_image_list_item, parent, false);
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
@@ -133,7 +153,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     int selectLimit = imagePicker.getSelectLimit();
                     if (holder.cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(res_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         holder.cbCheck.setChecked(false);
                         holder.mask.setVisibility(View.GONE);
                     } else {
@@ -169,9 +189,10 @@ public class ImageGridAdapter extends BaseAdapter {
 
         public ViewHolder(View view) {
             rootView = view;
-            ivThumb = (ImageView) view.findViewById(R.id.iv_thumb);
-            mask = view.findViewById(R.id.mask);
-            cbCheck = (SuperCheckBox) view.findViewById(R.id.cb_check);
+
+            ivThumb = (ImageView) view.findViewById(res_iv_thumb);
+            mask = view.findViewById(res_mask);
+            cbCheck = (SuperCheckBox) view.findViewById(res_cb_check);
         }
     }
 
