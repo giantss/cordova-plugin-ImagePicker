@@ -83,8 +83,8 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 | 配置参数            | 参数含义                   |
 |:------------------:|:-------------------------:|
 | maximumImagesCount | 多选限制数量，默认为9        |
-| width              | 设置图片的width，默认为1920   |
-| height             | 设置图片的height，默认为1440  |
+| width              | 设置图片的width，默认为自动   |
+| height             | 设置图片的height，默认为自动  |
 | quality            | 图片质量 默认80            |
 
 ### 注意：
