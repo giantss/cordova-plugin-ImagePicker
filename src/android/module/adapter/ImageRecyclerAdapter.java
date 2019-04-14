@@ -1,4 +1,4 @@
-package com.giants.imagepicker.adapter;
+package com.lzy.imagepicker.adapter;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.bean.ImageItem;
-import com.giants.imagepicker.ui.ImageBaseActivity;
-import com.giants.imagepicker.ui.ImageGridActivity;
-import com.giants.imagepicker.util.Utils;
-import com.giants.imagepicker.view.SuperCheckBox;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageBaseActivity;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.util.InnerToaster;
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.SuperCheckBox;
 
 import java.util.ArrayList;
 
@@ -49,9 +49,9 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     private int res_adapter_image_list_item;
     private int res_iv_thumb;
     private int res_mask;
+    private int res_checkView;
     private int res_cb_check;
-    private int res_select_limit;
-
+    private int res_ip_select_limit;
     private ArrayList<ImageItem> images;       //当前需要显示的所有的图片数据
     private ArrayList<ImageItem> mSelectedImages; //全局保存的已经选中的图片数据
     private boolean isShowCamera;         //是否显示拍照按钮
@@ -85,9 +85,9 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         res_adapter_image_list_item = resource.getIdentifier("adapter_image_list_item", "layout", pkgName);
         res_iv_thumb = resource.getIdentifier("iv_thumb", "id", pkgName);
         res_mask = resource.getIdentifier("mask", "id", pkgName);
+        res_checkView = resource.getIdentifier("checkView", "id", pkgName);
         res_cb_check = resource.getIdentifier("cb_check", "id", pkgName);
-        res_select_limit = resource.getIdentifier("select_limit", "string", pkgName);
-
+        res_ip_select_limit = resource.getIdentifier("ip_select_limit", "string", pkgName);
         if (images == null || images.size() == 0) this.images = new ArrayList<>();
         else this.images = images;
 
@@ -145,13 +145,16 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         View rootView;
         ImageView ivThumb;
         View mask;
+        View checkView;
         SuperCheckBox cbCheck;
+
 
         ImageViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
             ivThumb = (ImageView) itemView.findViewById(res_iv_thumb);
             mask = itemView.findViewById(res_mask);
+            checkView=itemView.findViewById(res_checkView);
             cbCheck = (SuperCheckBox) itemView.findViewById(res_cb_check);
             itemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
         }
@@ -164,12 +167,13 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (listener != null) listener.onImageItemClick(rootView, imageItem, position);
                 }
             });
-            cbCheck.setOnClickListener(new View.OnClickListener() {
+            checkView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    cbCheck.setChecked(!cbCheck.isChecked());
                     int selectLimit = imagePicker.getSelectLimit();
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(res_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        InnerToaster.obj(mActivity).show(mActivity.getString(res_ip_select_limit, selectLimit));
                         cbCheck.setChecked(false);
                         mask.setVisibility(View.GONE);
                     } else {

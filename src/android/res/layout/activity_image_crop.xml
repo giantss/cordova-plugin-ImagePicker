@@ -9,17 +9,17 @@
 
     <include layout="@layout/include_top_bar"/>
 
-   <!-- <com.giants.imagepicker.view.CropImageView
+   <!-- <com.lzy.imagepicker.view.CropImageView
         android:id="@+id/cv_crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>-->
 
-    <com.giants.imagepicker.view.CropImageView
+    <com.lzy.imagepicker.view.CropImageView
         android:id="@+id/cv_crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- <com.giants.imagepicker.view.crop.CropImageView2
+    <!-- <com.lzy.imagepicker.view.crop.CropImageView2
          android:id="@+id/cv_crop_image"
          android:layout_width="match_parent"
          android:layout_height="match_parent"

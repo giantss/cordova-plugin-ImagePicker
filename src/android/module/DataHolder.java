@@ -1,6 +1,6 @@
-package com.giants.imagepicker;
+package com.lzy.imagepicker;
 
-import com.giants.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.bean.ImageItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +17,14 @@ import java.util.Map;
 public class DataHolder {
     public static final String DH_CURRENT_IMAGE_FOLDER_ITEMS = "dh_current_image_folder_items";
 
-    private static com.giants.imagepicker.DataHolder mInstance;
+    private static DataHolder mInstance;
     private Map<String, List<ImageItem>> data;
 
-    public static com.giants.imagepicker.DataHolder getInstance() {
+    public static DataHolder getInstance() {
         if (mInstance == null){
-            synchronized (com.giants.imagepicker.DataHolder.class){
+            synchronized (DataHolder.class){
                 if (mInstance == null){
-                    mInstance = new com.giants.imagepicker.DataHolder();
+                    mInstance = new DataHolder();
                 }
             }
         }

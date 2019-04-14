@@ -14,7 +14,7 @@
         android:drawablePadding="6dp"
         android:drawableTop="@mipmap/grid_camera"
         android:gravity="center"
-        android:text="@string/camera"
+        android:text="@string/ip_str_capture"
         android:textColor="#CDCECE"
         android:textSize="14sp"/>
 

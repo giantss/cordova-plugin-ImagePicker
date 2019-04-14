@@ -9,7 +9,6 @@
 #import "TZTestCell.h"
 #import "UIView+Layout.h"
 #import <Photos/Photos.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "TZImagePickerController.h"
 
 @implementation TZTestCell
@@ -25,14 +24,13 @@
         self.clipsToBounds = YES;
         
         _videoImageView = [[UIImageView alloc] init];
-        _videoImageView.image = [UIImage imageNamedFromMyBundle:@"MMVideoPreviewPlay"];
+        _videoImageView.image = [UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"];
         _videoImageView.contentMode = UIViewContentModeScaleAspectFill;
         _videoImageView.hidden = YES;
         [self addSubview:_videoImageView];
         
         _deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_deleteBtn setImage:[UIImage imageNamed:@"photo_delete"] forState:UIControlStateNormal];
-        _deleteBtn.frame = CGRectMake(self.tz_width - 36, 0, 36, 36);
         _deleteBtn.imageEdgeInsets = UIEdgeInsetsMake(-10, 0, 0, -10);
         _deleteBtn.alpha = 0.6;
         [self addSubview:_deleteBtn];
@@ -43,7 +41,6 @@
         _gifLable.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
         _gifLable.textAlignment = NSTextAlignmentCenter;
         _gifLable.font = [UIFont systemFontOfSize:10];
-        _gifLable.frame = CGRectMake(self.tz_width - 25, self.tz_height - 14, 25, 14);
         [self addSubview:_gifLable];
     }
     return self;
@@ -52,22 +49,17 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     _imageView.frame = self.bounds;
+    _gifLable.frame = CGRectMake(self.tz_width - 25, self.tz_height - 14, 25, 14);
+    _deleteBtn.frame = CGRectMake(self.tz_width - 36, 0, 36, 36);
     CGFloat width = self.tz_width / 3.0;
     _videoImageView.frame = CGRectMake(width, width, width, width);
 }
 
-- (void)setAsset:(id)asset {
+- (void)setAsset:(PHAsset *)asset {
     _asset = asset;
-    if ([asset isKindOfClass:[PHAsset class]]) {
-        PHAsset *phAsset = asset;
-        _videoImageView.hidden = phAsset.mediaType != PHAssetMediaTypeVideo;
-        _gifLable.hidden = ![[phAsset valueForKey:@"filename"] containsString:@"GIF"];
-    } else if ([asset isKindOfClass:[ALAsset class]]) {
-        ALAsset *alAsset = asset;
-        _videoImageView.hidden = ![[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo];
-        _gifLable.hidden = YES;
-    }
- }
+    _videoImageView.hidden = asset.mediaType != PHAssetMediaTypeVideo;
+    _gifLable.hidden = ![[asset valueForKey:@"filename"] containsString:@"GIF"];
+}
 
 - (void)setRow:(NSInteger)row {
     _row = row;

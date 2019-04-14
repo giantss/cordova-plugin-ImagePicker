@@ -30,7 +30,8 @@ var defaults = {
     maximumImagesCount: 9,
     width: -1, // negative value means auto scale
     height: -1,
-    quality: 80
+    quality: 80,
+    enablePickOriginal: true
 };
 
 module.exports = {

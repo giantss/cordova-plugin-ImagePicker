@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CropImageView">
+    <declare-styleable name="FreeCropImageView">
         <attr name="cropMaskColor" format="color"/>
         <attr name="cropBorderColor" format="color"/>
         <attr name="cropBorderWidth" format="dimension"/>

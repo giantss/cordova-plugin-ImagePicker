@@ -1,4 +1,4 @@
-package com.giants.imagepicker.util;
+package com.lzy.imagepicker.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -62,7 +62,6 @@ public class Utils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaysMetrics);
         return displaysMetrics;
     }
-
 
     /** dp转px */
     public static int dp2px(Context context, float dpVal) {

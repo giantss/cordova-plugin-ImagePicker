@@ -86,6 +86,7 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 | width              | 设置图片的width，默认为自动   |
 | height             | 设置图片的height，默认为自动  |
 | quality            | 图片质量 默认80            |
+| enablePickOriginal | 允许选择原图 默认true  |
 
 ### 注意：
 
@@ -131,6 +132,7 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 ### 多选图片项目
 - [nanchen2251/ImagePicker](https://github.com/nanchen2251/ImagePicker) (Android)
     - [jeasonlzy/ImagePicker](https://github.com/jeasonlzy/ImagePicker)
+    - [CysionLiu/ImagePicker](https://github.com/CysionLiu/ImagePicker)
 - [banchichen/TZImagePickerController](https://github.com/banchichen/TZImagePickerController) (iOS)
 
 ### 图片压缩库
@@ -139,6 +141,11 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.1.7
+- 更新到最新的第三方图片选择库
+- 增加 enablePickOriginal 配置项（允许选择原图，即是否显示原图勾选框）
+- (iOS)支持 HEIC 图片格式
+
 ### v1.1.6
 - (Android)移除 [picasso](https://github.com/square/picasso) 引用和相关实现逻辑代码
 

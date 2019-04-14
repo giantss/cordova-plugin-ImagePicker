@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.giants.imagepicker.view;
+package com.lzy.imagepicker.view;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

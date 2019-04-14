@@ -90,7 +90,7 @@ static char customImageName;
     }
     return [self lubanCompressImage:image withMask:nil];
 }
-    
+//added
 + (NSData *)compressScale:(UIImage *)image maxWidth:(int)maxWidth maxHeight:(int)maxHeight {
     
     int fixelW = (int)image.size.width;

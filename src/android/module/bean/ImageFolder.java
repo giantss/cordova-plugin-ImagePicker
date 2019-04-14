@@ -1,4 +1,4 @@
-package com.giants.imagepicker.bean;
+package com.lzy.imagepicker.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;

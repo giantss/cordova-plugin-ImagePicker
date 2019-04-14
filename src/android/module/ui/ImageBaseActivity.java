@@ -1,4 +1,5 @@
-package com.giants.imagepicker.ui;
+package com.lzy.imagepicker.ui;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -10,10 +11,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.view.SystemBarTintManager;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.util.InnerToaster;
+import com.lzy.imagepicker.view.SystemBarTintManager;
 
 /**
  * ================================================
@@ -36,11 +37,10 @@ public class ImageBaseActivity extends AppCompatActivity {
         }
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-
         Context appContext = getApplicationContext();
         Resources resource = appContext.getResources();
         String pkgName = appContext.getPackageName();
-        tintManager.setStatusBarTintResource(resource.getIdentifier("status_bar", "color", pkgName));  //设置上方状态栏的颜色
+        tintManager.setStatusBarTintResource(resource.getIdentifier("ip_color_primary_dark", "color", pkgName));  //设置上方状态栏的颜色
     }
 
     @TargetApi(19)
@@ -61,7 +61,7 @@ public class ImageBaseActivity extends AppCompatActivity {
     }
 
     public void showToast(String toastText) {
-        Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+        InnerToaster.obj(this).show(toastText);
     }
 
     @Override

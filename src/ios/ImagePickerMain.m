@@ -25,7 +25,7 @@
 {
     _enableShowTakePhoto = true;
     _enableShowTakeVideo = true;
-    _enableSortAscending = false;
+    _enableSortAscending = true;
     _enablePickingVideo = false;
     _enablePickingImage = true;
     _enablePickingGif = true;
@@ -57,6 +57,7 @@
     self.width  = [[paramOptions objectForKey:@"width"] integerValue];
     self.height  = [[paramOptions objectForKey:@"height"] integerValue];
     self.quality  = [[paramOptions objectForKey:@"quality"] integerValue];
+    self.enablePickingOriginalPhoto = [[paramOptions objectForKey:@"enablePickOriginal"] boolValue];
 
     if (self.maxCountTF <= 0) {
         return;
@@ -228,10 +229,15 @@
         id asset = assets[idx];
         
         __block NSInteger index = idx;
-        __block NSString *fileName = [self getFileNameForAsset:asset];
+        
         
         [[TZImageManager manager] getOriginalPhotoDataWithAsset:asset completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
             
+            __block NSString *fileName = [self getFileNameForAsset:asset];
+            if ([info valueForKey:@"PHImageExtension"] != nil) {
+                NSString *newExtension = [info valueForKey:@"PHImageExtension"];
+                fileName = [fileName stringByAppendingString:newExtension];
+            }
             NSString *path = [self saveNSDataToFile:data withName:fileName];
             NSDictionary* fileObj = @{
                                       @"path": path,
@@ -251,7 +257,6 @@
         }
     }
 }
-    
     
 - (void)saveCompressImage:(NSArray *)assets currentIdx:(NSInteger)idx compressedPathArray:(NSMutableArray *)compressedPaths completion:(void (^)(NSMutableArray *photos))completion {
     if([assets count] - 1 >= idx) {
@@ -710,7 +715,7 @@
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
 
         // save photo and get asset / 保存图片，获取到asset
-        [[TZImageManager manager] savePhotoWithImage:image location:self.location completion:^(NSError *error){
+        [[TZImageManager manager] savePhotoWithImage:image location:self.location completion:^(PHAsset *asset, NSError *error){
             if (error) {
                 [tzImagePickerVc hideProgressHUD];
                 NSLog(@"图片保存失败 %@",error);
