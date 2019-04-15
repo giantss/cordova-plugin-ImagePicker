@@ -91,8 +91,8 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 ### 注意：
 
 - 参数都是可选的，不传则使用默认值；
-- 如果 width > 0 且 height > 0：Android 下压缩的图可能比原图大或者压缩率不高（比如原图4MB，压缩后也有2MB），可以 quality 设置低一些，比如 50；iOS 下会忽略 quality 参数；
-- 如果 width < 0 或 height < 0：那么插件返回压缩图，压缩逻辑接近于微信，自动选取合适的分辨率和压缩品质，推荐使用这种方式。压缩库使用的是 [Luban](https://github.com/Curzibn/Luban) 和 [Luban-iOS](https://github.com/GuoZhiQiang/Luban_iOS)。如果遇到压缩不清晰等问题，请到他们的项目上提 issues；
+- 如果 width > 0 且 height > 0：压缩的图可能比原图大或者压缩率不高（比如原图4MB，压缩后也有2MB），可以 quality 设置低一些，比如 50；
+- 如果 width < 0 或 height < 0：压缩逻辑接近于微信，自动选取合适的分辨率和压缩品质，推荐使用这种方式。压缩库使用的是 [Luban](https://github.com/Curzibn/Luban) 和 [Luban-iOS](https://github.com/GuoZhiQiang/Luban_iOS)。如果遇到压缩不清晰等问题，请到他们的项目上提 issues；
 - 运行时，选图界面上有“原图”单选按钮，选上之后，返回的图片是未压缩的原图
 
 ## android注意事项
@@ -141,6 +141,9 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.1.8
+- (iOS)Luban 压缩逻辑 fix
+
 ### v1.1.7
 - 更新到最新的第三方图片选择库
 - 增加 enablePickOriginal 配置项（允许选择原图，即是否显示原图勾选框）

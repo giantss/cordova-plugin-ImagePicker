@@ -269,6 +269,7 @@
         
         __block int maxWidth = (int)self.width;
         __block int maxHeight = (int)self.height;
+        __block int quality = (int)self.quality;
         
         // do not compress gif
         if([originExt isEqualToString:@"gif"]) {
@@ -292,8 +293,9 @@
                 
                 NSData *compressed;
                 
-                if(maxWidth > 0 && maxHeight > 0) {
-                    compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight];
+                if(maxWidth > 0 && maxHeight > 0 && quality > 0) {
+                    float q = (float)quality/100;
+                    compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight quality:q];
                 }
                 else { // maxWidth 和 maxHeight 如果小于0，就自动压缩分辨率
                     compressed = [UIImage lubanCompressImage:photo];
