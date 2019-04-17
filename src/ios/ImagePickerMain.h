@@ -36,12 +36,13 @@
 @property (nonatomic, assign) BOOL enableCircleCrop; ///< 使用圆形裁剪框
 @property (nonatomic, assign) BOOL enablePickingMuitlpleVideo; ///< 允许多选视频
 @property (nonatomic, assign) BOOL enableSelectedIndex; ///< 是否显示图片序号
-    
+
 @property (nonatomic, assign) NSInteger width;
 @property (nonatomic, assign) NSInteger height;
 @property (nonatomic, assign) NSInteger quality;
 
 - (void)getPictures:(CDVInvokedUrlCommand *)command;
+- (void)takePhoto:(CDVInvokedUrlCommand *)command;
 - (NSString *)saveAndGetImageDocuments:(UIImage *)currentImage withName: (NSString *)imageName;
 
 @end

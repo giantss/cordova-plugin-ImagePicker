@@ -62,11 +62,13 @@ ImagePicker.getPictures(function(result) {
 {
     "images": [{
         "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
+        "uri": "file:///data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
         "width": 720,
         "height": 1280,
         "size": 104871 // 文件体积(单位：字节)
     }, {
         "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817464525.jpg",
+        "uri": "file:///data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817464525.jpg",
         "width": 720,
         "height": 1280,
         "size": 109873
@@ -141,6 +143,9 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.1.9
+- (iOS)增加 `takePhoto` 方法，直接进入拍照
+
 ### v1.1.8
 - (iOS)Luban 压缩逻辑 fix
 

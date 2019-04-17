@@ -34,6 +34,18 @@ var defaults = {
     enablePickOriginal: true
 };
 
+var transformResult = function(result) {
+    if(result && result.images) {
+        var i, img;
+        for(i = 0; i < result.images.length; i++) {
+            img = result.images[i];
+            if(img && img.path) {
+                img.uri = 'file://' + img.path;
+            }
+        }
+    }
+};
+
 module.exports = {
     /**
      * 获取图片地址
@@ -43,8 +55,15 @@ module.exports = {
      */
     getPictures: function (onSuccess, onFail, params) {
         var options = Object.assign({}, defaults, params);
+        
+        var success = function(result) {
+            if(typeof onSuccess == 'function') {
+                transformResult(result);
+                onSuccess.apply(null, arguments);
+            }
+        };
 
-        exec(onSuccess, onFail, 'ImagePicker', 'getPictures', [options]);
+        exec(success, onFail, 'ImagePicker', 'getPictures', [options]);
     },
     /**
      * 拍照
@@ -54,7 +73,14 @@ module.exports = {
      */
     takePhoto: function (onSuccess, onFail, params) {
         var options = Object.assign({}, defaults, params);
+        
+        var success = function(result) {
+            if(typeof onSuccess == 'function') {
+                transformResult(result);
+                onSuccess.apply(null, arguments);
+            }
+        };
 
-        exec(onSuccess, onFail, 'ImagePicker', 'takePhoto', [options]);
+        exec(success, onFail, 'ImagePicker', 'takePhoto', [options]);
     }
 };

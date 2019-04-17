@@ -5,7 +5,7 @@
 
 #define CDV_PHOTO_PREFIX @"cdv_photo_"
 
-@interface ImagePicker ()<TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate,UINavigationControllerDelegate> {
+@interface ImagePicker ()<TZImagePickerControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate,UINavigationControllerDelegate> {
     NSMutableArray *_selectedPhotos;
     NSMutableArray *_selectedAssets;
     BOOL _isSelectOriginalPhoto;
@@ -341,7 +341,7 @@
 }
     
 //保存JPG图片
-- (NSString *)saveImgToFile:(UIImage *)currentImage withName:(NSString*)imageName{
+/*- (NSString *)saveImgToFile:(UIImage *)currentImage withName:(NSString*)imageName{
 
     NSData *imageData = UIImageJPEGRepresentation(currentImage, 1);
 
@@ -355,7 +355,7 @@
 
     return fullPath;
 
-}
+}*/
     
 //保存原始图片
 - (NSString *)saveNSDataToFile:(NSData *)imageData withName:(NSString*)imageName{
@@ -370,7 +370,7 @@
 }
 
 
-- (UIImage*)imageByScalingNotCroppingForSize:(UIImage*)anImage toSize:(CGSize)frameSize
+/*- (UIImage*)imageByScalingNotCroppingForSize:(UIImage*)anImage toSize:(CGSize)frameSize
 {
     UIImage* sourceImage = anImage;
     UIImage* newImage = nil;
@@ -411,7 +411,7 @@
     // pop the context to get back to the default
     UIGraphicsEndImageContext();
     return newImage;
-}
+}*/
 
 
 #pragma clang diagnostic push
@@ -437,134 +437,8 @@
     return _imagePickerVc;
 }
 
-//- (void)viewDidLoad {
-//    [super viewDidLoad];
-//    self.view.backgroundColor = [UIColor whiteColor];
-//    _selectedPhotos = [NSMutableArray array];
-//    _selectedAssets = [NSMutableArray array];
-//    [self configCollectionView];
-//}
-
 - (BOOL)prefersStatusBarHidden {
     return NO;
-}
-
-//- (void)configCollectionView {
-//    // 如不需要长按排序效果，将LxGridViewFlowLayout类改成UICollectionViewFlowLayout即可
-//    LxGridViewFlowLayout *layout = [[LxGridViewFlowLayout alloc] init];
-//    _margin = 4;
-//    _itemWH = (self.view.tz_width - 2 * _margin - 4) / 3 - _margin;
-//    layout.itemSize = CGSizeMake(_itemWH, _itemWH);
-//    layout.minimumInteritemSpacing = _margin;
-//    layout.minimumLineSpacing = _margin;
-//    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 409, self.view.tz_width, self.view.tz_height - 409) collectionViewLayout:layout];
-//    CGFloat rgb = 244 / 255.0;
-//    _collectionView.alwaysBounceVertical = YES;
-//    _collectionView.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:1.0];
-//    _collectionView.contentInset = UIEdgeInsetsMake(4, 4, 4, 4);
-//    _collectionView.dataSource = self;
-//    _collectionView.delegate = self;
-//    _collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-//    [self.view addSubview:_collectionView];
-//    [_collectionView registerClass:[TZTestCell class] forCellWithReuseIdentifier:@"TZTestCell"];
-//}
-
-#pragma mark UICollectionView
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _selectedPhotos.count + 1;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZTestCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZTestCell" forIndexPath:indexPath];
-    cell.videoImageView.hidden = YES;
-    if (indexPath.row == _selectedPhotos.count) {
-        cell.imageView.image = [UIImage imageNamed:@"AlbumAddBtn.png"];
-        cell.deleteBtn.hidden = YES;
-        cell.gifLable.hidden = YES;
-    } else {
-        cell.imageView.image = _selectedPhotos[indexPath.row];
-        cell.asset = _selectedAssets[indexPath.row];
-        cell.deleteBtn.hidden = NO;
-    }
-    if (!self.enablePickingGif) {
-        cell.gifLable.hidden = YES;
-    }
-    cell.deleteBtn.tag = indexPath.row;
-    [cell.deleteBtn addTarget:self action:@selector(deleteBtnClik:) forControlEvents:UIControlEventTouchUpInside];
-    return cell;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == _selectedPhotos.count) {
-        BOOL showSheet = self.enableShowSheet;
-        if (showSheet) {
-            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"去相册选择", nil];
-            [sheet showInView:self.viewController.view];
-        } else {
-            [self pushTZImagePickerController];
-        }
-    } else { // preview photos or video / 预览照片或者视频
-        id asset = _selectedAssets[indexPath.row];
-        BOOL isVideo = NO;
-        if ([asset isKindOfClass:[PHAsset class]]) {
-            PHAsset *phAsset = asset;
-            isVideo = phAsset.mediaType == PHAssetMediaTypeVideo;
-        } else if ([asset isKindOfClass:[ALAsset class]]) {
-            ALAsset *alAsset = asset;
-            isVideo = [[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo];
-        }
-        if ([[asset valueForKey:@"filename"] containsString:@"GIF"] && self.enablePickingGif && !self.enablePickingMuitlpleVideo) {
-            TZGifPhotoPreviewController *vc = [[TZGifPhotoPreviewController alloc] init];
-            TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypePhotoGif timeLength:@""];
-            vc.model = model;
-            [self.viewController presentViewController:vc animated:YES completion:nil];
-        } else if (isVideo && !self.enablePickingMuitlpleVideo) { // perview video / 预览视频
-            TZVideoPlayerController *vc = [[TZVideoPlayerController alloc] init];
-            TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypeVideo timeLength:@""];
-            vc.model = model;
-            [self.viewController presentViewController:vc animated:YES completion:nil];
-        } else { // preview photos / 预览照片
-            TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithSelectedAssets:_selectedAssets selectedPhotos:_selectedPhotos index:indexPath.row];
-            imagePickerVc.maxImagesCount = self.maxCountTF;
-            imagePickerVc.allowPickingGif = self.enablePickingGif;
-            imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
-            imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo;
-            imagePickerVc.showSelectedIndex = self.enableSelectedIndex;
-            imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-            [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-                _selectedPhotos = [NSMutableArray arrayWithArray:photos];
-                _selectedAssets = [NSMutableArray arrayWithArray:assets];
-                _isSelectOriginalPhoto = isSelectOriginalPhoto;
-                [_collectionView reloadData];
-                _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
-            }];
-            [self.viewController presentViewController:imagePickerVc animated:YES completion:nil];
-        }
-    }
-}
-
-#pragma mark - LxGridViewDataSource
-
-/// 以下三个方法为长按排序相关代码
-- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.item < _selectedPhotos.count;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)sourceIndexPath canMoveToIndexPath:(NSIndexPath *)destinationIndexPath {
-    return (sourceIndexPath.item < _selectedPhotos.count && destinationIndexPath.item < _selectedPhotos.count);
-}
-
-- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)sourceIndexPath didMoveToIndexPath:(NSIndexPath *)destinationIndexPath {
-    UIImage *image = _selectedPhotos[sourceIndexPath.item];
-    [_selectedPhotos removeObjectAtIndex:sourceIndexPath.item];
-    [_selectedPhotos insertObject:image atIndex:destinationIndexPath.item];
-
-    id asset = _selectedAssets[sourceIndexPath.item];
-    [_selectedAssets removeObjectAtIndex:sourceIndexPath.item];
-    [_selectedAssets insertObject:asset atIndex:destinationIndexPath.item];
-
-    [_collectionView reloadData];
 }
 
 #pragma mark - TZImagePickerController
@@ -649,7 +523,20 @@
 
 #pragma mark - UIImagePickerController
 
-- (void)takePhoto {
+- (void)takePhoto:(CDVInvokedUrlCommand *)command {
+    _callback = command.callbackId;
+    
+    NSDictionary *paramOptions = [command.arguments objectAtIndex: 0];
+    
+    self.maxCountTF  = [[paramOptions objectForKey:@"maximumImagesCount"] integerValue];
+    self.width  = [[paramOptions objectForKey:@"width"] integerValue];
+    self.height  = [[paramOptions objectForKey:@"height"] integerValue];
+    self.quality  = [[paramOptions objectForKey:@"quality"] integerValue];
+    
+    [self checkTakePhoto];
+}
+
+- (void)checkTakePhoto {
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if ((authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) && iOS7Later) {
         // 无相机权限 做一个友好的提示
@@ -661,12 +548,12 @@
             [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
                 if (granted) {
                     dispatch_sync(dispatch_get_main_queue(), ^{
-                        [self takePhoto];
+                        [self checkTakePhoto];
                     });
                 }
             }];
         } else {
-            [self takePhoto];
+            [self checkTakePhoto];
         }
         // 拍照之前还需要检查相册权限
     } else if ([TZImageManager authorizationStatus] == 2) { // 已被拒绝，没有相册权限，将无法保存拍的照片
@@ -679,7 +566,7 @@
         }
     } else if ([TZImageManager authorizationStatus] == 0) { // 未请求过相册权限
         [[TZImageManager manager] requestAuthorizationWithCompletion:^{
-            [self takePhoto];
+            [self checkTakePhoto];
         }];
     } else {
         [self pushImagePickerController];
@@ -747,29 +634,41 @@
 }
 
 - (void)refreshCollectionViewWithAddedAsset:(id)asset image:(UIImage *)image {
-    [_selectedAssets addObject:asset];
-    [_selectedPhotos addObject:image];
-    [_collectionView reloadData];
+    //_selectedPhotos = [NSMutableArray arrayWithArray:@[image]];
+    _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
+    //[_collectionView reloadData];
 
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHAsset *phAsset = asset;
         NSLog(@"location:%@",phAsset.location);
     }
+    
+    if(_callback != NULL) {
+        
+        __block NSMutableArray *pathsArr = [[NSMutableArray alloc] init];
+        
+        [self saveCompressImage:_selectedAssets currentIdx:0 compressedPathArray:pathsArr completion:^(NSMutableArray *paths) {
+            
+            NSLog(@"All finished.");
+            
+            NSDictionary* result = @{@"images": paths, @"isOrigin": @(NO)};
+            
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+            
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self->_callback];
+        }];
+    }
+    _selectedAssets = nil;
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     if ([picker isKindOfClass:[UIImagePickerController class]]) {
         [picker dismissViewControllerAnimated:YES completion:nil];
     }
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) { // take photo / 去拍照
-        [self takePhoto];
-    } else if (buttonIndex == 1) {
-        [self pushTZImagePickerController];
+    
+    if(_callback != NULL) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"已取消"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callback];
     }
 }
 
@@ -808,7 +707,7 @@
     _selectedPhotos = [NSMutableArray arrayWithArray:photos];
     _selectedAssets = [NSMutableArray arrayWithArray:assets];
     _isSelectOriginalPhoto = isSelectOriginalPhoto;
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
 
     // 1.打印图片名字
@@ -835,7 +734,7 @@
     // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
 
     // }];
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
 }
 
@@ -844,7 +743,7 @@
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingGifImage:(UIImage *)animatedImage sourceAssets:(id)asset {
     _selectedPhotos = [NSMutableArray arrayWithArray:@[animatedImage]];
     _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
 }
 
 // Decide album show or not't
@@ -908,23 +807,6 @@
     return YES;
 }
 
-#pragma mark - Click Event
-
-- (void)deleteBtnClik:(UIButton *)sender {
-    [_selectedPhotos removeObjectAtIndex:sender.tag];
-    [_selectedAssets removeObjectAtIndex:sender.tag];
-
-    [_collectionView performBatchUpdates:^{
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:sender.tag inSection:0];
-        [_collectionView deleteItemsAtIndexPaths:@[indexPath]];
-    } completion:^(BOOL finished) {
-        [_collectionView reloadData];
-    }];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.viewController.view endEditing:YES];
-}
 
 #pragma mark - Private
 
