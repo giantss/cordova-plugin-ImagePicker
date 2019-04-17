@@ -27,12 +27,10 @@
 
 ## Android 视频演示
 
-- [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>
 - [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NDIyMA==.html)
 
 ## iOS 视频演示
 
-- [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
 - [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
 ## 效果图
@@ -45,6 +43,7 @@
 [一个粗糙的 cordova demo](https://github.com/giantss/ImagePickerDemo)
 
 ```javascript
+// 选图
 ImagePicker.getPictures(function(result) {
     alert(JSON.stringify(result));
 }, function(err) {
@@ -54,6 +53,17 @@ ImagePicker.getPictures(function(result) {
     width : 1920, 
     height : 1440, 
     quality : 100 
+});
+
+// 拍照
+ImagePicker.getPictures(function(result) {
+    alert(JSON.stringify(result));
+}, function(err) {
+    alert(err);
+}, { 
+    width : 1920, 
+    height : 1440, 
+    quality : 50 
 });
 ```
 
@@ -85,8 +95,8 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 | 配置参数            | 参数含义                   |
 |:------------------:|:-------------------------:|
 | maximumImagesCount | 多选限制数量，默认为9        |
-| width              | 设置图片的width，默认为自动   |
-| height             | 设置图片的height，默认为自动  |
+| width              | 设置输出图片的width，默认为自动   |
+| height             | 设置输出图片的height，默认为自动  |
 | quality            | 图片质量 默认80            |
 | enablePickOriginal | 允许选择原图 默认true  |
 
