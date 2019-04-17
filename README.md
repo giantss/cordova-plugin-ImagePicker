@@ -56,7 +56,7 @@ ImagePicker.getPictures(function(result) {
 });
 
 // 拍照
-ImagePicker.getPictures(function(result) {
+ImagePicker.takePhoto(function(result) {
     alert(JSON.stringify(result));
 }, function(err) {
     alert(err);
@@ -69,6 +69,7 @@ ImagePicker.getPictures(function(result) {
 
 返回结果如下：
 ```
+// 如果是拍照，images 数组中只有一个对象
 {
     "images": [{
         "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
@@ -122,7 +123,7 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
     ```
     $ cordova plugin add cordova-android-support-gradle-release  --variable ANDROID_SUPPORT_VERSION={required version}
     ```
-    其中`{required version}` 值为类似 `25.+`，`26.+`，`27.+` 这种。
+    其中`{required version}` 值为类似 `26.+`，`27.+`，`28.+` 这种。
 
 - 如果你用的是 低版本 Cordova 和 Gradle，会报错不支持`implementation`
     Cordova 7.1.0 及以下版本（对应Cordova-Android@6.3.0及以下版本），请将 `cordova-plugin-ImagePicker\src\android\imagepicker.gradle` 里面的 `implementation` 修改为 `compile`，
@@ -142,8 +143,8 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 ## 参考项目
 
 ### 多选图片项目
-- [nanchen2251/ImagePicker](https://github.com/nanchen2251/ImagePicker) (Android)
-    - [jeasonlzy/ImagePicker](https://github.com/jeasonlzy/ImagePicker)
+- [jeasonlzy/ImagePicker](https://github.com/jeasonlzy/ImagePicker) (Android)
+    - [nanchen2251/ImagePicker](https://github.com/nanchen2251/ImagePicker)
     - [CysionLiu/ImagePicker](https://github.com/CysionLiu/ImagePicker)
 - [banchichen/TZImagePickerController](https://github.com/banchichen/TZImagePickerController) (iOS)
 
