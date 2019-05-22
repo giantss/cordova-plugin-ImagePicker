@@ -11,8 +11,6 @@
     <string name="ip_origin">Original</string>
     <string name="ip_origin_size">Original(%1$s)</string>
     <string name="ip_str_no_camera">Não detecte nenhuma câmera</string>
-    <string name="ip_select">Selecione</string>
-    <string name="ip_select_image">Elige una imagen</string>
     <string name="ip_str_capture">cámara</string>
     <string name="ip_str_choose">Escolher</string>
     <string name="ip_str_picture">Cenário</string>
