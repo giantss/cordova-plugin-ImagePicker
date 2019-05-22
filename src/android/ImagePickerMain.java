@@ -114,8 +114,8 @@ public class ImagePickerMain extends CordovaPlugin {
                 Context appContext = this.cordova.getActivity().getApplicationContext();
                 Resources resource = appContext.getResources();
                 String pkgName = appContext.getPackageName();
-                int res_canceled = resource.getIdentifier("canceled", "string", pkgName);
-                String canceled = resource.getString(res_canceled);
+                int res_ip_canceled = resource.getIdentifier("ip_canceled", "string", pkgName);
+                String canceled = resource.getString(res_ip_canceled);
                 this.callbackContext.error(canceled);
             }
             else if (data != null && resultCode == ImagePicker.RESULT_CODE_ITEMS) {
