@@ -20,5 +20,5 @@
     <string name="ip_need_to_del">要删除这张照片吗？</string>
     <string name="ip_cancel">取消</string>
     <string name="ip_str_confirm">确定</string>
-    <string name="canceled">已取消</string>
+    <string name="ip_canceled">已取消</string>
 </resources>
