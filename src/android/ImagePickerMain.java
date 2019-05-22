@@ -1,4 +1,5 @@
 package com.giants.imagepicker;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -6,9 +7,13 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.giants.imagepicker.bean.ImageItem;
-import com.giants.imagepicker.ui.ImageGridActivity;
-import com.giants.imagepicker.view.CropImageView;
+import com.lzy.imagepicker.*;
+import com.lzy.imagepicker.adapter.*;
+import com.lzy.imagepicker.bean.*;
+import com.lzy.imagepicker.loader.*;
+import com.lzy.imagepicker.ui.*;
+import com.lzy.imagepicker.util.*;
+import com.lzy.imagepicker.view.*;
 import com.giants.imagepicker.imageloader.*;
 import com.nanchen.compresshelper.CompressHelper;
 
@@ -65,6 +70,7 @@ public class ImagePickerMain extends CordovaPlugin {
 
         if (action.equals("getPictures")) {
             imagePicker.setSelectLimit(params.getInt("maximumImagesCount"));
+            imagePicker.setEnablePickOriginal(params.getBoolean("enablePickOriginal"));
             image_limit_width = params.getInt("width");
             image_limit_height = params.getInt("height");
             image_limit_quality = params.getInt("quality");
@@ -77,6 +83,7 @@ public class ImagePickerMain extends CordovaPlugin {
             return true;
         }
         else if (action.equals("takePhoto")) {
+            imagePicker.setEnablePickOriginal(params.getBoolean("enablePickOriginal"));
             image_limit_width = params.getInt("width");
             image_limit_height = params.getInt("height");
             image_limit_quality = params.getInt("quality");
@@ -107,8 +114,8 @@ public class ImagePickerMain extends CordovaPlugin {
                 Context appContext = this.cordova.getActivity().getApplicationContext();
                 Resources resource = appContext.getResources();
                 String pkgName = appContext.getPackageName();
-                int res_canceled = resource.getIdentifier("canceled", "string", pkgName);
-                String canceled = resource.getString(res_canceled);
+                int res_ip_canceled = resource.getIdentifier("ip_canceled", "string", pkgName);
+                String canceled = resource.getString(res_ip_canceled);
                 this.callbackContext.error(canceled);
             }
             else if (data != null && resultCode == ImagePicker.RESULT_CODE_ITEMS) {

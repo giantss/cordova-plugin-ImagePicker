@@ -1,4 +1,4 @@
-package com.giants.imagepicker.adapter;
+package com.lzy.imagepicker.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,12 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.util.Utils;
-import com.giants.imagepicker.bean.ImageFolder;
+import com.lzy.imagepicker.ImagePicker;
+
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.bean.ImageFolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * ================================================
@@ -32,12 +34,11 @@ public class ImageFolderAdapter extends BaseAdapter {
     private Activity mActivity;
 
     private int res_adapter_folder_list_item;
-    private int res_folder_image_count;
+    private int res_ip_folder_image_count;
     private int res_iv_cover;
     private int res_tv_folder_name;
     private int res_tv_image_count;
     private int res_iv_folder_check;
-
     private LayoutInflater mInflater;
     private int mImageSize;
     private List<ImageFolder> imageFolders;
@@ -49,12 +50,11 @@ public class ImageFolderAdapter extends BaseAdapter {
         Resources resource = appContext.getResources();
         String pkgName = appContext.getPackageName();
         res_adapter_folder_list_item = resource.getIdentifier("adapter_folder_list_item", "layout", pkgName);
-        res_folder_image_count = resource.getIdentifier("folder_image_count", "string", pkgName);
+        res_ip_folder_image_count = resource.getIdentifier("ip_folder_image_count", "string", pkgName);
         res_iv_cover = resource.getIdentifier("iv_cover", "id", pkgName);
         res_tv_folder_name = resource.getIdentifier("tv_folder_name", "id", pkgName);
         res_tv_image_count = resource.getIdentifier("tv_image_count", "id", pkgName);
         res_iv_folder_check = resource.getIdentifier("iv_folder_check", "id", pkgName);
-
         if (folders != null && folders.size() > 0) imageFolders = folders;
         else imageFolders = new ArrayList<>();
 
@@ -96,7 +96,7 @@ public class ImageFolderAdapter extends BaseAdapter {
 
         ImageFolder folder = getItem(position);
         holder.folderName.setText(folder.name);
-        holder.imageCount.setText(mActivity.getString(res_folder_image_count, folder.images.size()));
+        holder.imageCount.setText(mActivity.getString(res_ip_folder_image_count, folder.images.size()));
         imagePicker.getImageLoader().displayImage(mActivity, folder.cover.path, holder.cover, mImageSize, mImageSize);
 
         if (lastSelected == position) {

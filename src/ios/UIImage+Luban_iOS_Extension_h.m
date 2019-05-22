@@ -29,7 +29,10 @@ static char customImageName;
     int thumbW = fixelW % 2  == 1 ? fixelW + 1 : fixelW;
     int thumbH = fixelH % 2  == 1 ? fixelH + 1 : fixelH;
     
-    double scale = ((double)fixelW/fixelH);
+    int longSide = MAX(fixelW, fixelH);
+    int shortSide = MIN(fixelW, fixelH);
+    
+    double scale = ((double)shortSide / (double)longSide);
     
     if (scale <= 1 && scale > 0.5625) {
         
@@ -53,7 +56,7 @@ static char customImageName;
             size = size < 100 ? 100 : size;
         }
         else {
-            int multiple = fixelH / 1280 == 0 ? 1 : fixelH / 1280;
+            int multiple = longSide / 1280 == 0 ? 1 : longSide / 1280;
             thumbW = fixelW / multiple;
             thumbH = fixelH / multiple;
             size = (thumbW * thumbH) / pow(2560, 2) * 300;
@@ -62,18 +65,18 @@ static char customImageName;
     }
     else if (scale <= 0.5625 && scale > 0.5) {
         
-        if (fixelH < 1280 && imageData.length/1024 < 200) {
+        if (longSide < 1280 && imageData.length/1024 < 200) {
             
             return imageData;
         }
-        int multiple = fixelH / 1280 == 0 ? 1 : fixelH / 1280;
+        int multiple = longSide / 1280 == 0 ? 1 : longSide / 1280;
         thumbW = fixelW / multiple;
         thumbH = fixelH / multiple;
         size = (thumbW * thumbH) / (1440.0 * 2560.0) * 400;
         size = size < 100 ? 100 : size;
     }
     else {
-        int multiple = (int)ceil(fixelH / (1280.0 / scale));
+        int multiple = (int)ceil(longSide / (1280.0 / scale));
         thumbW = fixelW / multiple;
         thumbH = fixelH / multiple;
         size = ((thumbW * thumbH) / (1280.0 * (1280 / scale))) * 500;
@@ -90,10 +93,10 @@ static char customImageName;
     }
     return [self lubanCompressImage:image withMask:nil];
 }
+//added
++ (NSData *)compressScale:(UIImage *)image maxWidth:(int)maxWidth maxHeight:(int)maxHeight quality:(float)quality {
     
-+ (NSData *)compressScale:(UIImage *)image maxWidth:(int)maxWidth maxHeight:(int)maxHeight {
-    
-    int fixelW = (int)image.size.width;
+    /*int fixelW = (int)image.size.width;
     int fixelH = (int)image.size.height;
     
     int actualWidth = fixelW;
@@ -121,7 +124,13 @@ static char customImageName;
     double size = (double)actualWidth * actualHeight / 4000;
     size = size < 60 ? 60 : size;
     
-    return [self compressWithImage:image thumbW:actualWidth thumbH:actualHeight size:size withMask:nil];
+    return [self compressWithImage:image thumbW:actualWidth thumbH:actualHeight size:size withMask:nil];*/
+    
+    UIImage *thumbImage = [image fixOrientation];
+    thumbImage = [thumbImage resizeImage:image thumbWidth:maxWidth thumbHeight:maxHeight withMask:nil];
+    
+    NSData *imageData = UIImageJPEGRepresentation(thumbImage, quality);
+    return imageData;
 }
 
 + (NSData *)compressWithImage:(UIImage *)image thumbW:(int)width thumbH:(int)height size:(double)size withMask:(NSString *)maskName {

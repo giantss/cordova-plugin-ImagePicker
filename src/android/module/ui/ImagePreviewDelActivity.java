@@ -1,8 +1,9 @@
-package com.giants.imagepicker.ui;
+package com.lzy.imagepicker.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -11,8 +12,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.util.NavigationBarChangeListener;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.util.NavigationBarChangeListener;
 
 /**
  * ================================================
@@ -27,12 +28,14 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
 
     private int res_btn_del;
     private int res_btn_back;
-    private int res_preview_image_count;
+    private int res_ip_preview_image_count;
     private int res_top_out;
     private int res_top_in;
-    private int res_transparent;
-    private int res_status_bar;
-
+    private int res_ip_color_primary_dark;
+    private int res_ip_str_tips;
+    private int res_ip_need_to_del;
+    private int res_ip_cancel;
+    private int res_ip_str_confirm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,27 +46,29 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
 
         res_btn_del = resource.getIdentifier("btn_del", "id", pkgName);
         res_btn_back = resource.getIdentifier("btn_back", "id", pkgName);
-        res_preview_image_count = resource.getIdentifier("preview_image_count", "string", pkgName);
+        res_ip_preview_image_count = resource.getIdentifier("ip_preview_image_count", "string", pkgName);
         res_top_out = resource.getIdentifier("top_out", "anim", pkgName);
         res_top_in = resource.getIdentifier("top_in", "anim", pkgName);
-        res_transparent = resource.getIdentifier("transparent", "color", pkgName);
-        res_status_bar = resource.getIdentifier("status_bar", "color", pkgName);
+        res_ip_color_primary_dark = resource.getIdentifier("ip_color_primary_dark", "color", pkgName);
+        res_ip_str_tips = resource.getIdentifier("ip_str_tips", "string", pkgName);
+        res_ip_need_to_del = resource.getIdentifier("ip_need_to_del", "string", pkgName);
+        res_ip_cancel = resource.getIdentifier("ip_cancel", "string", pkgName);
+        res_ip_str_confirm = resource.getIdentifier("ip_str_confirm", "string", pkgName);
 
         ImageView mBtnDel = (ImageView) findViewById(res_btn_del);
         mBtnDel.setOnClickListener(this);
         mBtnDel.setVisibility(View.VISIBLE);
         topBar.findViewById(res_btn_back).setOnClickListener(this);
 
-        mTitleCount.setText(getString(res_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+        mTitleCount.setText(getString(res_ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
         //滑动ViewPager的时候，根据外界的数据改变当前的选中状态和当前的图片的位置描述文本
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
-                mTitleCount.setText(getString(res_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+                mTitleCount.setText(getString(res_ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
             }
         });
-
         NavigationBarChangeListener.with(this, NavigationBarChangeListener.ORIENTATION_HORIZONTAL)
                 .setListener(new NavigationBarChangeListener.OnSoftInputStateChangeListener() {
                     @Override
@@ -91,10 +96,10 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
     /** 是否删除此张图片 */
     private void showDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("要删除这张照片吗？");
-        builder.setNegativeButton("取消", null);
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setTitle(res_ip_str_tips);
+        builder.setMessage(res_ip_need_to_del);
+        builder.setNegativeButton(res_ip_cancel, null);
+        builder.setPositiveButton(res_ip_str_confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //移除当前图片刷新界面
@@ -102,7 +107,7 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
                 if (mImageItems.size() > 0) {
                     mAdapter.setData(mImageItems);
                     mAdapter.notifyDataSetChanged();
-                    mTitleCount.setText(getString(res_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+                    mTitleCount.setText(getString(res_ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
                 } else {
                     onBackPressed();
                 }
@@ -127,13 +132,13 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
         if (topBar.getVisibility() == View.VISIBLE) {
             topBar.setAnimation(AnimationUtils.loadAnimation(this, res_top_out));
             topBar.setVisibility(View.GONE);
-            tintManager.setStatusBarTintResource(res_transparent);//通知栏所需颜色
+            tintManager.setStatusBarTintResource(Color.TRANSPARENT);//通知栏所需颜色
             //给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         } else {
             topBar.setAnimation(AnimationUtils.loadAnimation(this, res_top_in));
             topBar.setVisibility(View.VISIBLE);
-            tintManager.setStatusBarTintResource(res_status_bar);//通知栏所需颜色
+            tintManager.setStatusBarTintResource(res_ip_color_primary_dark);//通知栏所需颜色
             //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }

@@ -1,4 +1,4 @@
-package com.giants.imagepicker.adapter;
+package com.lzy.imagepicker.adapter;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
@@ -6,9 +6,9 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.util.Utils;
-import com.giants.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * ================================================
- * 作    者：jeasongiants（廖子尧 Github地址：https://github.com/jeasongiants0216
+ * 作    者：jeasonlzy（廖子尧 Github地址：https://github.com/jeasonlzy0216
  * 版    本：1.0
  * 创建日期：2016/5/19
  * 描    述：

@@ -13,6 +13,6 @@
 + (NSData *)lubanCompressImage:(UIImage *)image;
 + (NSData *)lubanCompressImage:(UIImage *)image withMask:(NSString *)maskName;
 + (NSData *)lubanCompressImage:(UIImage *)image withCustomImage:(NSString *)imageName;
-+ (NSData *)compressScale:(UIImage *)image maxWidth:(int)maxWidth maxHeight:(int)maxHeight;
++ (NSData *)compressScale:(UIImage *)image maxWidth:(int)maxWidth maxHeight:(int)maxHeight quality:(float)quality; //added
 
 @end

@@ -1,4 +1,4 @@
-package com.giants.imagepicker.loader;
+package com.lzy.imagepicker.loader;
 
 import android.app.Activity;
 import android.widget.ImageView;

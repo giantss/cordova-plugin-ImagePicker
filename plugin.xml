@@ -20,7 +20,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="cordova-plugin-imagepicker"
-      version="1.1.6">
+      version="1.2.0">
 
     <name>ImagePicker</name>
     <description>Cordova ImagePicker Plugin</description>
@@ -101,6 +101,9 @@
         <header-file src="src/ios/libs/TZPhotoPreviewCell.h" />
         <source-file src="src/ios/libs/TZPhotoPreviewCell.m"/>
 
+        <header-file src="src/ios/libs/TZImageRequestOperation.h" />
+        <source-file src="src/ios/libs/TZImageRequestOperation.m"/>
+
         <header-file src="src/ios/libs/TZPhotoPreviewController.h" />
         <source-file src="src/ios/libs/TZPhotoPreviewController.m"/>
 
@@ -114,6 +117,7 @@
         <source-file src="src/ios/libs/UIView+Layout.m"/>
 
         <resource-file src="src/ios/libs/TZImagePickerController.bundle" />
+
     </platform>
 
     <!-- android -->
@@ -138,22 +142,22 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity
-                    android:name="com.giants.imagepicker.ui.ImageGridActivity"
+                    android:name="com.lzy.imagepicker.ui.ImageGridActivity"
                     android:configChanges="orientation|screenSize"
                     android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
             <activity
-                    android:name="com.giants.imagepicker.ui.ImageCropActivity"
+                    android:name="com.lzy.imagepicker.ui.ImageCropActivity"
                     android:configChanges="orientation|screenSize"
                     android:hardwareAccelerated="false"
                     android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
             <activity
-                    android:name="com.giants.imagepicker.ui.ImagePreviewActivity"
+                    android:name="com.lzy.imagepicker.ui.ImagePreviewActivity"
                     android:configChanges="orientation|screenSize"
                     android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
             <provider
                     android:authorities="${applicationId}.imagepicker.provider"
-                    android:name="com.giants.imagepicker.ImagePickerProvider"
+                    android:name="com.lzy.imagepicker.ImagePickerProvider"
                     android:exported="false"
                     android:grantUriPermissions="true">
                 <meta-data
@@ -178,33 +182,34 @@
 
         <!-- 第三方库 和 sourceCompatibility 1.7 用来支持 diamond 运算符  -->
 		<framework src="src/android/imagepicker.gradle" custom="true" type="gradleReference"/>
-        <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImageGridAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/adapter/ImageRecyclerAdapter.java" target-dir="src/com/giants/imagepicker/adapter" />
-        <source-file src="src/android/module/bean/ImageFolder.java" target-dir="src/com/giants/imagepicker/bean" />
-        <source-file src="src/android/module/bean/ImageItem.java" target-dir="src/com/giants/imagepicker/bean" />
-        <source-file src="src/android/module/loader/ImageLoader.java" target-dir="src/com/giants/imagepicker/loader" />
-        <source-file src="src/android/module/ui/ImageBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImageCropActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImageGridActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewBaseActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/ui/ImagePreviewDelActivity.java" target-dir="src/com/giants/imagepicker/ui" />
-        <source-file src="src/android/module/util/BitmapUtil.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/util/ProviderUtil.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/util/Utils.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/util/NavigationBarChangeListener.java" target-dir="src/com/giants/imagepicker/util" />
-        <source-file src="src/android/module/view/CropImageView.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/FolderPopUpWindow.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/SuperCheckBox.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/giants/imagepicker/view" />
-        <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/giants/imagepicker/view" />
+        <source-file src="src/android/module/adapter/ImageFolderAdapter.java" target-dir="src/com/lzy/imagepicker/adapter" />
+        <source-file src="src/android/module/adapter/ImagePageAdapter.java" target-dir="src/com/lzy/imagepicker/adapter" />
+        <source-file src="src/android/module/adapter/ImageRecyclerAdapter.java" target-dir="src/com/lzy/imagepicker/adapter" />
+        <source-file src="src/android/module/bean/ImageFolder.java" target-dir="src/com/lzy/imagepicker/bean" />
+        <source-file src="src/android/module/bean/ImageItem.java" target-dir="src/com/lzy/imagepicker/bean" />
+        <source-file src="src/android/module/loader/ImageLoader.java" target-dir="src/com/lzy/imagepicker/loader" />
+        <source-file src="src/android/module/ui/ImageBaseActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImageCropActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImageGridActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewBaseActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/ui/ImagePreviewDelActivity.java" target-dir="src/com/lzy/imagepicker/ui" />
+        <source-file src="src/android/module/util/BitmapUtil.java" target-dir="src/com/lzy/imagepicker/util" />
+        <source-file src="src/android/module/util/InnerToaster.java" target-dir="src/com/lzy/imagepicker/util" />
+        <source-file src="src/android/module/util/ProviderUtil.java" target-dir="src/com/lzy/imagepicker/util" />
+        <source-file src="src/android/module/util/Utils.java" target-dir="src/com/lzy/imagepicker/util" />
+        <source-file src="src/android/module/util/NavigationBarChangeListener.java" target-dir="src/com/lzy/imagepicker/util" />
+        <source-file src="src/android/module/view/CropImageView.java" target-dir="src/com/lzy/imagepicker/view" />
+        <source-file src="src/android/module/view/FolderPopUpWindow.java" target-dir="src/com/lzy/imagepicker/view" />
+        <source-file src="src/android/module/view/GridSpacingItemDecoration.java" target-dir="src/com/lzy/imagepicker/view" />
+        <source-file src="src/android/module/view/SuperCheckBox.java" target-dir="src/com/lzy/imagepicker/view" />
+        <source-file src="src/android/module/view/SystemBarTintManager.java" target-dir="src/com/lzy/imagepicker/view" />
+        <source-file src="src/android/module/view/ViewPagerFixed.java" target-dir="src/com/lzy/imagepicker/view" />
 
-        <source-file src="src/android/module/DataHolder.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/giants/imagepicker" />
-        <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/giants/imagepicker" />
+        <source-file src="src/android/module/DataHolder.java" target-dir="src/com/lzy/imagepicker" />
+        <source-file src="src/android/module/ImageDataSource.java" target-dir="src/com/lzy/imagepicker" />
+        <source-file src="src/android/module/ImagePicker.java" target-dir="src/com/lzy/imagepicker" />
+        <source-file src="src/android/module/ImagePickerProvider.java" target-dir="src/com/lzy/imagepicker" />
 
         <source-file src="src/android/imageloader/GlideImageLoader.java" target-dir="src/com/giants/imagepicker/imageloader" />
 
@@ -212,32 +217,31 @@
         
         <source-file src="src/android/res/xml/imagepicker_provider_paths.xml" target-dir="res/xml"/>
 
-        <resource-file src="src/android/res/anim/bottom_in.xml" target="res/anim/bottom_in.xml"/>
-        <resource-file src="src/android/res/anim/bottom_out.xml" target="res/anim/bottom_out.xml"/>
         <resource-file src="src/android/res/anim/fade_in.xml" target="res/anim/fade_in.xml"/>
         <resource-file src="src/android/res/anim/fade_out.xml" target="res/anim/fade_out.xml"/>
         <resource-file src="src/android/res/anim/hide_to_bottom.xml" target="res/anim/hide_to_bottom.xml"/>
-        <resource-file src="src/android/res/anim/left_in.xml" target="res/anim/left_in.xml"/>
-        <resource-file src="src/android/res/anim/left_out.xml" target="res/anim/left_out.xml"/>
-        <resource-file src="src/android/res/anim/right_in.xml" target="res/anim/right_in.xml"/>
-        <resource-file src="src/android/res/anim/right_out.xml" target="res/anim/right_out.xml"/>
-        <resource-file src="src/android/res/anim/scale_in.xml" target="res/anim/scale_in.xml"/>
-        <resource-file src="src/android/res/anim/scale_out.xml" target="res/anim/scale_out.xml"/>
         <resource-file src="src/android/res/anim/show_from_bottom.xml" target="res/anim/show_from_bottom.xml"/>
         <resource-file src="src/android/res/anim/top_in.xml" target="res/anim/top_in.xml"/>
         <resource-file src="src/android/res/anim/top_out.xml" target="res/anim/top_out.xml"/>
 
-        <resource-file src="src/android/res/drawable/folder_list_divider.xml" target="res/drawable/folder_list_divider.xml"/>
+        <resource-file src="src/android/res/drawable/bg_btn_dis.xml" target="res/drawable/bg_btn_dis.xml"/>
+        <resource-file src="src/android/res/drawable/bg_btn_nor.xml" target="res/drawable/bg_btn_nor.xml"/>
+        <resource-file src="src/android/res/drawable/bg_btn_pre.xml" target="res/drawable/bg_btn_pre.xml"/>
+        <resource-file src="src/android/res/drawable/bg_folder_item.xml" target="res/drawable/bg_folder_item.xml"/>
+        <resource-file src="src/android/res/drawable/bg_image_folder.xml" target="res/drawable/bg_image_folder.xml"/>
+
+        <resource-file src="src/android/res/drawable/ic_arrow_back.xml" target="res/drawable/ic_arrow_back.xml"/>
         <resource-file src="src/android/res/drawable/ic_cover_shade.xml" target="res/drawable/ic_cover_shade.xml"/>
+        <resource-file src="src/android/res/drawable/ic_default_image.xml" target="res/drawable/ic_default_image.xml"/>
+        <resource-file src="src/android/res/drawable/ic_vector_check.xml" target="res/drawable/ic_vector_check.xml"/>
+        <resource-file src="src/android/res/drawable/ic_vector_delete.xml" target="res/drawable/ic_vector_delete.xml"/>
         <resource-file src="src/android/res/drawable/radio_item_checked.xml" target="res/drawable/radio_item_checked.xml"/>
         <resource-file src="src/android/res/drawable/selector_back_press.xml" target="res/drawable/selector_back_press.xml"/>
         <resource-file src="src/android/res/drawable/selector_grid_camera_bg.xml" target="res/drawable/selector_grid_camera_bg.xml"/>
         <resource-file src="src/android/res/drawable/selector_item_checked.xml" target="res/drawable/selector_item_checked.xml"/>
         <resource-file src="src/android/res/drawable/selector_top_ok.xml" target="res/drawable/selector_top_ok.xml"/>
-
-        <resource-file src="src/android/res/drawable-xxhdpi/bg_btn_dis.9.png" target="res/drawable-xxhdpi/bg_btn_dis.9.png"/>
-        <resource-file src="src/android/res/drawable-xxhdpi/bg_btn_nor.9.png" target="res/drawable-xxhdpi/bg_btn_nor.9.png"/>
-        <resource-file src="src/android/res/drawable-xxhdpi/bg_btn_pre.9.png" target="res/drawable-xxhdpi/bg_btn_pre.9.png"/>
+        
+        <resource-file src="src/android/res/drawable-v21/bg_folder_item.xml" target="res/drawable-v21/bg_folder_item.xml"/>
 
         <resource-file src="src/android/res/layout/activity_image_crop.xml" target="res/layout/activity_image_crop.xml"/>
         <resource-file src="src/android/res/layout/activity_image_grid.xml" target="res/layout/activity_image_grid.xml"/>
@@ -246,16 +250,14 @@
         <resource-file src="src/android/res/layout/adapter_folder_list_item.xml" target="res/layout/adapter_folder_list_item.xml"/>
         <resource-file src="src/android/res/layout/adapter_image_list_item.xml" target="res/layout/adapter_image_list_item.xml"/>
         <resource-file src="src/android/res/layout/include_top_bar.xml" target="res/layout/include_top_bar.xml"/>
+        <resource-file src="src/android/res/layout/ip_dialog_loading.xml" target="res/layout/ip_dialog_loading.xml"/>
         <resource-file src="src/android/res/layout/pop_folder.xml" target="res/layout/pop_folder.xml"/>
 
         <resource-file src="src/android/res/mipmap-xxhdpi/checkbox_checked.png" target="res/mipmap-xxhdpi/checkbox_checked.png"/>
         <resource-file src="src/android/res/mipmap-xxhdpi/checkbox_normal.png" target="res/mipmap-xxhdpi/checkbox_normal.png"/>
         <resource-file src="src/android/res/mipmap-xxhdpi/radio_checked.png" target="res/mipmap-xxhdpi/radio_checked.png"/>
         <resource-file src="src/android/res/mipmap-xxhdpi/radio_normal.png" target="res/mipmap-xxhdpi/radio_normal.png"/>
-        <resource-file src="src/android/res/mipmap-xxhdpi/default_image.png" target="res/mipmap-xxhdpi/default_image.png"/>
         <resource-file src="src/android/res/mipmap-xxhdpi/grid_camera.png" target="res/mipmap-xxhdpi/grid_camera.png"/>
-        <resource-file src="src/android/res/mipmap-xxhdpi/ic_back.png" target="res/mipmap-xxhdpi/ic_back.png"/>
-        <resource-file src="src/android/res/mipmap-xxhdpi/ic_del.png" target="res/mipmap-xxhdpi/ic_del.png"/>
         <resource-file src="src/android/res/mipmap-xxhdpi/text_indicator.png" target="res/mipmap-xxhdpi/text_indicator.png"/>
 
         <resource-file src="src/android/res/values/attrs.xml" target="res/values/attrs.xml"/>

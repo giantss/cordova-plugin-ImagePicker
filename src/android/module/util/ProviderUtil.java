@@ -1,4 +1,4 @@
-package com.giants.imagepicker.util;
+package com.lzy.imagepicker.util;
 
 import android.content.Context;
 

@@ -1,4 +1,5 @@
-package com.giants.imagepicker.ui;
+package com.lzy.imagepicker.ui;
+
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,18 +9,18 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.giants.imagepicker.ImagePicker;
-import com.giants.imagepicker.util.Utils;
-import com.giants.imagepicker.adapter.ImagePageAdapter;
-import com.giants.imagepicker.DataHolder;
-import com.giants.imagepicker.bean.ImageItem;
-import com.giants.imagepicker.view.ViewPagerFixed;
+import com.lzy.imagepicker.DataHolder;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.adapter.ImagePageAdapter;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.ViewPagerFixed;
 
 import java.util.ArrayList;
 
 /**
  * ================================================
- * 作    者：jeasongiants（廖子尧 Github地址：https://github.com/jeasongiants0216
+ * 作    者：jeasonlzy（廖子尧 Github地址：https://github.com/jeasonlzy0216
  * 版    本：1.0
  * 创建日期：2016/5/19
  * 描    述：
@@ -46,20 +47,18 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         Context appContext = getApplicationContext();
         Resources resource = appContext.getResources();
         String pkgName = appContext.getPackageName();
-
         setContentView(resource.getIdentifier("activity_image_preview", "layout", pkgName));
 
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
-        isFromItems = getIntent().getBooleanExtra(ImagePicker.EXTRA_FROM_ITEMS,false);
+        isFromItems = getIntent().getBooleanExtra(ImagePicker.EXTRA_FROM_ITEMS, false);
 
-        if (isFromItems){
+        if (isFromItems) {
             // 据说这样会导致大量图片崩溃
             mImageItems = (ArrayList<ImageItem>) getIntent().getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-        }else{
+        } else {
             // 下面采用弱引用会导致预览崩溃
-            mImageItems =  (ArrayList<ImageItem>) DataHolder.getInstance().retrieve(DataHolder.DH_CURRENT_IMAGE_FOLDER_ITEMS);
+            mImageItems = (ArrayList<ImageItem>) DataHolder.getInstance().retrieve(DataHolder.DH_CURRENT_IMAGE_FOLDER_ITEMS);
         }
-
 
         imagePicker = ImagePicker.getInstance();
         selectedImages = imagePicker.getSelectedImages();
@@ -96,7 +95,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
         mViewPager.setCurrentItem(mCurrentPosition, false);
 
         //初始化当前页面的状态
-        mTitleCount.setText(getString(resource.getIdentifier("preview_image_count", "string", pkgName), mCurrentPosition + 1, mImageItems.size()));
+        mTitleCount.setText(getString(resource.getIdentifier("ip_preview_image_count", "string", pkgName), mCurrentPosition + 1, mImageItems.size()));
     }
 
     /** 单击时，隐藏头和尾 */

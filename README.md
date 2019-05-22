@@ -31,12 +31,10 @@ fork  from  giantss/cordova-plugin-ImagePicker
 
 ## Android 视频演示
 
-- [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/111.mp4)<br>
 - [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NDIyMA==.html)
 
 ## iOS 视频演示
 
-- [点击查看视频(mp4格式)](http://oqdxjvpc7.bkt.clouddn.com/ios1.mp4)<br>
 - [点击查看视频(优酷)](http://v.youku.com/v_show/id_XMjg0NDg0NTU4OA==.html)
 
 ## 效果图
@@ -49,6 +47,7 @@ fork  from  giantss/cordova-plugin-ImagePicker
 [一个粗糙的 cordova demo](https://github.com/giantss/ImagePickerDemo)
 
 ```javascript
+// 选图
 ImagePicker.getPictures(function(result) {
     alert(JSON.stringify(result));
 }, function(err) {
@@ -59,18 +58,32 @@ ImagePicker.getPictures(function(result) {
     height : 1440, 
     quality : 100 
 });
+
+// 拍照
+ImagePicker.takePhoto(function(result) {
+    alert(JSON.stringify(result));
+}, function(err) {
+    alert(err);
+}, { 
+    width : 1920, 
+    height : 1440, 
+    quality : 50 
+});
 ```
 
 返回结果如下：
 ```
+// 如果是拍照，images 数组中只有一个对象
 {
     "images": [{
         "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
+        "uri": "file:///data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817455118.jpg",
         "width": 720,
         "height": 1280,
         "size": 104871 // 文件体积(单位：字节)
     }, {
         "path": "/data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817464525.jpg",
+        "uri": "file:///data/user/0/com.pushsoft.im2/cache/ImagePicker/152783817464525.jpg",
         "width": 720,
         "height": 1280,
         "size": 109873
@@ -87,15 +100,16 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 | 配置参数            | 参数含义                   |
 |:------------------:|:-------------------------:|
 | maximumImagesCount | 多选限制数量，默认为9        |
-| width              | 设置图片的width，默认为1920   |
-| height             | 设置图片的height，默认为1440  |
+| width              | 设置输出图片的width，默认为自动   |
+| height             | 设置输出图片的height，默认为自动  |
 | quality            | 图片质量 默认80            |
+| enablePickOriginal | 允许选择原图 默认true  |
 
 ### 注意：
 
 - 参数都是可选的，不传则使用默认值；
-- 如果 width > 0 且 height > 0：Android 下压缩的图可能比原图大或者压缩率不高（比如原图4MB，压缩后也有2MB），可以 quality 设置低一些，比如 50；iOS 下会忽略 quality 参数；
-- 如果 width < 0 或 height < 0：那么插件返回压缩图，压缩逻辑接近于微信，自动选取合适的分辨率和压缩品质，推荐使用这种方式。压缩库使用的是 [Luban](https://github.com/Curzibn/Luban) 和 [Luban-iOS](https://github.com/GuoZhiQiang/Luban_iOS)。如果遇到压缩不清晰等问题，请到他们的项目上提 issues；
+- 如果 width > 0 且 height > 0：压缩的图可能比原图大或者压缩率不高（比如原图4MB，压缩后也有2MB），可以 quality 设置低一些，比如 50；
+- 如果 width < 0 或 height < 0：压缩逻辑接近于微信，自动选取合适的分辨率和压缩品质，推荐使用这种方式。压缩库使用的是 [Luban](https://github.com/Curzibn/Luban) 和 [Luban-iOS](https://github.com/GuoZhiQiang/Luban_iOS)。如果遇到压缩不清晰等问题，请到他们的项目上提 issues；
 - 运行时，选图界面上有“原图”单选按钮，选上之后，返回的图片是未压缩的原图
 
 ## android注意事项
@@ -113,7 +127,7 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
     ```
     $ cordova plugin add cordova-android-support-gradle-release  --variable ANDROID_SUPPORT_VERSION={required version}
     ```
-    其中`{required version}` 值为类似 `25.+`，`26.+`，`27.+` 这种。
+    其中`{required version}` 值为类似 `26.+`，`27.+`，`28.+` 这种。
 
 - 如果你用的是 低版本 Cordova 和 Gradle，会报错不支持`implementation`
     Cordova 7.1.0 及以下版本（对应Cordova-Android@6.3.0及以下版本），请将 `cordova-plugin-ImagePicker\src\android\imagepicker.gradle` 里面的 `implementation` 修改为 `compile`，
@@ -133,8 +147,9 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 ## 参考项目
 
 ### 多选图片项目
-- [nanchen2251/ImagePicker](https://github.com/nanchen2251/ImagePicker) (Android)
-    - [jeasonlzy/ImagePicker](https://github.com/jeasonlzy/ImagePicker)
+- [jeasonlzy/ImagePicker](https://github.com/jeasonlzy/ImagePicker) (Android)
+    - [nanchen2251/ImagePicker](https://github.com/nanchen2251/ImagePicker)
+    - [CysionLiu/ImagePicker](https://github.com/CysionLiu/ImagePicker)
 - [banchichen/TZImagePickerController](https://github.com/banchichen/TZImagePickerController) (iOS)
 
 ### 图片压缩库
@@ -143,6 +158,17 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.1.9
+- (iOS)增加 `takePhoto` 方法，直接进入拍照
+
+### v1.1.8
+- (iOS)Luban 压缩逻辑 fix
+
+### v1.1.7
+- 更新到最新的第三方图片选择库
+- 增加 enablePickOriginal 配置项（允许选择原图，即是否显示原图勾选框）
+- (iOS)支持 HEIC 图片格式
+
 ### v1.1.6
 - (Android)移除 [picasso](https://github.com/square/picasso) 引用和相关实现逻辑代码
 

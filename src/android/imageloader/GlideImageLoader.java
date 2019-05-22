@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.giants.imagepicker.loader.ImageLoader;
+import com.lzy.imagepicker.loader.ImageLoader;
 
 import java.io.File;
 
@@ -30,7 +30,7 @@ public class GlideImageLoader implements ImageLoader {
         Resources resource = appContext.getResources();
         String pkgName = appContext.getPackageName();
 
-        int defaultImage = resource.getIdentifier("default_image", "mipmap", pkgName);
+        int defaultImage = resource.getIdentifier("ic_default_image", "drawable", pkgName);
 
         RequestOptions options = new RequestOptions()
                 .placeholder(defaultImage) //设置占位图片

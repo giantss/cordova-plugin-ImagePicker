@@ -1,11 +1,11 @@
-package com.giants.imagepicker;
+package com.lzy.imagepicker;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -15,12 +15,13 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
-import com.giants.imagepicker.bean.ImageFolder;
-import com.giants.imagepicker.bean.ImageItem;
-import com.giants.imagepicker.loader.ImageLoader;
-import com.giants.imagepicker.util.ProviderUtil;
-import com.giants.imagepicker.util.Utils;
-import com.giants.imagepicker.view.CropImageView;
+import com.lzy.imagepicker.bean.ImageFolder;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.loader.ImageLoader;
+import com.lzy.imagepicker.util.InnerToaster;
+import com.lzy.imagepicker.util.ProviderUtil;
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.CropImageView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -31,17 +32,16 @@ import java.util.Locale;
 
 /**
  * ================================================
- * 作    者：jeasongiants（廖子尧 Github地址：https://github.com/jeasongiants0216
+ * 作    者：jeasonlzy（廖子尧 Github地址：https://github.com/jeasonlzy0216
  * 版    本：1.0
  * 创建日期：2016/5/19
  * 描    述：图片选择的入口类
  * 修订历史：
- * <p>
  * 2017-03-20
  *
  * @author nanchen
- *         采用单例和弱引用解决Intent传值限制导致的异常
- *         ================================================
+ * 采用单例和弱引用解决Intent传值限制导致的异常
+ * ================================================
  */
 public class ImagePicker {
 
@@ -58,6 +58,7 @@ public class ImagePicker {
     public static final String EXTRA_FROM_ITEMS = "extra_from_items";
     public static final String EXTRAS_ISORIGIN = "extra_isOrigin";
 
+    private boolean enablePickOriginal = true; // 允许选择原图(原图勾选框)
     private boolean multiMode = true;    //图片选择模式
     private int selectLimit = 9;         //最大选择图片数量
     private boolean crop = true;         //裁剪
@@ -71,7 +72,6 @@ public class ImagePicker {
     private CropImageView.Style style = CropImageView.Style.RECTANGLE; //裁剪框的形状
     private File cropCacheFolder;
     private File takeImageFile;
-    public Bitmap cropBitmap;
 
     private ArrayList<ImageItem> mSelectedImages = new ArrayList<>();   //选中的图片集合
     private List<ImageFolder> mImageFolders;      //所有的图片文件夹
@@ -79,6 +79,7 @@ public class ImagePicker {
     private List<OnImageSelectedListener> mImageSelectedListeners;          // 图片选中的监听回调
 
     private static ImagePicker mInstance;
+
 
     private ImagePicker() {
     }
@@ -92,6 +93,13 @@ public class ImagePicker {
             }
         }
         return mInstance;
+    }
+
+    public void setEnablePickOriginal(boolean enablePickOriginal) {
+        this.enablePickOriginal = enablePickOriginal;
+    }
+    public boolean getEnablePickOriginal() {
+        return this.enablePickOriginal;
     }
 
     public boolean isMultiMode() {
@@ -232,7 +240,6 @@ public class ImagePicker {
         return mSelectedImages;
     }
 
-
     public void clearSelectedImages() {
         if (mSelectedImages != null) mSelectedImages.clear();
     }
@@ -256,6 +263,15 @@ public class ImagePicker {
      * 拍照的方法
      */
     public void takePicture(Activity activity, int requestCode) {
+        PackageManager packageManager = activity.getPackageManager();
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+		    Context appContext = activity.getApplicationContext();
+	        Resources resource = appContext.getResources();
+	        String pkgName = appContext.getPackageName();
+			
+            InnerToaster.obj(activity).show(resource.getIdentifier("ip_str_no_camera", "string", pkgName));
+            return;
+        }
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
@@ -274,19 +290,16 @@ public class ImagePicker {
                     uri = Uri.fromFile(takeImageFile);
                 } else {
 
-
                     /**
                      * 7.0 调用系统相机拍照不再允许使用Uri方式，应该替换为FileProvider
                      * 并且这样可以解决MIUI系统上拍照返回size为0的情况
                      */
                     uri = FileProvider.getUriForFile(activity, ProviderUtil.getFileProviderName(activity), takeImageFile);
                     //加入uri权限 要不三星手机不能拍照
-                    List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities
-                            (takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                    List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
                     for (ResolveInfo resolveInfo : resInfoList) {
                         String packageName = resolveInfo.activityInfo.packageName;
-                        activity.grantUriPermission(packageName, uri, Intent
-                                .FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        activity.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }
                 }
 
@@ -354,7 +367,6 @@ public class ImagePicker {
         }
     }
 
-
     /**
      * 用于手机内存不足，进程被系统回收，重启时的状态恢复
      */
@@ -391,5 +403,11 @@ public class ImagePicker {
         outState.putInt("outPutY", outPutY);
         outState.putInt("focusWidth", focusWidth);
         outState.putInt("focusHeight", focusHeight);
+    }
+
+
+    //设置内部toast展示风格
+    public void setIToaster(Context aContext, InnerToaster.IToaster aIToaster) {
+        InnerToaster.obj(aContext).setIToaster(aIToaster);
     }
 }

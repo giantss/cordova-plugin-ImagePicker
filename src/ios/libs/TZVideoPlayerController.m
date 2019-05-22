@@ -49,7 +49,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _originStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-    [UIApplication sharedApplication].statusBarStyle = iOS7Later ? UIStatusBarStyleLightContent : UIStatusBarStyleBlackOpaque;
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -93,8 +93,8 @@
 
 - (void)configPlayButton {
     _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_playButton setImage:[UIImage imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
-    [_playButton setImage:[UIImage imageNamedFromMyBundle:@"MMVideoPreviewPlayHL"] forState:UIControlStateHighlighted];
+    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
+    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlayHL"] forState:UIControlStateHighlighted];
     [_playButton addTarget:self action:@selector(playButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_playButton];
 }
@@ -121,6 +121,18 @@
     [_doneButton setTitleColor:tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
     [_toolBar addSubview:_doneButton];
     [self.view addSubview:_toolBar];
+    
+    if (tzImagePickerVc.videoPreviewPageUIConfigBlock) {
+        tzImagePickerVc.videoPreviewPageUIConfigBlock(_playButton, _toolBar, _doneButton);
+    }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    TZImagePickerController *tzImagePicker = (TZImagePickerController *)self.navigationController;
+    if (tzImagePicker && [tzImagePicker isKindOfClass:[TZImagePickerController class]]) {
+        return tzImagePicker.statusBarStyle;
+    }
+    return [super preferredStatusBarStyle];
 }
 
 #pragma mark - Layout
@@ -135,6 +147,11 @@
     _toolBar.frame = CGRectMake(0, self.view.tz_height - toolBarHeight, self.view.tz_width, toolBarHeight);
     _doneButton.frame = CGRectMake(self.view.tz_width - 44 - 12, 0, 44, 44);
     _playButton.frame = CGRectMake(0, statusBarAndNaviBarHeight, self.view.tz_width, self.view.tz_height - statusBarAndNaviBarHeight - toolBarHeight);
+    
+    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+    if (tzImagePickerVc.videoPreviewPageDidLayoutSubviewsBlock) {
+        tzImagePickerVc.videoPreviewPageDidLayoutSubviewsBlock(_playButton, _toolBar, _doneButton);
+    }
 }
 
 #pragma mark - Click Event
@@ -148,7 +165,7 @@
         [self.navigationController setNavigationBarHidden:YES];
         _toolBar.hidden = YES;
         [_playButton setImage:nil forState:UIControlStateNormal];
-        if (iOS7Later) [UIApplication sharedApplication].statusBarHidden = YES;
+        [UIApplication sharedApplication].statusBarHidden = YES;
     } else {
         [self pausePlayerAndShowNaviBar];
     }
@@ -187,9 +204,9 @@
     [_player pause];
     _toolBar.hidden = NO;
     [self.navigationController setNavigationBarHidden:NO];
-    [_playButton setImage:[UIImage imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
+    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
     
-    if (self.needShowStatusBar && iOS7Later) {
+    if (self.needShowStatusBar) {
         [UIApplication sharedApplication].statusBarHidden = NO;
     }
 }
