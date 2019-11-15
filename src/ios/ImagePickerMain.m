@@ -289,32 +289,34 @@
             }];
         }
         else {
-            [[TZImageManager manager] getOriginalPhotoWithAsset:asset completion:^(UIImage *photo, NSDictionary *info) {
+            [[TZImageManager manager] getOriginalPhotoWithAsset:asset newCompletion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
                 
-                NSData *compressed;
-                
-                if(maxWidth > 0 && maxHeight > 0 && quality > 0) {
-                    float q = (float)quality/100;
-                    compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight quality:q];
+                if(!isDegraded) {
+                    NSData *compressed;
+
+                    if(maxWidth > 0 && maxHeight > 0 && quality > 0) {
+                        float q = (float)quality/100;
+                        compressed = [UIImage compressScale:photo maxWidth:maxWidth maxHeight:maxHeight quality:q];
+                    }
+                    else { // maxWidth 和 maxHeight 如果小于0，就自动压缩分辨率
+                        compressed = [UIImage lubanCompressImage:photo];
+                    }
+
+                    UIImage *newImage   = [UIImage imageWithData:compressed];
+
+                    NSString *fileName = [[[originName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
+                    NSString *path = [self saveNSDataToFile:compressed withName:fileName];
+                    NSDictionary* fileObj = @{
+                                              @"path": path,
+                                              @"width": @(newImage.size.width * newImage.scale),
+                                              @"height": @(newImage.size.height * newImage.scale),
+                                              @"size": @([compressed length])
+                                              };
+                    [compressedPaths addObject:fileObj];
+
+                    index += 1;
+                    [self saveCompressImage:assets currentIdx:index compressedPathArray:compressedPaths completion:completion];
                 }
-                else { // maxWidth 和 maxHeight 如果小于0，就自动压缩分辨率
-                    compressed = [UIImage lubanCompressImage:photo];
-                }
-                
-                UIImage *newImage   = [UIImage imageWithData:compressed];
-                
-                NSString *fileName = [[[originName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
-                NSString *path = [self saveNSDataToFile:compressed withName:fileName];
-                NSDictionary* fileObj = @{
-                                          @"path": path,
-                                          @"width": @(newImage.size.width * newImage.scale),
-                                          @"height": @(newImage.size.height * newImage.scale),
-                                          @"size": @([compressed length])
-                                          };
-                [compressedPaths addObject:fileObj];
-                
-                index += 1;
-                [self saveCompressImage:assets currentIdx:index compressedPathArray:compressedPaths completion:completion];
             }];
         }
     }
