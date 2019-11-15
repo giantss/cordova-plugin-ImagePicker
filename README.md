@@ -154,6 +154,9 @@ ionic 中使用本插件，需要声明： `declare let ImagePicker:any`
 - [GuoZhiQiang/Luban_iOS](https://github.com/GuoZhiQiang/Luban_iOS) (iOS)
 
 ## 更新说明
+### v1.2.2
+- (ios)改进：ios 13 选多张图会崩溃等问题
+
 ### v1.2.1
 - (Android)改进：Glide库4.10.+导致android.support库和androidx冲突的问题
 - (Android)改进：先设置单选，再设置多选，选择器却还是单选的问题
