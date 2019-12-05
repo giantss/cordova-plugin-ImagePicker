@@ -15,7 +15,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:+'
     implementation 'com.android.support:exifinterface:+'
     implementation 'com.github.chrisbanes.photoview:library:1.+'
-    implementation 'com.github.bumptech.glide:glide:4.+'
+    implementation 'com.github.bumptech.glide:glide:4.9.+'
     implementation 'com.github.nanchen2251:CompressHelper:1.0.+'
     implementation 'top.zibin:Luban-turbo:1.+'
     //implementation 'top.zibin:Luban:1.1.+'
