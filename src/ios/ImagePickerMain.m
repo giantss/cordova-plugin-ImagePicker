@@ -66,13 +66,13 @@
 
 
 #pragma mark - 四类个性化设置，这些参数都可以不传，此时会走默认设置
-    imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
+    imagePickerVc.isSelectOriginalPhoto = YES;
 
     if (self.maxCountTF > 1) {
         // 1.设置目前已经选中的图片数组
         imagePickerVc.selectedAssets = _selectedAssets; // 目前已经选中的图片数组
     }
-    imagePickerVc.allowTakePicture = self.enableShowTakePhoto; // 在内部显示拍照按钮
+    imagePickerVc.allowTakePicture = YES; // 在内部显示拍照按钮
 
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
@@ -85,7 +85,7 @@
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
-    imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
+    imagePickerVc.allowPickingOriginalPhoto = NO;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
     imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo; // 是否可以多选视频
 
@@ -119,12 +119,12 @@
     //imagePickerVc.allowPreview = NO;
     // 自定义导航栏上的返回按钮
     /*
+     */
      [imagePickerVc setNavLeftBarButtonSettingBlock:^(UIButton *leftButton){
-     [leftButton setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-     [leftButton setImageEdgeInsets:UIEdgeInsetsMake(0, -10, 0, 20)];
+        [leftButton setTitle:[NSBundle tz_localizedStringForKey:@"Back"] forState:UIControlStateNormal];
+        leftButton.titleLabel.font = [UIFont systemFontOfSize:15];
      }];
      imagePickerVc.delegate = self;
-     */
     
     // Deprecated, Use statusBarStyle
     // imagePickerVc.isStatusBarDefault = NO;
@@ -230,25 +230,26 @@
         
         __block NSInteger index = idx;
         
-        
-        [[TZImageManager manager] getOriginalPhotoDataWithAsset:asset completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
-            
-            __block NSString *fileName = [self getFileNameForAsset:asset];
-            if ([info valueForKey:@"PHImageExtension"] != nil) {
-                NSString *newExtension = [info valueForKey:@"PHImageExtension"];
-                fileName = [fileName stringByAppendingString:newExtension];
-            }
-            NSString *path = [self saveNSDataToFile:data withName:fileName];
-            NSDictionary* fileObj = @{
-                                      @"path": path,
-                                      @"width": @([asset pixelWidth]),
-                                      @"height": @([asset pixelHeight]),
-                                      @"size": @([data length])
-                                      };
-            [originalPaths addObject:fileObj];
-            
-            index += 1;
-            [self saveOriginalImage:assets currentIdx:index originalPathArray:originalPaths completion:completion];
+        NSString *originName = [self getFileNameForAsset:asset];
+        NSString *originExt = [[originName pathExtension] lowercaseString];
+
+        [[TZImageManager manager] getOriginalPhotoWithAsset:asset newCompletion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+            if (!isDegraded) {
+                @autoreleasepool {
+                    NSString *fileName = [[[originName lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"JPG"];
+                    NSData *imageData = UIImageJPEGRepresentation(photo, 0.9);
+                    NSString *path = [self saveNSDataToFile:imageData withName:fileName];
+                    NSDictionary* fileObj = @{
+                                            @"path": path,
+                                            @"width": @([asset pixelWidth]),
+                                            @"height": @([asset pixelHeight]),
+                                            @"size": @([imageData length])
+                                            };
+                    [originalPaths addObject:fileObj];
+                    index += 1;
+                    [self saveOriginalImage:assets currentIdx:index originalPathArray:originalPaths completion:completion];
+                };
+            };
         }];
     }
     else {
@@ -484,7 +485,7 @@
     // 3. 设置是否可以选择视频/图片/原图
     imagePickerVc.allowPickingVideo = self.enablePickingVideo;
     imagePickerVc.allowPickingImage = self.enablePickingImage;
-    imagePickerVc.allowPickingOriginalPhoto = self.enablePickingOriginalPhoto;
+    imagePickerVc.allowPickingOriginalPhoto = NO;
     imagePickerVc.allowPickingGif = self.enablePickingGif;
     imagePickerVc.allowPickingMultipleVideo = self.enablePickingMuitlpleVideo; // 是否可以多选视频
 

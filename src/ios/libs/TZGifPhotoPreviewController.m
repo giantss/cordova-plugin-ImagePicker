@@ -25,12 +25,14 @@
     
     UIStatusBarStyle _originStatusBarStyle;
 }
+@property (assign, nonatomic) BOOL needShowStatusBar;
 @end
 
 @implementation TZGifPhotoPreviewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.needShowStatusBar = ![UIApplication sharedApplication].statusBarHidden;
     self.view.backgroundColor = [UIColor blackColor];
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (tzImagePickerVc) {
@@ -48,6 +50,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    if (self.needShowStatusBar) {
+        [UIApplication sharedApplication].statusBarHidden = NO;
+    }
     [UIApplication sharedApplication].statusBarStyle = _originStatusBarStyle;
 }
 
@@ -76,7 +81,7 @@
         [_doneButton setTitleColor:tzImagePickerVc.oKButtonTitleColorNormal forState:UIControlStateNormal];
     } else {
         [_doneButton setTitle:[NSBundle tz_localizedStringForKey:@"Done"] forState:UIControlStateNormal];
-        [_doneButton setTitleColor:[UIColor colorWithRed:(83/255.0) green:(179/255.0) blue:(17/255.0) alpha:1.0] forState:UIControlStateNormal];
+        [_doneButton setTitleColor:[UIColor colorWithRed: 0.20 green: 0.72 blue: 0.61 alpha: 1.00] forState:UIControlStateNormal];
     }
     [_toolBar addSubview:_doneButton];
     
@@ -111,9 +116,10 @@
     
     _previewView.frame = self.view.bounds;
     _previewView.scrollView.frame = self.view.bounds;
-    CGFloat toolBarHeight = [TZCommonTools tz_isIPhoneX] ? 44 + (83 - 49) : 44;
+    CGFloat toolBarHeight = 44 + [TZCommonTools tz_safeAreaInsets].bottom;
     _toolBar.frame = CGRectMake(0, self.view.tz_height - toolBarHeight, self.view.tz_width, toolBarHeight);
-    _doneButton.frame = CGRectMake(self.view.tz_width - 44 - 12, 0, 44, 44);
+    [_doneButton sizeToFit];
+    _doneButton.frame = CGRectMake(self.view.tz_width - _doneButton.tz_width - 12, 0, MAX(44, _doneButton.tz_width), 44);
     
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (tzImagePickerVc.gifPreviewPageDidLayoutSubviewsBlock) {

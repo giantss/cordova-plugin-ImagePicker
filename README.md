@@ -20,7 +20,7 @@
 
 ## 安装
 
- - `cordova plugin add https://github.com/giantss/cordova-plugin-ImagePicker.git`
+ - `cordova plugin add https://github.com/AllJointTW/cordova-plugin-ImagePicker.git`
 
 
 注意：Android 项目先不要直接 build ，见 [android注意事项](#android注意事项)。
