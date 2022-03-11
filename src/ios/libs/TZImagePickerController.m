@@ -64,10 +64,10 @@
 
     // Default appearance, you can reset these after this method
     // 默认的外观，你可以在这个方法后重置
-    self.oKButtonTitleColorNormal   = [UIColor colorWithRed: 0.27 green: 0.71 blue: 0.65 alpha: 1.00];;
-    self.oKButtonTitleColorDisabled = [UIColor colorWithRed: 0.27 green: 0.71 blue: 0.65 alpha: 0.50];;
+    self.oKButtonTitleColorNormal   = [UIColor colorWithRed: 0.27 green: 0.44 blue: 0.54 alpha: 1.00];;
+    self.oKButtonTitleColorDisabled = [UIColor colorWithRed: 0.27 green: 0.44 blue: 0.54 alpha: 0.50];;
 
-    self.navigationBar.barTintColor = [UIColor colorWithRed: 0.27 green: 0.71 blue: 0.65 alpha: 1.00];;
+    self.navigationBar.barTintColor = [UIColor colorWithRed: 0.27 green: 0.44 blue: 0.54 alpha: 1.00];;
     self.navigationBar.tintColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     if (self.needShowStatusBar) [UIApplication sharedApplication].statusBarHidden = NO;
@@ -301,7 +301,7 @@
     self.presetName = AVAssetExportPresetMediumQuality;
     self.maxCropVideoDuration = 30;
     
-    self.iconThemeColor = [UIColor colorWithRed: 0.27 green: 0.71 blue: 0.65 alpha: 1.00];
+    self.iconThemeColor = [UIColor colorWithRed: 0.27 green: 0.44 blue: 0.54 alpha: 1.00];
     [self configDefaultBtnTitle];
     
     CGFloat cropViewWH = MIN(self.view.tz_width, self.view.tz_height) / 3 * 2;
